@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const UserProfilePicture = ({ userId, picturePath }) => {
+const UserProfilePicture = ({ userId }) => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const token = useSelector((state) => state.token);
@@ -29,7 +29,7 @@ const UserProfilePicture = ({ userId, picturePath }) => {
 
   return (
     <Box onClick={() => navigate(`/profile/${userId}`)}>
-      <UserImage image={picturePath} name={user.firstName} />
+      <UserImage image={user.picturePath} name={user.firstName} />
     </Box>
   );
 };

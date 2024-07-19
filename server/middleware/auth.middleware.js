@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import User from "../models/User.js"; // Adjust the path as needed
 
 export const verifyToken = async (req, res, next) => {
   try {
@@ -17,7 +18,13 @@ export const verifyToken = async (req, res, next) => {
       return res.status(403).send("Access Denied: Invalid token");
     }
 
-    req.user = verified;
+    // Fetch user from the database and attach to req.user
+    const user = await User.findById(verified.id);
+    if (!user) {
+      return res.status(403).send("Access Denied: User not found");
+    }
+
+    req.user = user; // Attach the user document to req.user
     next();
   } catch (err) {
     console.error("Token verification error:", err.message);

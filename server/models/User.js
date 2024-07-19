@@ -1,7 +1,11 @@
 import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema(
-  {
+  { role: {
+    type: String,
+    enum: ["user", "admin" ], 
+    default: "user", 
+  },
     firstName: {
       type: String,
       required: true,
@@ -36,6 +40,10 @@ const UserSchema = new mongoose.Schema(
     friends: {
     type: Array,
     default: [],
+    }, 
+    budget: {
+      type: Array,
+      default: [],
     },
   },
   { timestamps: true }

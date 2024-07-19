@@ -1,15 +1,12 @@
-import  { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setActivities } from "../../state/state.js";
 import ActivityWidget from "./ActivityWidget.jsx";
 
 const ActivitiesWidget = () => {
- 
   const dispatch = useDispatch();
   const activities = useSelector((state) => state.activities || []);
   const token = useSelector((state) => state.token);
-  
-  console.log("Received activities:", activities);
 
   const fetchActivities = async (url) => {
     try {
@@ -23,29 +20,89 @@ const ActivitiesWidget = () => {
       }
 
       const data = await response.json();
-      dispatch(setActivities(data)); // Assuming setActivities action sets activities in Redux state
+      dispatch(setActivities(data));
     } catch (error) {
       console.error("Error fetching data:", error.message);
     }
   };
 
   useEffect(() => {
-    const url = `http://localhost:3333/activities`; 
-
+    const url = `http://localhost:3333/activities`;
     fetchActivities(url);
   }, [token, dispatch]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleEdit = async (activityId, updatedData) => {
+    try {
+      const response = await fetch(`http://localhost:3333/activities/${activityId}`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedData),
+      });
+
+      if (response.ok) {
+        fetchActivities(`http://localhost:3333/activities`);
+      } else {
+        console.error("Failed to update activity");
+      }
+    } catch (error) {
+      console.error("Error updating activity:", error);
+    }
+  };
+
+  const handleDelete = async (activityId) => {
+    try {
+      const response = await fetch(`http://localhost:3333/activities/${activityId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.ok) {
+        fetchActivities(`http://localhost:3333/activities`);
+      } else {
+        console.error("Failed to delete activity");
+      }
+    } catch (error) {
+      console.error("Error deleting activity:", error);
+    }
+  };
+
+  const handleSave = async (activityId, saved) => {
+    try {
+      const response = await fetch(`http://localhost:3333/activities/${activityId}/save`, {
+        method: saved ? "POST" : "DELETE", // Adjust method based on saved state
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        fetchActivities(`http://localhost:3333/activities`);
+      } else {
+        console.error("Failed to save/unsave activity");
+      }
+    } catch (error) {
+      console.error("Error saving/unsaving activity:", error);
+    }
+  };
 
   return (
     <>
       {activities.map(({ _id, activityName, description, coverPath, categories, saves }) => (
         <ActivityWidget
-          key={_id} 
+          key={_id}
           activityId={_id}
           activityName={activityName}
           description={description}
           coverPath={coverPath}
-          saves={saves} 
+          saves={saves}
           categories={categories}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          onSave={handleSave}
         />
       ))}
     </>

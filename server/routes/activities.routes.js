@@ -6,11 +6,12 @@ import {
   //addActivities
 } from "../controllers/activities.controller.js";
 
+import { authorizeRole } from "../middleware/role.middleware.js";
 import { verifyToken } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 /* read */
-router.get("/", verifyToken, getActivities);
+router.get("/", verifyToken,  getActivities);
 
 /* update */
 

@@ -60,6 +60,13 @@ const NavBar = () => {
         <FlexBetween gap="2rem">
         
   
+            <Typography
+              variant="body1"
+              sx={{ color: theme.palette.primary.main, cursor: "pointer" }}
+            >
+              Discover
+            </Typography>
+          </Link>  
           <Link to="/activities" style={{ textDecoration: "none" }}>
             <Typography
               variant="body1"
@@ -68,14 +75,6 @@ const NavBar = () => {
               Activities
             </Typography>
           </Link>
-          <Link to="/discover" style={{ textDecoration: "none" }}>
-            <Typography
-              variant="body1"
-              sx={{ color: theme.palette.primary.main, cursor: "pointer" }}
-            >
-              Discover
-            </Typography>
-          </Link>  
           <Link to="/posts" style={{ textDecoration: "none" }}>
             <Typography
               variant="body1"

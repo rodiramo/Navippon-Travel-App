@@ -11,15 +11,19 @@ import { fileURLToPath } from "url";
 import authRoute from "./routes/auth.routes.js";
 import userRoute from "./routes/users.routes.js";
 import postRoute from "./routes/posts.routes.js";
+import prefectureRoute from "./routes/prefectures.routes.js";
+import categoryRoute from "./routes/categories.routes.js";
 import activityRoute from "./routes/activities.routes.js";
+import { editUser } from "./controllers/users.controller.js";
 import { register } from "./controllers/auth.controller.js";
+import { authorizeRole } from "./middleware/role.middleware.js";
 import { verifyToken } from "./middleware/auth.middleware.js";
 import { createPost } from "./controllers/posts.controller.js";
-// import User from "./models/User.js";
+//import User from "./models/User.js";
 //import Category from "./models/Category.js";
 //import Prefecture from "./models/Prefecture.js";
 //import Activity from "./models/Activity.js";
-//import { categories,activities,   prefectures } from "./data/index.js";
+//import { categories,activities, users,  prefectures } from "./data/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -58,10 +62,13 @@ const upload = multer({ storage });
 /** Routes with Files */
 app.post("/auth/register", upload.single("picture"), register);
 app.post("/posts", verifyToken, upload.single("picture"), createPost);
+app.patch("/users/:id", verifyToken, upload.single('picture'), editUser);
 /** Routes */
 app.use("/auth", authRoute);
 app.use("/users", userRoute);
 app.use("/posts", postRoute);
+app.use("/categories", categoryRoute);
+app.use("/prefectures", prefectureRoute);
 app.use("/activities", activityRoute);
 
 app.use((err, req, res, next) => {
@@ -77,9 +84,10 @@ mongoose
   .then(() => {
     app.listen(PORT, () => console.log(`Server is Running on Port ${PORT}`));
 
-   // Category.insertMany(categories);
-   //Activity.insertMany(activities);
-  // Prefecture.insertMany(prefectures);
+    // User.insertMany(users);
+    // Category.insertMany(categories);
+    // Activity.insertMany(activities);
+    // Prefecture.insertMany(prefectures);
     // Post.insertMany(posts);
   })
   .catch((error) => console.log(`${error} did not connect`));

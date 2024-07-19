@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { EditOutlined, Close } from "@mui/icons-material";
-import { Box, Typography, Divider, useTheme, IconButton, Dialog, DialogTitle, DialogContent, TextField, Button } from "@mui/material";
+import { Box, Input, Typography, Divider, useTheme, IconButton, Dialog, DialogTitle, DialogContent, TextField, Button } from "@mui/material";
 import UserImage from "../../components/UserImage.jsx";
 import FlexBetween from "../../components/FlexBetween.jsx";
 import WidgetWrapper from "../../components/Wrapper.jsx";
@@ -14,8 +14,10 @@ const User = ({ userId, picturePath }) => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
+    image: null,
   });
   const { palette } = useTheme();
+  const [imagePreview, setImagePreview] = useState(picturePath); 
   const navigate = useNavigate();
   const token = useSelector((state) => state.token);
   const dark = palette.neutral.dark;
@@ -32,7 +34,10 @@ const User = ({ userId, picturePath }) => {
     setFormData({
       firstName: data.firstName,
       lastName: data.lastName,
+      image: null,
     });
+
+    setImagePreview(data.picturePath);
   };
 
   useEffect(() => {
@@ -57,23 +62,41 @@ const User = ({ userId, picturePath }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setFormData({ ...formData, image: e.target.files[0] });
+      setImagePreview(URL.createObjectURL(e.target.files[0])); // Preview the image
+    }
+  };
+
   const handleSave = async () => {
+    const formDataToSend = new FormData();
+    formDataToSend.append("firstName", formData.firstName);
+    formDataToSend.append("lastName", formData.lastName);
+    if (formData.image) {
+      formDataToSend.append("picture", formData.image);
+    }
+  
     const response = await fetch(`http://localhost:3333/users/${userId}`, {
       method: "PATCH",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        }),
+      body: formDataToSend,
     });
-    const data = await response.json();
-    setUser(data);
-    setOpen(false);
+  
+    if (!response.ok) {
+      console.error("Failed to update user");
+    } else {
+      const data = await response.json();
+      setUser(data);
+      setImagePreview(data.picturePath); 
+      setOpen(false);
+      window.location.reload();
+    }
   };
-
+  
+  
   return (
     <WidgetWrapper>
       {/* FIRST ROW */}
@@ -169,7 +192,17 @@ const User = ({ userId, picturePath }) => {
             value={formData.lastName}
             onChange={handleChange}
           />
-         
+           <Input
+            accept="image/*"
+            type="file"
+            onChange={handleImageChange}
+            sx={{ mt: 2 }}
+          />
+          {imagePreview && (
+            <Box mt={2}>
+              <img src={imagePreview} alt="Preview" style={{ width: '100px', height: '100px', objectFit: 'cover' }} />
+            </Box>
+          )}
         </DialogContent>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }}>
           <Button onClick={handleClose} color="primary">

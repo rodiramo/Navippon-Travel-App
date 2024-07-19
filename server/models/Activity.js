@@ -19,12 +19,8 @@ const ActivitySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  categories: [
-  ],
-  saves: {
-    type: [],
-    default: [],
-  },
+  categories: [String], 
+  saves: { type: Map, of: Boolean },
   location: {
     type: String,
     required: true,
