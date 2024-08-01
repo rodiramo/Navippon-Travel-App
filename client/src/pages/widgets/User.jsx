@@ -65,8 +65,7 @@ const User = ({ userId, picturePath }) => {
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       setFormData({ ...formData, image: e.target.files[0] });
-      setImagePreview(URL.createObjectURL(e.target.files[0])); // Preview the image
-    }
+      }
   };
 
   const handleSave = async () => {

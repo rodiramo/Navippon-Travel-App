@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { Typography, Box, List, ListItem, ListItemText } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const PrefecturesWidget = () => {
   const [prefectures, setPrefectures] = useState([]);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPrefectures = async () => {
@@ -22,28 +24,53 @@ const PrefecturesWidget = () => {
     fetchPrefectures();
   }, []);
 
+  const handleClick = (prefectureId) => {
+    navigate(`/activities/filtered-activities?prefecture=${prefectureId}`);
+  };
+
   if (error) return <Typography color="error">Error: {error}</Typography>;
 
   return (
     <Box>
       <Typography variant="h5" gutterBottom>
-        prefectures
+        Prefectures
       </Typography>
-      <List>
+      <List
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          padding: 0,
+        }}
+      >
         {prefectures.map((prefecture) => (
-          <ListItem key={prefecture._id}>
+          <ListItem
+            button
+            key={prefecture._id}
+            onClick={() => handleClick(prefecture._id)}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              width: 'auto',
+              margin: 1,
+            }}
+          >
             <Box
               component="img"
               src={`http://localhost:3333/assets/${prefecture.image}`}
               alt={prefecture.name}
               sx={{
-                width: 40,
-                height: 40,
-                borderRadius: "50%",
-                marginRight: 2,
+                width: 50,
+                height: 50,
+                borderRadius: '50%',
+                marginBottom: 1,
               }}
             />
-            <ListItemText primary={prefecture.name} />
+            <ListItemText
+              primary={prefecture.name}
+              sx={{ textAlign: 'center' }}
+            />
           </ListItem>
         ))}
       </List>

@@ -18,6 +18,7 @@ import Dropzone from "react-dropzone";
 import { setLogin } from "../../state/state.js";
 import FlexBetween from "../../components/FlexBetween.jsx";
 
+// Validation schemas
 const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
   lastName: yup.string().required("required"),
@@ -31,6 +32,7 @@ const loginSchema = yup.object().shape({
   password: yup.string().required("required"),
 });
 
+// Initial values
 const initialValuesRegister = {
   firstName: "",
   lastName: "",
@@ -53,12 +55,12 @@ const Form = () => {
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
+  // Handle user registration
   const register = async (values, onSubmitProps) => {
     const formData = new FormData();
     for (let value in values) {
       formData.append(value, values[value]);
     }
-    // append images manually
     formData.append("picturePath", values.picture.name);
 
     const savedUserResponse = await fetch(
@@ -71,16 +73,13 @@ const Form = () => {
 
     const savedUser = await savedUserResponse.json();
     onSubmitProps.resetForm();
-    {
-      /* register */
-    }
     if (savedUser) {
       setPageType("login");
     }
   };
 
+  // Handle user login
   const login = async (values, onSubmitProps) => {
-    // Form.jsx
     const loggedInResponse = await fetch("http://localhost:3333/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -89,7 +88,8 @@ const Form = () => {
 
     const loggedIn = await loggedInResponse.json();
     onSubmitProps.resetForm();
-    if (loggedIn) {
+    if (loggedIn) { 
+      console.log('Logged In User:', loggedIn.user); 
       dispatch(
         setLogin({
           user: loggedIn.user,
@@ -99,6 +99,8 @@ const Form = () => {
       navigate("/home");
     }
   };
+
+  // Form submission handler
   const handleFormSubmit = async (values, onSubmitProps) => {
     if (isLogin) await login(values, onSubmitProps);
     if (isRegister) await register(values, onSubmitProps);
@@ -124,9 +126,9 @@ const Form = () => {
           <Box
             display="grid"
             gap="30px"
-            gridTemplateColumns="repeat(4, minxmax(0,1fr))"
+            gridTemplateColumns="repeat(4, minmax(0, 1fr))"
             sx={{
-              "& > div": { gridColumn: isNonMobile ? undefined : "span 4a" },
+              "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
             }}
           >
             {isRegister && (
@@ -137,9 +139,7 @@ const Form = () => {
                   onChange={handleChange}
                   value={values.firstName}
                   name="firstName"
-                  error={
-                    Boolean(touched.firstName) && Boolean(errors.firstName)
-                  }
+                  error={Boolean(touched.firstName) && Boolean(errors.firstName)}
                   helperText={touched.firstName && errors.firstName}
                   sx={{ gridColumn: "span 2" }}
                 />
@@ -187,9 +187,6 @@ const Form = () => {
                 </Box>
               </>
             )}
-
-            {/** Login */}
-            {/* email */}
             <TextField
               label="Email"
               onBlur={handleBlur}
@@ -200,7 +197,6 @@ const Form = () => {
               helperText={touched.email && errors.email}
               sx={{ gridColumn: "span 4" }}
             />
-            {/* password */}
             <TextField
               label="Password"
               type={values.showPassword ? "text" : "password"}
@@ -223,7 +219,6 @@ const Form = () => {
                 ),
               }}
             />
-            {/* Buttons */}
             <Box>
               <Button
                 fullWidth
@@ -253,7 +248,7 @@ const Form = () => {
                 }}
               >
                 {isLogin
-                  ? "Dont have an account? Sign up here: "
+                  ? "Don't have an account? Sign up here:"
                   : "Already have an account? Login here:"}
               </Typography>
             </Box>

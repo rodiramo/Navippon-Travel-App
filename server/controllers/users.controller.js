@@ -36,12 +36,14 @@ export const getUserActivities = async (req, res) => {
         };
       }
     );
+    console.log("Incoming data:", req.body);
+    console.log("Updated document:", formattedActivities);
+
     res.status(200).json(formattedActivities);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
 };
-
 
 export const editUser = async (req, res) => {
   try {
@@ -51,21 +53,22 @@ export const editUser = async (req, res) => {
     const user = await User.findById(id);
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     if (req.file) {
       if (user.picturePath) {
-        fs.unlinkSync(path.join('public/assets', user.picturePath));
+        fs.unlinkSync(path.join("public/assets", user.picturePath));
       }
       updates.picturePath = req.file.filename;
     }
 
-    const updatedUser = await User.findByIdAndUpdate(id, updates, { new: true });
-
+    const updatedUser = await User.findByIdAndUpdate(id, updates, {
+      new: true,
+    });
     res.status(200).json(updatedUser);
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -119,12 +122,14 @@ export const getUserFriends = async (req, res) => {
     const friends = await User.find({ _id: { $in: user.friends } });
 
     // Return formatted list of friends
-    const formattedFriends = friends.map(({ _id, firstName, lastName, picturePath }) => ({
-      _id,
-      firstName,
-      lastName,
-      picturePath,
-    }));
+    const formattedFriends = friends.map(
+      ({ _id, firstName, lastName, picturePath }) => ({
+        _id,
+        firstName,
+        lastName,
+        picturePath,
+      })
+    );
 
     res.status(200).json(formattedFriends);
   } catch (err) {

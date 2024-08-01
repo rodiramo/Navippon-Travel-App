@@ -1,20 +1,23 @@
 import express from "express";
 import {
+  createActivity,
   getActivities,
+  editActivity,
+  getActivity,
+  filterActivities,
+  deleteActivity,
   saveActivity,
-  //deleteActivities,
-  //addActivities
 } from "../controllers/activities.controller.js";
-
-import { authorizeRole } from "../middleware/role.middleware.js";
 import { verifyToken } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
-/* read */
-router.get("/", verifyToken,  getActivities);
 
-/* update */
-
+router.post("/", verifyToken, createActivity);
+router.get("/", verifyToken, getActivities);
+router.get("/filtered-activities", verifyToken, filterActivities);
+router.get("/:id", verifyToken, getActivity);
+router.patch("/:id", verifyToken, editActivity);
 router.patch("/:id/save", verifyToken, saveActivity);
+router.delete("/:id", verifyToken, deleteActivity);
 
 export default router;

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
@@ -7,14 +7,23 @@ import { themeSettings } from "./theme.js";
 import LoginPage from "./pages/LoginPage/Login.jsx";
 import HomePage from "./pages/HomePage/Home.jsx";
 import ProfilePage from "./pages/ProfilePage/Profile.jsx";
+import ActivityDetails from "./pages/ActivitiesPage/ActivityDetails.jsx";
 import ActivitiesPage from "./pages/ActivitiesPage/ActivitiesPage.jsx";
 import DiscoverPage from "./pages/DiscoverPage/DiscoverPage.jsx";
 import AboutUsPage from "./pages/AboutUsPage/AboutUsPage.jsx";
 import BlogPage from "./pages/BlogPage/BlogPage.jsx";
+import FilteredActivities from "./pages/ActivitiesPage/FilteredActivities.jsx";
+import AdminPanel from "./pages/AdminPage/AdminPanel.jsx";
+import PrivateRoute from "./components/PrivateRoute.jsx";
+import ActivityForm from "./pages/ActivitiesPage/ActivityForm.jsx";
+import useAuth from "./hooks/useAuth.js";
 
 function App() {
   const mode = useSelector((state) => state.mode);
-  const isAuthenticated = useSelector((state) => !!state.token);
+  const { isAuthenticated, isAdmin } = useAuth();
+  console.log("Is Authenticated:", isAuthenticated);
+  console.log("Is Admin:", isAdmin);
+
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
 
   return (
@@ -23,9 +32,6 @@ function App() {
         <CssBaseline />
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          <Route
-            path="/home"
-            element={isAuthenticated ? <HomePage /> : <Navigate to="/" />}
           />
           <Route
             path="/profile/:userId"
@@ -36,6 +42,8 @@ function App() {
           <Route path="/activities"            element={isAuthenticated ? <ActivitiesPage /> : <Navigate to="/" />}/>
           <Route path="/discover" element={<DiscoverPage />} />
           <Route path="/about-us" element={<AboutUsPage />} />
+          <Route element={<PrivateRoute requiredRole="admin" />}>
+          </Route>
         </Routes>
       </ThemeProvider>
     </BrowserRouter>

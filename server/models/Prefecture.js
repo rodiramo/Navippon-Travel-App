@@ -1,12 +1,11 @@
 import mongoose from "mongoose";
 
 const PrefectureSchema = new mongoose.Schema({
-  prefectureName: {
+ name: {
     type: String,
     unique: true,
   },
-  cities: {
-  },
+  cities: [String],
   image: {
     type: String,
     required: true,

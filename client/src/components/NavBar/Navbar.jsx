@@ -16,10 +16,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "../../state/state.js";
 import { useNavigate, Link } from "react-router-dom";
 import FlexBetween from "../FlexBetween.jsx";
-
 import UserProfilePicture from "../../pages/widgets/UserProfilePic.jsx";
+import useAuth from "../../hooks/useAuth.js";
 
 const NavBar = () => {
+  const { isAdmin } = useAuth(); 
   const userState = useSelector((state) => state.user);
   const user = userState || {};
   const { picturePath, _id } = user;
@@ -37,8 +38,16 @@ const NavBar = () => {
     navigate(`/profile/${_id}`);
   };
 
+  const handleMyTripsClick = () => {
+    navigate("/my-trips"); // Adjust the route to your "My Trips" page
+  };
+
   return (
-    <FlexBetween padding="1rem 6%" backgroundColor={alt}>
+    <FlexBetween
+      padding="1rem 2rem"  // Adjust padding as needed
+      backgroundColor={alt}
+      sx={{ width: "100%" }}  // Ensure the navbar takes the full width
+    >
       <FlexBetween gap="1.75rem">
         <Typography
           fontWeight="bold"
@@ -55,11 +64,10 @@ const NavBar = () => {
           Navippon
         </Typography>
       </FlexBetween>
-  
+
       {isNonMobileScreens ? (
         <FlexBetween gap="2rem">
-        
-  
+          <Link to="/discover" style={{ textDecoration: "none" }}>
             <Typography
               variant="body1"
               sx={{ color: theme.palette.primary.main, cursor: "pointer" }}
@@ -91,11 +99,26 @@ const NavBar = () => {
               About Us
             </Typography>
           </Link>
-          {/* User profile picture and dropdown */}
+
+          {/* Conditionally render the Admin Dashboard link */}
+          {isAdmin && (
+            <Link to="/admin" style={{ textDecoration: "none" }}>
+              <Typography
+                variant="body1"
+                sx={{ color: theme.palette.primary.main, cursor: "pointer" }}
+              >
+                Admin Dashboard
+              </Typography>
+            </Link>
+          )}
+
           <UserProfilePicture userId={_id} picturePath={picturePath} />
-          <FormControl variant="standard" value={fullName}>
+          <FormControl variant="standard">
             <Select
-              value={fullName}
+              value="My Profile" 
+              renderValue={() => (
+                <Typography>{fullName}</Typography>  
+              )}
               sx={{
                 backgroundColor: neutralLight,
                 width: "210px",
@@ -112,21 +135,31 @@ const NavBar = () => {
               }}
               input={<InputBase />}
             >
-              <MenuItem value={fullName}>
+              <MenuItem onClick={handleProfileClick}>
                 <Button
-                  onClick={handleProfileClick}
                   variant="text"
                   color="inherit"
-                  sx={{ textTransform: "none" }}
+                  sx={{ textTransform: "none", width: "100%" }}
                 >
-                  <Typography>{fullName}</Typography>
+                  <Typography>My Profile</Typography>
                 </Button>
               </MenuItem>
-              <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
+              <MenuItem onClick={handleMyTripsClick}>
+                <Button
+                  variant="text"
+                  color="inherit"
+                  sx={{ textTransform: "none", width: "100%" }}
+                >
+                  <Typography>My Trips</Typography>
+                </Button>
+              </MenuItem>
+              <MenuItem onClick={() => dispatch(setLogout())}>
+                Log Out
+              </MenuItem>
             </Select>
           </FormControl>
-    {/* Mode switch */}
-    <IconButton onClick={() => dispatch(setMode())}>
+
+          <IconButton onClick={() => dispatch(setMode())}>
             {theme.palette.mode === "dark" ? (
               <DarkMode sx={{ fontSize: "25px" }} />
             ) : (
@@ -135,7 +168,6 @@ const NavBar = () => {
           </IconButton>
         </FlexBetween>
       ) : (
-    
         <IconButton
           onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
           sx={{ color: neutralDark }}
@@ -143,20 +175,19 @@ const NavBar = () => {
           <Menu />
         </IconButton>
       )}
-  
-      {/* Mobile menu */}
+
       {!isNonMobileScreens && isMobileMenuToggled && (
         <Box
           position="fixed"
+          top="0"  
           right="0"
           bottom="0"
-          height="100%"
+          width="100%"  
           zIndex="10"
-          maxWidth="500px"
-          minWidth="300px"
           backgroundColor={theme.palette.background.default}
+          p="1rem" 
         >
-          <Box display="flex" justifyContent="flex-end" p="1rem">
+          <Box display="flex" justifyContent="flex-end">
             <IconButton
               onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
             >
@@ -183,7 +214,7 @@ const NavBar = () => {
                 />
               )}
             </IconButton>
-  
+
             {/* Links for Activities, Discover, and About Us in mobile menu */}
             <Link to="/activities" style={{ textDecoration: "none" }}>
               <Typography
@@ -201,6 +232,14 @@ const NavBar = () => {
                 Discover
               </Typography>
             </Link>
+            <Link to="/posts" style={{ textDecoration: "none" }}>
+            <Typography
+              variant="body1"
+              sx={{ color: theme.palette.primary.main, cursor: "pointer" }}
+            >
+              Blog
+            </Typography>
+          </Link>
             <Link to="/about-us" style={{ textDecoration: "none" }}>
               <Typography
                 variant="body1"
@@ -209,10 +248,23 @@ const NavBar = () => {
                 About Us
               </Typography>
             </Link>
+            {isAdmin && (
+              <Link to="/admin" style={{ textDecoration: "none" }}>
+                <Typography
+                  variant="body1"
+                  sx={{ color: theme.palette.primary.main, cursor: "pointer" }}
+                >
+                  Admin Dashboard
+                </Typography>
+              </Link>
+            )}
             {/* User profile dropdown in mobile menu */}
-            <FormControl variant="standard" value={fullName}>
+            <FormControl variant="standard">
               <Select
-                value={fullName}
+                value="My Profile"  
+                renderValue={() => (
+                  <Typography>{fullName}</Typography> 
+                )}
                 sx={{
                   backgroundColor: neutralLight,
                   width: "200px",
@@ -228,14 +280,22 @@ const NavBar = () => {
                 }}
                 input={<InputBase />}
               >
-                <MenuItem value={fullName}>
+                <MenuItem onClick={handleProfileClick}>
                   <Button
-                    onClick={handleProfileClick}
                     variant="text"
                     color="inherit"
-                    sx={{ textTransform: "none" }}
+                    sx={{ textTransform: "none", width: "100%" }}
                   >
-                    <Typography>{fullName}</Typography>
+                    <Typography>My Profile</Typography>
+                  </Button>
+                </MenuItem>
+                <MenuItem onClick={handleMyTripsClick}>
+                  <Button
+                    variant="text"
+                    color="inherit"
+                    sx={{ textTransform: "none", width: "100%" }}
+                  >
+                    <Typography>My Trips</Typography>
                   </Button>
                 </MenuItem>
                 <MenuItem onClick={() => dispatch(setLogout())}>
@@ -243,7 +303,6 @@ const NavBar = () => {
                 </MenuItem>
               </Select>
             </FormControl>
-  
           </FlexBetween>
         </Box>
       )}

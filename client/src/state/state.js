@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   mode: "light",
-  user: { _id: null, friends: [] },
+  user: { _id: null, friends: [], role: '' },
   token: null,
   posts: [],
   activities: [],
@@ -20,14 +20,14 @@ export const authSlice = createSlice({
       state.token = action.payload.token;
     },
     setLogout: (state) => {
-      state.user = { _id: null, friends: [] }; // Reset user to initial state
+      state.user = { _id: null, friends: [], role: '' };
       state.token = null;
     },
     setFriends: (state, action) => {
       if (state.user) {
         state.user.friends = action.payload.friends;
       } else {
-        console.error("user friends non-existent :(");
+        console.error("User does not exist");
       }
     },
     setPosts: (state, action) => {
@@ -66,6 +66,9 @@ export const authSlice = createSlice({
       });
       state.activities = updatedActivities;
     },
+    removeActivity: (state, action) => {
+      state.activities = state.activities.filter((activity) => activity._id !== action.payload.activityId);
+    },
   },
 });
 
@@ -79,6 +82,7 @@ export const {
   removePost,
   setActivities,
   setActivity,
+  removeActivity,
 } = authSlice.actions;
 
 export default authSlice.reducer;
