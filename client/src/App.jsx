@@ -32,17 +32,23 @@ function App() {
         <CssBaseline />
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          />
-          <Route
-            path="/profile/:userId"
-            element={isAuthenticated ? <ProfilePage /> : <Navigate to="/" />}
-          />
-                  <Route path="/posts"
-            element={isAuthenticated ? <BlogPage /> : <Navigate to="/" />} />
-          <Route path="/activities"            element={isAuthenticated ? <ActivitiesPage /> : <Navigate to="/" />}/>
+          <Route element={<PrivateRoute />}>
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/profile/:userId" element={<ProfilePage />} />
+            <Route path="/posts" element={<BlogPage />} />
+            <Route path="/activities" element={<ActivitiesPage />} />
+            <Route
+              path="/filtered-activities"
+              element={<FilteredActivities />}
+            />
+            <Route path="/activities/:id" element={<ActivityDetails />} />
+            <Route path="/create-activity" element={<ActivityForm />} />
+            <Route path="/edit-activity/:id" element={<ActivityForm />} />
+          </Route>
           <Route path="/discover" element={<DiscoverPage />} />
           <Route path="/about-us" element={<AboutUsPage />} />
           <Route element={<PrivateRoute requiredRole="admin" />}>
+            <Route path="/admin" element={<AdminPanel />} />
           </Route>
         </Routes>
       </ThemeProvider>
