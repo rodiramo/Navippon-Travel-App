@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema(
-  { role: {
-    type: String,
-    enum: ["user", "admin" ], 
-    default: "user", 
-  },
+  {
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
     firstName: {
       type: String,
       required: true,
@@ -38,11 +39,16 @@ const UserSchema = new mongoose.Schema(
       default: [],
     },
     friends: {
-    type: Array,
-    default: [],
-    }, 
+      type: Array,
+      default: [],
+    },
     budget: {
       type: Array,
+      default: [],
+    },
+    favoriteActivities: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Activity",
       default: [],
     },
   },

@@ -17,7 +17,6 @@ import AdminPanel from "./pages/AdminPage/AdminPanel.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import ActivityForm from "./pages/ActivitiesPage/ActivityForm.jsx";
 import useAuth from "./hooks/useAuth.js";
-
 function App() {
   const mode = useSelector((state) => state.mode);
   const { isAuthenticated, isAdmin } = useAuth();

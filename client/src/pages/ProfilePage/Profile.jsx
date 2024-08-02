@@ -7,7 +7,7 @@ import FriendListWidget from "../widgets/FriendListWidget.jsx";
 import MyPostWidget from "../widgets/MyPostWidget";
 import PostsWidget from "../widgets/PostsWidget";
 import UserWidget from "../widgets/User.jsx";
-
+import FavoriteActivities from "../widgets/FavoriteActivities.jsx";
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const { userId } = useParams();
@@ -39,19 +39,36 @@ const ProfilePage = () => {
         gap="2rem"
         justifyContent="center"
       >
+        {/* left screen */}
+        {/* friends */}
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
           <UserWidget userId={userId} picturePath={user.picturePath} />
           <Box m="2rem 0" />
           <FriendListWidget userId={userId} />
         </Box>
-        <Box
-          flexBasis={isNonMobileScreens ? "42%" : undefined}
-          mt={isNonMobileScreens ? undefined : "2rem"}
-        >
-          <MyPostWidget picturePath={user.picturePath} />
-          <Box m="2rem 0" />
-          <h2>My Posts</h2>
-          <PostsWidget userId={userId} isProfile />
+
+        {/* right screen */}
+        <Box>
+          {/* favorites */}
+          <Box
+            flexBasis={isNonMobileScreens ? "42%" : undefined}
+            mt={isNonMobileScreens ? undefined : "2rem"}
+          >
+            <Box m="2rem 0" />
+            <h2>My Favorites</h2>
+            <FavoriteActivities />
+          </Box>
+          {/** posts */}
+          <Box
+            flexBasis={isNonMobileScreens ? "42%" : undefined}
+            mt={isNonMobileScreens ? undefined : "2rem"}
+          >
+            <h2>Post Something New</h2>
+            <MyPostWidget picturePath={user.picturePath} />
+            <Box m="2rem 0" />
+            <h2>My Posts</h2>
+            <PostsWidget userId={userId} isProfile />
+          </Box>
         </Box>
       </Box>
     </Box>

@@ -14,34 +14,18 @@ export const getUser = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
-
 export const getUserActivities = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.findById(id);
+    const user = await User.findById(id).populate("favoriteActivities");
 
-    const activities = await Promise.all(
-      user.activities.map((id) => Activity.findById(id))
-    );
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-    const formattedActivities = activities.map(
-      ({ _id, activityName, description, location, coverPath, city }) => {
-        return {
-          _id,
-          activityName,
-          description,
-          location,
-          coverPath,
-          city,
-        };
-      }
-    );
-    console.log("Incoming data:", req.body);
-    console.log("Updated document:", formattedActivities);
-
-    res.status(200).json(formattedActivities);
+    res.status(200).json(user.favoriteActivities);
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 
@@ -71,42 +55,27 @@ export const editUser = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
-export const addRemoveActivity = async (req, res) => {
+export const addRemoveFavoriteActivity = async (req, res) => {
   try {
     const { id, activityId } = req.params;
     const user = await User.findById(id);
-    const activity = await Activity.findById(activityId);
 
-    if (user.activities.includes(activityId)) {
-      user.activities = user.activities.filter(
-        (activity) => activity !== activityId
-      );
-      activity.activities = activity.activities.filter(
-        (userId) => userId !== id
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.favoriteActivities.includes(activityId)) {
+      user.favoriteActivities = user.favoriteActivities.filter(
+        (favActivityId) => favActivityId.toString() !== activityId
       );
     } else {
-      user.activities.push(activityId);
-      activity.activities.push(id);
+      user.favoriteActivities.push(activityId);
     }
-    await user.save();
-    await activity.save();
 
-    const formattedActivities = activities.map(
-      ({ _id, activityName, description, location, coverPath, city }) => {
-        return {
-          _id,
-          activityName,
-          description,
-          location,
-          coverPath,
-          city,
-        };
-      }
-    );
-    res.status(200).json(formattedActivities);
+    await user.save();
+    res.status(200).json(user.favoriteActivities);
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 

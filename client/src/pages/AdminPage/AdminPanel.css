@@ -1,91 +1,90 @@
-/* AdminPanel.css */
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.table-container {
+  width: 100%;
+  max-width: 1200px;
+}
+
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table-container th,
+.table-container td {
+  padding: 1rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.table-container th {
+  background-color: #f4f4f4;
+}
+
+.table-container tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Modal styles */
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 400px;
+  background-color: white;
+  padding: 2rem;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
   .header {
-    text-align: center;
-    margin-bottom: 2rem;
+    font-size: 1.5rem;
   }
-  
-  .table-container {
-    width: 100%;
-    max-width: 1200px;
-  }
-  
+
   .table-container table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
+    display: none;
   }
-  
-  .table-container th, .table-container td {
-    padding: 1rem;
-    border-bottom: 1px solid #ddd;
+
+  .list-view {
+    display: block;
   }
-  
-  .table-container th {
-    background-color: #f4f4f4;
+}
+
+@media (min-width: 769px) {
+  .header {
+    font-size: 1rem;
   }
-  
-  .table-container tr:hover {
-    background-color: #f1f1f1;
+
+  .table-container table {
+    display: table;
   }
-  
-  /* Modal styles */
+
+  .list-view {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    font-size: 1.25rem;
+  }
+
   .modal-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 400px;
-    background-color: white;
-    padding: 2rem;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    width: 95%;
+    max-width: 300px;
   }
-  
-  /* Responsive Styles */
-  @media (max-width: 768px) {
-    .header {
-      font-size: 1.5rem;
-    }
-  
-    .table-container table {
-      display: none;
-    }
-  
-    .list-view {
-      display: block;
-    }
-  }
-  
-  @media (min-width: 769px) {
-    .header {
-      font-size: 2rem;
-    }
-  
-    .table-container table {
-      display: table;
-    }
-  
-    .list-view {
-      display: none; 
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .header {
-      font-size: 1.25rem;
-    }
-  
-    .modal-content {
-      width: 95%;
-      max-width: 300px;
-    }
-  }
-  
+}

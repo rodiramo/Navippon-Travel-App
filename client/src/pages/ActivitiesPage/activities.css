@@ -1,0 +1,105 @@
+/*activities page view */
+.search-results {
+  padding: 20px;
+}
+
+.search-results .filters {
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px;
+}
+
+.filters label {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.filters input,
+.filters select {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #96c6d9;
+  border-radius: 5px;
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.activity-item {
+  display: flex;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.activity-item img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-right: 20px;
+}
+
+.activity-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.activity-title {
+  font-size: 1.25rem !important;
+  display: flex;
+  align-items: center;
+}
+
+.activity-description {
+  font-size: 1rem;
+  color: #666;
+}
+
+.activity-price {
+  font-size: 1.2rem;
+  color: #ff4081;
+}
+
+.prefecture-badge {
+  background-color: #ffe4e7;
+  padding: 0.25rem 0.5rem;
+  border-radius: 30rem;
+  font-size: 0.75rem;
+  margin-left: 10px;
+  color: #ff4081;
+}
+
+.budget {
+  position: absolute;
+  right: 22px;
+  margin-top: 147px !important;
+  font-weight: 500 !important;
+  font-size: 1.25rem !important;
+}
+
+.button-detail,
+.button-create,
+.button {
+  border-radius: 30rem !important;
+  border: none !important;
+}
+
+.favorite {
+  position: absolute !important;
+  right: 20px;
+  margin-top: -4px !important;
+}
+
+.wrap-buttons {
+  margin-top: 10px;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  flex-direction: row !important;
+}

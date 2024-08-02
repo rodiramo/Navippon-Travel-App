@@ -3,34 +3,34 @@ import Footer from "../../components/Footer/Footer.jsx";
 import ActivitiesWidget from "../widgets/ActivitiesWidget.jsx";
 import "./activities.css";
 import { Button } from "@mui/material";
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-import { Box} from "@mui/material";
+import { Box } from "@mui/material";
 const ActivitiesPage = () => {
-
-  const role = useSelector((state) => state.user.role); // Get the role from Redux state
+  const role = useSelector((state) => state.user.role);
   const navigate = useNavigate();
   const handleCreateActivity = () => {
-    navigate('/create-activity'); 
+    navigate("/create-activity");
   };
 
   return (
     <Box>
       <NavBar />
-      <h1>All Activities around Japan</h1>
-
-      {role === 'admin' && (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleCreateActivity}
-        >
-          Create Activity
-        </Button>
-      )}
-
-      <ActivitiesWidget  />
+      <Box className="header">
+        <h1>All Activities around Japan</h1>
+        {role === "admin" && (
+          <Button
+            variant="contained"
+            color="primary"
+            className="button-create"
+            onClick={handleCreateActivity}
+          >
+            Create Activity
+          </Button>
+        )}
+      </Box>
+      <ActivitiesWidget />
       <Footer />
     </Box>
   );

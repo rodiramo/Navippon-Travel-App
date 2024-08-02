@@ -1,8 +1,7 @@
-//  color design tokens export
 export const colorTokens = {
   grey: {
     0: "#FFFFFF",
-    10: "#F6F6F6",
+    10: "#F5F5F5",
     50: "#F0F0F0",
     100: "#E0E0E0",
     200: "#C2C2C2",
@@ -15,20 +14,45 @@ export const colorTokens = {
     900: "#0A0A0A",
     1000: "#000000",
   },
-  primary: { 
-    50: "#FF8A94",  // Lightest shade
-    100: "#FF7380", 
-    200: "#F2273F",
-    300: "#EB132D",
-    400: "#D90F29",
-    500: "#C70C25",
-    600: "#B50921",
-    700: "#A3071D",
-    800: "#91041A",
-    900: "#800218",
+  primary: {
+    0: "#FFFFFF",
+    10: "#FFE4E7",
+    50: "#FFB3C1", // Lightest
+    100: "#FF9CAA",
+    200: "#FF85A3",
+    300: "#FF6E8C",
+    400: "#FF5775",
+    500: "#FF4081", // Primary pink Navippon
+    600: "#E63675",
+    700: "#CC2D69",
+    800: "#B3245D",
+    900: "#991B51",
+  },
+  lightBlue: {
+    50: "#EAF4F7",
+    100: "#CBE3EB",
+    200: "#ABCFDF",
+    300: "#8BBBD3",
+    400: "#6CA7C7",
+    500: "#96C6D9", // Light blue color Navippon
+    600: "#5893AF",
+    700: "#407797",
+    800: "#305D7F",
+    900: "#204167",
+  },
+  darkBlue: {
+    50: "#E0E5EB",
+    100: "#B3BED1",
+    200: "#8195B5",
+    300: "#4F6D98",
+    400: "#2A4E83",
+    500: "#102651", // Dark blue color Navippon
+    600: "#0E2147",
+    700: "#0C1C3D",
+    800: "#0A1733",
+    900: "#08112A",
   },
 };
-
 // mui theme settings
 export const themeSettings = (mode) => {
   return {
@@ -39,7 +63,14 @@ export const themeSettings = (mode) => {
             primary: {
               dark: colorTokens.primary[200],
               main: colorTokens.primary[500],
-              light: colorTokens.primary[800],
+              light: colorTokens.primary[300],
+              white: colorTokens.primary[50],
+              black: colorTokens.grey[0],
+            },
+            secondary: {
+              dark: colorTokens.darkBlue[200],
+              main: colorTokens.darkBlue[500],
+              light: colorTokens.darkBlue[800],
             },
             neutral: {
               dark: colorTokens.grey[100],
@@ -49,16 +80,23 @@ export const themeSettings = (mode) => {
               light: colorTokens.grey[700],
             },
             background: {
-              default: colorTokens.grey[900],
-              alt: colorTokens.grey[800],
+              default: colorTokens.darkBlue[900],
+              alt: colorTokens.darkBlue[800],
+              nav: colorTokens.darkBlue[800],
             },
           }
         : {
-            // palette values for light mode
             primary: {
               dark: colorTokens.primary[700],
               main: colorTokens.primary[500],
               light: colorTokens.primary[50],
+              white: colorTokens.primary[0],
+              black: colorTokens.grey[1000],
+            },
+            secondary: {
+              dark: colorTokens.lightBlue[700],
+              main: colorTokens.lightBlue[500],
+              light: colorTokens.lightBlue[50],
             },
             neutral: {
               dark: colorTokens.grey[1000],
@@ -70,6 +108,7 @@ export const themeSettings = (mode) => {
             background: {
               default: colorTokens.grey[10],
               alt: colorTokens.grey[10],
+              nav: colorTokens.darkBlue[800],
             },
           }),
     },

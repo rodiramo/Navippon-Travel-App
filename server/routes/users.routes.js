@@ -3,7 +3,7 @@ import {
   getUser,
   editUser,
   getUserActivities,
-  addRemoveActivity,
+  addRemoveFavoriteActivity,
   getUserFriends,
   addRemoveFriend,
 } from "../controllers/users.controller.js";
@@ -11,14 +11,18 @@ import { verifyToken } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.get("/:id", verifyToken,getUser);
-router.patch("/:id", verifyToken, editUser );;
+router.get("/:id", verifyToken, getUser);
+router.patch("/:id", verifyToken, editUser);
 
 router.get("/:id/friends", verifyToken, getUserFriends);
 
 router.get("/:id/activities", verifyToken, getUserActivities);
-router.patch("/:id/activityId", verifyToken, addRemoveActivity);
+router.patch(
+  "/:id/favorites/:activityId",
+  verifyToken,
+  addRemoveFavoriteActivity
+);
 
-router.patch("/:id/:friendId", verifyToken, addRemoveFriend);
+router.patch("/:id/friend/:friendId", verifyToken, addRemoveFriend);
 
 export default router;

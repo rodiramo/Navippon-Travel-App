@@ -25,7 +25,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setActivity } from "../../state/state.js";
 import "../ActivitiesPage/activities.css";
 
-const ActivityWidget = ({
+const ActivitySmall = ({
   activityId,
   activityName,
   description,
@@ -295,7 +295,7 @@ const ActivityWidget = ({
   );
 };
 
-ActivityWidget.propTypes = {
+ActivitySmall.propTypes = {
   activityId: PropTypes.string.isRequired,
   activityName: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
@@ -310,4 +310,4 @@ ActivityWidget.propTypes = {
   onDelete: PropTypes.func,
 };
 
-export default ActivityWidget;
+export default ActivitySmall;

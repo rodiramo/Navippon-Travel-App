@@ -1,6 +1,9 @@
 .activity-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 16px;
-  max-width: 600px;
+  max-width: 1000px;
   margin: auto;
 }
 
@@ -18,7 +21,7 @@
 }
 
 .file-upload::before {
-  content: 'Select an image';
+  content: "Select an image";
   display: inline-block;
   background: red;
   color: white;
@@ -48,4 +51,17 @@
 
 .submit-button:focus {
   box-shadow: none;
+}
+
+.breadcrumbs-container {
+  margin: 20px 0;
+}
+
+.breadcrumbs-container .MuiBreadcrumbs-root {
+  font-size: 1rem;
+  color: #ff4081;
+}
+
+.breadcrumbs-container .MuiBreadcrumbs-separator {
+  margin: 0 8px;
 }

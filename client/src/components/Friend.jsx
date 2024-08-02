@@ -1,11 +1,19 @@
 import PropTypes from "prop-types";
 import { PersonAddOutlined, PersonRemoveOutlined } from "@mui/icons-material";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Typography,
+  useTheme,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setFriends } from "../state/state.js";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
+import { useState } from "react";
 
 const Friend = ({ friendId, name, userPicturePath }) => {
   const dispatch = useDispatch();
@@ -19,7 +27,12 @@ const Friend = ({ friendId, name, userPicturePath }) => {
   const primaryDark = palette.primary.dark;
   const main = palette.neutral.main;
 
-  const isFriend = Array.isArray(friends) && friends.find((friend) => friend._id === friendId);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
+  const isFriend =
+    Array.isArray(friends) && friends.find((friend) => friend._id === friendId);
 
   const patchFriend = async () => {
     try {
@@ -29,18 +42,34 @@ const Friend = ({ friendId, name, userPicturePath }) => {
           method: "PATCH",
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
-    
+
+      if (!response.ok) {
+        throw new Error("Failed to update friend status");
+      }
+
       const data = await response.json();
       dispatch(setFriends({ friends: data }));
+
+      setSnackbarMessage(
+        isFriend ? "Friend removed successfully!" : "Friend added successfully!"
+      );
+      setSnackbarSeverity("success");
     } catch (error) {
-      console.error("Error updating friend status:", error);
+      setSnackbarMessage("Error updating friend status. Please try again.");
+      setSnackbarSeverity("error");
+    } finally {
+      setSnackbarOpen(true);
     }
   };
-  
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
   return (
     <FlexBetween>
       <FlexBetween gap="1rem">
@@ -64,7 +93,6 @@ const Friend = ({ friendId, name, userPicturePath }) => {
           >
             {name}
           </Typography>
-        
         </Box>
       </FlexBetween>
       <IconButton
@@ -77,6 +105,21 @@ const Friend = ({ friendId, name, userPicturePath }) => {
           <PersonAddOutlined sx={{ color: primaryDark }} />
         )}
       </IconButton>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }} // Positioning the Snackbar at the top center
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </FlexBetween>
   );
 };

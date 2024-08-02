@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   mode: "light",
-  user: { _id: null, friends: [], role: '' },
+  user: { _id: null, friends: [], role: "", favorites: [] },
   token: null,
   posts: [],
   activities: [],
@@ -20,7 +20,7 @@ export const authSlice = createSlice({
       state.token = action.payload.token;
     },
     setLogout: (state) => {
-      state.user = { _id: null, friends: [], role: '' };
+      state.user = { _id: null, friends: [], role: "", favorites: [] };
       state.token = null;
     },
     setFriends: (state, action) => {
@@ -50,24 +50,30 @@ export const authSlice = createSlice({
       state.posts = updatedPosts;
     },
     removePost: (state, action) => {
-      state.posts = state.posts.filter((post) => post._id !== action.payload.postId);
+      state.posts = state.posts.filter(
+        (post) => post._id !== action.payload.postId
+      );
     },
     setActivities: (state, action) => {
       state.activities = action.payload;
     },
     setActivity: (state, action) => {
-      const updatedActivities = state.activities.map((activity) => {
-        if (activity._id === action.payload.activity._id) {
-          return {
-            ...action.payload.activity,
-          };
-        }
-        return activity;
-      });
-      state.activities = updatedActivities;
+      const updatedActivity = action.payload.activity;
+      state.activities = state.activities.map((activity) =>
+        activity._id === updatedActivity._id ? updatedActivity : activity
+      );
     },
     removeActivity: (state, action) => {
-      state.activities = state.activities.filter((activity) => activity._id !== action.payload.activityId);
+      state.activities = state.activities.filter(
+        (activity) => activity._id !== action.payload.activityId
+      );
+    },
+    setFavorites: (state, action) => {
+      if (state.user) {
+        state.user.favorites = action.payload.favorites;
+      } else {
+        console.error("User does not exist");
+      }
     },
   },
 });
@@ -83,6 +89,7 @@ export const {
   setActivities,
   setActivity,
   removeActivity,
+  setFavorites,
 } = authSlice.actions;
 
 export default authSlice.reducer;

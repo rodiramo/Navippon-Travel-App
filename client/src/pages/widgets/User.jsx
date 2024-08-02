@@ -1,23 +1,36 @@
 import PropTypes from "prop-types";
 import { EditOutlined, Close } from "@mui/icons-material";
-import { Box, Input, Typography, Divider, useTheme, IconButton, Dialog, DialogTitle, DialogContent, TextField, Button } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Divider,
+  useTheme,
+  IconButton,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Button,
+} from "@mui/material";
 import UserImage from "../../components/UserImage.jsx";
 import FlexBetween from "../../components/FlexBetween.jsx";
 import WidgetWrapper from "../../components/Wrapper.jsx";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Dropzone from "react-dropzone";
 
 const User = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null);
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    firstName: "",
+    lastName: "",
     image: null,
   });
+  const [hasSelectedImage, setHasSelectedImage] = useState(false);
   const { palette } = useTheme();
-  const [imagePreview, setImagePreview] = useState(picturePath); 
+  const [imagePreview, setImagePreview] = useState(picturePath);
   const navigate = useNavigate();
   const token = useSelector((state) => state.token);
   const dark = palette.neutral.dark;
@@ -36,7 +49,6 @@ const User = ({ userId, picturePath }) => {
       lastName: data.lastName,
       image: null,
     });
-
     setImagePreview(data.picturePath);
   };
 
@@ -62,10 +74,13 @@ const User = ({ userId, picturePath }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleImageChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setFormData({ ...formData, image: e.target.files[0] });
-      }
+  const handleImageChange = (acceptedFiles) => {
+    if (acceptedFiles.length > 0) {
+      const file = acceptedFiles[0];
+      setFormData({ ...formData, image: file });
+      setImagePreview(URL.createObjectURL(file));
+      setHasSelectedImage(true);
+    }
   };
 
   const handleSave = async () => {
@@ -75,7 +90,7 @@ const User = ({ userId, picturePath }) => {
     if (formData.image) {
       formDataToSend.append("picture", formData.image);
     }
-  
+
     const response = await fetch(`http://localhost:3333/users/${userId}`, {
       method: "PATCH",
       headers: {
@@ -83,19 +98,18 @@ const User = ({ userId, picturePath }) => {
       },
       body: formDataToSend,
     });
-  
+
     if (!response.ok) {
       console.error("Failed to update user");
     } else {
       const data = await response.json();
       setUser(data);
-      setImagePreview(data.picturePath); 
+      setImagePreview(data.picturePath);
       setOpen(false);
       window.location.reload();
     }
   };
-  
-  
+
   return (
     <WidgetWrapper>
       {/* FIRST ROW */}
@@ -123,7 +137,11 @@ const User = ({ userId, picturePath }) => {
           </Box>
         </FlexBetween>
         <IconButton onClick={handleEditUser}>
-        <EditOutlined sx={{ color: main }} />
+          <EditOutlined
+            sx={{
+              color: palette.primary.main,
+            }}
+          />
         </IconButton>
       </FlexBetween>
 
@@ -160,7 +178,7 @@ const User = ({ userId, picturePath }) => {
             aria-label="close"
             onClick={handleClose}
             sx={{
-              position: 'absolute',
+              position: "absolute",
               right: 8,
               top: 8,
               color: (theme) => theme.palette.grey[500],
@@ -191,19 +209,48 @@ const User = ({ userId, picturePath }) => {
             value={formData.lastName}
             onChange={handleChange}
           />
-           <Input
-            accept="image/*"
-            type="file"
-            onChange={handleImageChange}
-            sx={{ mt: 2 }}
-          />
-          {imagePreview && (
-            <Box mt={2}>
-              <img src={imagePreview} alt="Preview" style={{ width: '100px', height: '100px', objectFit: 'cover' }} />
-            </Box>
-          )}
+          <Dropzone
+            acceptedFiles=".jpg,.jpeg,.png"
+            multiple={false}
+            onDrop={handleImageChange}
+          >
+            {({ getRootProps, getInputProps }) => (
+              <section>
+                <div
+                  {...getRootProps({ className: "dropzone" })}
+                  style={{
+                    border: `2px dashed ${palette.primary.main}`,
+                    padding: "1rem",
+                    marginTop: "1rem",
+                    borderRadius: "8px",
+                    textAlign: "center",
+                    color: palette.text.secondary,
+                  }}
+                >
+                  <input {...getInputProps()} />
+                  <Typography>
+                    Drag and drop an image here, or click to select one
+                  </Typography>
+                </div>
+                {hasSelectedImage && imagePreview && (
+                  <Box mt={2}>
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      style={{
+                        width: "100px",
+                        height: "100px",
+                        objectFit: "cover",
+                        borderRadius: "8px",
+                      }}
+                    />
+                  </Box>
+                )}
+              </section>
+            )}
+          </Dropzone>
         </DialogContent>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }}>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", p: 2 }}>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
@@ -222,4 +269,3 @@ User.propTypes = {
 };
 
 export default User;
-
