@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setActivities } from "../../state/state.js";
 import ActivityWidget from "./ActivityWidget.jsx";
 import { useNavigate } from "react-router-dom";
-import "../ActivitiesPage/activities.css";
+import "../ActivitiesPage/Activities.css";
 import SuccessMessage from "../../components/SuccessMessage.jsx";
 import ErrorMessage from "../../components/ErrorMessage.jsx";
 

@@ -12,6 +12,7 @@ import {
   useTheme,
   Typography,
   Button,
+  Box,
   Dialog,
   DialogTitle,
   DialogActions,
@@ -23,8 +24,7 @@ import FlexBetween from "../../components/FlexBetween.jsx";
 import WidgetWrapper from "../../components/Wrapper.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import { setActivity } from "../../state/state.js";
-import "../ActivitiesPage/activities.css";
-
+import "../ActivitiesPage/Activity.css";
 const ActivitySmall = ({
   activityId,
   activityName,
@@ -144,10 +144,8 @@ const ActivitySmall = ({
         throw new Error("Failed to update favorite activities");
       }
 
-      // Update saved state based on server response
       setIsSaved(!isSaved);
 
-      // Fetch updated activity details if needed
       const activityResponse = await fetch(
         `http://localhost:3333/activities/${activityId}`,
         {
@@ -185,112 +183,117 @@ const ActivitySmall = ({
   };
 
   return (
-    <WidgetWrapper m="2rem 0" className="activity-item">
-      <img
-        src={`http://localhost:3333/assets/${coverPath}`}
-        alt={activityName}
-        className="activity-image"
-      />
-      <div className="activity-details">
-        <Typography variant="h4" color="primary" className="activity-title">
-          {activityName}{" "}
-          <span className="prefecture-badge">
-            {prefecture && prefecture.name ? prefecture.name : "Loading..."}
-          </span>
-        </Typography>
-        <Typography style={{ color: palette.primary.black }}>
-          Categories:{" "}
-          {categoryDetails.length
-            ? categoryDetails.map((category) => category.category).join(", ")
-            : "No categories"}
-        </Typography>
-        <Typography color="text.secondary" className="activity-description">
-          {description}
-        </Typography>
-
-        <Typography style={{ color: palette.primary.black }} className="budget">
-          {budget && budget.abbreviation ? budget.abbreviation : "Loading..."}
-        </Typography>
-        <FlexBetween className="wrap-buttons">
-          <Button
-            variant="contained"
-            style={{
-              color: palette.primary.white,
-              backgroundColor: palette.secondary.main,
-            }}
-            className="button-detail"
-            onClick={handleViewDetails}
-          >
-            View Details
-          </Button>
-          {role === "admin" && (
-            <>
-              <IconButton onClick={handleEdit}>
-                <EditOutlined />
-              </IconButton>
-              <IconButton onClick={handleOpenDeleteModal}>
-                <DeleteOutlined />
-              </IconButton>
-            </>
-          )}
-        </FlexBetween>
-      </div>
-      <IconButton
-        className="favorite"
-        style={{
-          backgroundColor: palette.primary.main,
-          color: palette.primary.white,
-        }}
-        onClick={patchSave}
-      >
-        {isSaved ? (
-          <FavoriteOutlined sx={{ color: "#fff" }} />
-        ) : (
-          <FavoriteBorderOutlined />
-        )}
-      </IconButton>
-
-      {/* Delete Modal */}
-      <Dialog open={openDeleteModal} onClose={handleCloseDeleteModal}>
-        <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Are you sure you want to delete this activity? This action cannot be
-            undone.
+    <WidgetWrapper className="container-favorites activity-item activity-item-profile">
+      <Box className="">
+        <img
+          src={`http://localhost:3333/assets/${coverPath}`}
+          alt={activityName}
+          className="activity-image-profile"
+        />
+        <div className="activity-details">
+          <Typography variant="h4" color="primary" className="activity-title">
+            {activityName}{" "}
+            <span className="prefecture-badge">
+              {prefecture && prefecture.name ? prefecture.name : "Loading..."}
+            </span>
           </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDeleteModal} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleDelete} color="secondary">
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+          <Typography style={{ color: palette.primary.black }}>
+            Categories:{" "}
+            {categoryDetails.length
+              ? categoryDetails.map((category) => category.category).join(", ")
+              : "No categories"}
+          </Typography>
+          <Typography color="text.secondary" className="activity-description">
+            {description}
+          </Typography>
 
-      {/* Snackbar for notifications */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        sx={{
-          "& .MuiSnackbarContent-root": {
-            width: "auto",
-            maxWidth: "80%",
-            margin: "0 auto",
-          },
-        }}
-      >
-        <Alert
-          onClose={() => setSnackbarOpen(false)}
-          severity={snackbarSeverity}
-          sx={{ width: "100%" }}
+          <Typography
+            style={{ color: palette.primary.black }}
+            className="budget-profile"
+          >
+            {budget && budget.abbreviation ? budget.abbreviation : "Loading..."}
+          </Typography>
+          <FlexBetween className="wrap-buttons">
+            <Button
+              variant="contained"
+              style={{
+                color: palette.primary.white,
+                backgroundColor: palette.secondary.main,
+              }}
+              className="button-detail"
+              onClick={handleViewDetails}
+            >
+              View Details
+            </Button>
+            {role === "admin" && (
+              <>
+                <IconButton onClick={handleEdit}>
+                  <EditOutlined />
+                </IconButton>
+                <IconButton onClick={handleOpenDeleteModal}>
+                  <DeleteOutlined />
+                </IconButton>
+              </>
+            )}
+          </FlexBetween>
+        </div>
+        <IconButton
+          className="favorite-profile"
+          style={{
+            backgroundColor: palette.primary.main,
+            color: palette.primary.white,
+          }}
+          onClick={patchSave}
         >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+          {isSaved ? (
+            <FavoriteOutlined sx={{ color: "#fff" }} />
+          ) : (
+            <FavoriteBorderOutlined />
+          )}
+        </IconButton>
+
+        {/* Delete Modal */}
+        <Dialog open={openDeleteModal} onClose={handleCloseDeleteModal}>
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogContent>
+            <Typography>
+              Are you sure you want to delete this activity? This action cannot
+              be undone.
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDeleteModal} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleDelete} color="secondary">
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Snackbar for notifications */}
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000}
+          onClose={() => setSnackbarOpen(false)}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          sx={{
+            "& .MuiSnackbarContent-root": {
+              width: "auto",
+              maxWidth: "80%",
+              margin: "0 auto",
+            },
+          }}
+        >
+          <Alert
+            onClose={() => setSnackbarOpen(false)}
+            severity={snackbarSeverity}
+            sx={{ width: "100%" }}
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
+      </Box>
     </WidgetWrapper>
   );
 };

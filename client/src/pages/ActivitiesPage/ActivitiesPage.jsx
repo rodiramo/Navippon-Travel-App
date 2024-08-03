@@ -1,7 +1,7 @@
 import NavBar from "../../components/NavBar/Navbar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
 import ActivitiesWidget from "../widgets/ActivitiesWidget.jsx";
-import "./activities.css";
+import "./Activities.css";
 import { Button } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";

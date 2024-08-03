@@ -23,7 +23,7 @@ import FlexBetween from "../../components/FlexBetween.jsx";
 import WidgetWrapper from "../../components/Wrapper.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import { setActivity } from "../../state/state.js";
-import "../ActivitiesPage/activities.css";
+import "../ActivitiesPage/Activities.css";
 
 const ActivityWidget = ({
   activityId,
