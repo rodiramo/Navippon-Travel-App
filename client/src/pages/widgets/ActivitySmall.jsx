@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
   EditOutlined,
-  FavoriteOutlined,
   DeleteOutlined,
   FavoriteBorderOutlined,
 } from "@mui/icons-material";
@@ -30,11 +29,11 @@ const ActivitySmall = ({
   activityId,
   activityName,
   description,
+  isFavorite = false,
   coverPath,
   categories = [],
   prefecture = {},
   budget = {},
-  isFavorite,
   onDelete,
 }) => {
   const navigate = useNavigate();
@@ -85,12 +84,19 @@ const ActivitySmall = ({
   const handleDelete = async () => {
     try {
       if (onDelete) {
-        await onDelete(activityId); // Use the onDelete prop here
+        await onDelete(activityId);
       }
+
+      setSnackbarMessage("Activity deleted successfully!");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
     } catch (error) {
       console.error("Failed to delete activity:", error.message);
+      setSnackbarMessage("Failed to delete activity. Please try again.");
+      setSnackbarSeverity("error");
+    } finally {
+      handleCloseDeleteModal();
     }
-    handleCloseDeleteModal();
   };
 
   const handleViewDetails = () => navigate(`/activities/${activityId}`);
@@ -182,15 +188,25 @@ const ActivitySmall = ({
           <FlexBetween className="wrap-buttons">
             <Button
               variant="contained"
-              style={{
-                color: palette.primary.white,
-                backgroundColor: palette.secondary.main,
-              }}
               className="button-detail"
               onClick={handleViewDetails}
             >
               View Details
-            </Button>
+            </Button>{" "}
+            <IconButton onClick={handleFavoriteToggle}>
+              {isFavorite ? (
+                <Typography
+                  style={{
+                    color: palette.primary.main,
+                    textDecoration: "underline",
+                  }}
+                >
+                  Remove from Favorites
+                </Typography>
+              ) : (
+                <FavoriteBorderOutlined />
+              )}
+            </IconButton>
             {role === "admin" && (
               <>
                 <IconButton onClick={handleEdit}>
@@ -203,20 +219,6 @@ const ActivitySmall = ({
             )}
           </FlexBetween>
         </div>
-        <IconButton
-          className="favorite-profile"
-          style={{
-            backgroundColor: palette.primary.main,
-            color: palette.primary.white,
-          }}
-          onClick={handleFavoriteToggle}
-        >
-          {isFavorite ? (
-            <FavoriteOutlined sx={{ color: "#fff" }} />
-          ) : (
-            <FavoriteBorderOutlined />
-          )}
-        </IconButton>
 
         {/* Delete Modal */}
         <Dialog open={openDeleteModal} onClose={handleCloseDeleteModal}>
@@ -277,7 +279,7 @@ ActivitySmall.propTypes = {
     abbreviation: PropTypes.string,
   }),
   isFavorite: PropTypes.bool.isRequired,
-  onDelete: PropTypes.func,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default ActivitySmall;

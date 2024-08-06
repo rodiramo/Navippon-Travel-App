@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import {
   Grid,
@@ -9,6 +9,7 @@ import {
   useTheme,
 } from "@mui/material";
 import ActivitySmall from "./ActivitySmall.jsx";
+import { setActivities } from "../../state/state.js";
 
 const FavoriteActivities = () => {
   const theme = useTheme();
@@ -20,7 +21,7 @@ const FavoriteActivities = () => {
   const token = useSelector((state) => state.token);
   const [prefectureMap, setPrefectureMap] = useState({});
   const [budgetMap, setBudgetMap] = useState({});
-  const [favoritesSet, setFavoritesSet] = useState(new Set());
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchPrefecturesAndBudgets = async () => {
@@ -73,13 +74,11 @@ const FavoriteActivities = () => {
         }
 
         const data = await response.json();
-        const favoritesSet = new Set(data.map((activity) => activity._id));
-        setFavoritesSet(favoritesSet);
-
         const transformedData = data.map((activity) => ({
           ...activity,
           prefecture: { name: prefectureMap[activity.prefecture] || "Unknown" },
           budget: { abbreviation: budgetMap[activity.budget] || "Unknown" },
+          isFavorite: true, // Assuming all activities in this list are favorites
         }));
 
         setFavoriteActivities(transformedData);
@@ -96,15 +95,14 @@ const FavoriteActivities = () => {
     }
   }, [userId, token, prefectureMap, budgetMap]);
 
-  const handleRemoveFromFavorites = async (activityId) => {
+  const handleDelete = async (activityId) => {
     try {
       const response = await fetch(
-        `http://localhost:3333/users/${userId}/favorites/${activityId}`,
+        `http://localhost:3333/activities/${activityId}`,
         {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
           },
         }
       );
@@ -112,17 +110,22 @@ const FavoriteActivities = () => {
       if (!response.ok) {
         const errorText = await response.text();
         console.error("Error response from server:", errorText);
-        throw new Error("Failed to remove from favorites");
+        throw new Error("Failed to delete activity");
       }
 
-      setFavoritesSet((prevSet) => {
-        const updatedSet = new Set(prevSet);
-        updatedSet.delete(activityId);
-        return updatedSet;
-      });
+      // Update the state after deletion
+      setFavoriteActivities((prevActivities) =>
+        prevActivities.filter((activity) => activity._id !== activityId)
+      );
+
+      dispatch(
+        setActivities(
+          favoriteActivities.filter((activity) => activity._id !== activityId)
+        )
+      );
     } catch (error) {
       setError(error.message);
-      console.error("Failed to remove from favorites", error);
+      console.error("Failed to delete activity", error);
     }
   };
 
@@ -151,8 +154,8 @@ const FavoriteActivities = () => {
                 categories={activity.categories}
                 prefecture={activity.prefecture}
                 budget={activity.budget}
-                isFavorite={favoritesSet.has(activity._id)}
-                onDelete={() => handleRemoveFromFavorites(activity._id)}
+                isFavorite={activity.isFavorite}
+                onDelete={() => handleDelete(activity._id)}
               />
             </Grid>
           ))

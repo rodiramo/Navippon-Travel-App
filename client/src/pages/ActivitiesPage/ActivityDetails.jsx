@@ -5,6 +5,7 @@ import {
   Typography,
   CircularProgress,
   Box,
+  useTheme,
   Breadcrumbs,
   Link,
 } from "@mui/material";
@@ -13,6 +14,7 @@ import Footer from "../../components/Footer/Footer.jsx";
 import "./ActivityDetail.css";
 
 const ActivityDetails = () => {
+  const { palette } = useTheme();
   const { id } = useParams();
   const [activity, setActivity] = useState(null);
   const [categoryDetails, setCategoryDetails] = useState([]);
@@ -32,7 +34,6 @@ const ActivityDetails = () => {
 
         const data = await response.json();
         setActivity(data);
-
         fetchCategoryDetails(data.categories);
       } catch (error) {
         console.error("Error fetching activity:", error.message);
@@ -93,13 +94,17 @@ const ActivityDetails = () => {
           variant="h1"
           color="primary"
           className="activity-title"
-          sx={{ mt: 2 }}
+          sx={{ mt: 2, fontWeight: "bold", color: palette.primary.black }}
         >
           {activity.activityName}
         </Typography>
       </Box>
       <Box className="activity-body">
-        <Typography className="activity-description" sx={{ mb: 3 }}>
+        <Typography
+          className="activity-description"
+          sx={{ mb: 3 }}
+          style={{ color: palette.primary.dark }}
+        >
           {activity.description}
         </Typography>
         <Box
@@ -113,7 +118,14 @@ const ActivityDetails = () => {
                 <Typography
                   key={category.category}
                   variant="body2"
-                  sx={{ mx: 1, fontWeight: "bold", color: "primary.main" }}
+                  sx={{
+                    mx: 1,
+                    fontWeight: "bold",
+                    color: "#FF4081",
+                    padding: 1,
+                    borderRadius: 20,
+                    backgroundColor: "#FFE4E7",
+                  }}
                 >
                   {category.category}
                 </Typography>
@@ -122,7 +134,7 @@ const ActivityDetails = () => {
         </Box>
         <Typography className="activity-location" sx={{ mb: 1 }}>
           <strong>Prefecture:</strong>{" "}
-          <Typography component="span" sx={{ color: "primary.main" }}>
+          <Typography component="span" style={{ color: palette.primary.black }}>
             {activity.prefecture ? activity.prefecture.name : "Loading..."}
           </Typography>
         </Typography>
@@ -133,8 +145,9 @@ const ActivityDetails = () => {
             sx={{
               display: "inline-block",
               padding: "0.25em 0.5em",
+              color: "#305D7F",
               borderRadius: "12px",
-              backgroundColor: "#e0f7fa",
+              backgroundColor: "#CBE3EB",
               fontWeight: "bold",
             }}
           >

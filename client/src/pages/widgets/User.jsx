@@ -34,8 +34,6 @@ const User = ({ userId, picturePath }) => {
   const navigate = useNavigate();
   const token = useSelector((state) => state.token);
   const dark = palette.neutral.dark;
-  const medium = palette.neutral.medium;
-  const main = palette.neutral.main;
 
   const getUser = async () => {
     const response = await fetch(`http://localhost:3333/users/${userId}`, {
@@ -149,15 +147,14 @@ const User = ({ userId, picturePath }) => {
 
       <Divider />
 
-      {/* THIRD ROW */}
+      {/* THIRD ROW 
       <Box p="1rem 0">
         <Typography fontSize="1rem" color={main} fontWeight="500" mb="1rem">
-          Interests
+          Preferences
         </Typography>
 
         <FlexBetween gap="1rem" mb="0.5rem">
           <FlexBetween gap="1rem">
-            {/* Change to user interests from database */}
             <img src="../assets/twitter.png" alt="twitter" />
             <Box>
               <Typography color={main} fontWeight="500">
@@ -169,7 +166,7 @@ const User = ({ userId, picturePath }) => {
           <EditOutlined sx={{ color: main }} />
         </FlexBetween>
       </Box>
-
+      */}
       {/* EDIT USER MODAL */}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>

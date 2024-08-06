@@ -21,9 +21,7 @@ import {
 } from "@mui/material";
 import FlexBetween from "../../components/FlexBetween.jsx";
 import WidgetWrapper from "../../components/Wrapper.jsx";
-import { useSelector, useDispatch } from "react-redux";
-import { setActivity } from "../../state/state.js";
-
+import { useSelector } from "react-redux";
 import "../ActivitiesPage/Activities.css";
 
 const ActivityWidget = ({
@@ -34,6 +32,7 @@ const ActivityWidget = ({
   categories = [],
   prefecture,
   budget,
+  onSave,
   onDelete,
 }) => {
   const navigate = useNavigate();
@@ -43,11 +42,8 @@ const ActivityWidget = ({
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-  const loggedInUserId = useSelector((state) => state.user._id);
   const [isSaved, setIsSaved] = useState(false);
-  const role = useSelector((state) => state.user.role);
-  const dispatch = useDispatch();
-  const token = useSelector((state) => state.token);
+  const role = useSelector((state) => state.user.role); // Get role from Redux
 
   useEffect(() => {
     const fetchCategoryDetails = async () => {
@@ -75,37 +71,7 @@ const ActivityWidget = ({
     fetchCategoryDetails();
   }, [categories]);
 
-  useEffect(() => {
-    const checkIfSaved = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:3333/users/${loggedInUserId}/favorites`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (!response.ok)
-          throw new Error("Failed to fetch favorite activities");
-
-        const favorites = await response.json();
-        setIsSaved(favorites.includes(activityId));
-      } catch (error) {
-        console.error("Error fetching favorite activities:", error.message);
-      }
-    };
-
-    if (loggedInUserId) {
-      checkIfSaved();
-    }
-  }, [loggedInUserId, activityId, token]);
-
-  const handleEdit = () => {
-    navigate(`/edit-activity/${activityId}`);
-  };
-
+  const handleEdit = () => navigate(`/edit-activity/${activityId}`);
   const handleOpenDeleteModal = () => setOpenDeleteModal(true);
   const handleCloseDeleteModal = () => setOpenDeleteModal(false);
 
@@ -113,61 +79,44 @@ const ActivityWidget = ({
     try {
       if (onDelete) {
         await onDelete(activityId);
+        setSnackbarMessage("Activity deleted successfully!");
+        setSnackbarSeverity("success");
       }
     } catch (error) {
       console.error("Failed to delete activity:", error.message);
+      setSnackbarMessage("Failed to delete activity. Please try again.");
+      setSnackbarSeverity("error");
+    } finally {
+      setSnackbarOpen(true);
+      handleCloseDeleteModal();
     }
-    handleCloseDeleteModal();
   };
 
   const handleViewDetails = () => navigate(`/activities/${activityId}`);
 
-  const patchSave = async () => {
+  const handleSave = async () => {
     try {
-      const method = isSaved ? "DELETE" : "PATCH";
-      const response = await fetch(
-        `http://localhost:3333/users/${loggedInUserId}/favorites/${activityId}`,
-        {
-          method: method,
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || "Failed to update favorite activities");
+      if (onSave) {
+        await onSave(isSaved);
+        setIsSaved(!isSaved);
+        setSnackbarMessage(
+          isSaved ? "Removed from favorites!" : "Added to favorites!"
+        );
+        setSnackbarSeverity("success");
       }
-
-      const updatedActivity = await response.json();
-      setIsSaved(!isSaved);
-
-      // Update activity details in Redux store
-      dispatch(setActivity({ activity: updatedActivity }));
-
-      setSnackbarMessage(
-        isSaved
-          ? "Activity removed from your profile!"
-          : "Activity has been saved to your profile!"
-      );
-      setSnackbarSeverity(isSaved ? "info" : "success");
     } catch (error) {
       console.error("Error updating favorite activities:", error.message);
-
       setSnackbarMessage("Failed to save activity. Please try again.");
       setSnackbarSeverity("error");
-    } finally {
-      setSnackbarOpen(true);
     }
+    setSnackbarOpen(true);
   };
 
   return (
     <WidgetWrapper
       m="2rem 0"
       className="activity-item"
-      style={{ color: palette.primary.white }}
+      style={{ backgroundColor: palette.primary.white }}
     >
       <img
         src={`http://localhost:3333/assets/${coverPath}`}
@@ -179,7 +128,7 @@ const ActivityWidget = ({
         <Typography variant="h4" color="primary" className="activity-title">
           {activityName}{" "}
           <span className="prefecture-badge">
-            {prefecture && prefecture.name ? prefecture.name : "Loading..."}
+            {prefecture?.name || "Loading..."}
           </span>
         </Typography>
         <Typography style={{ color: palette.primary.black }}>
@@ -188,20 +137,18 @@ const ActivityWidget = ({
             ? categoryDetails.map((category) => category.category).join(", ")
             : "No categories"}
         </Typography>
-        <Typography color="text.secondary" className="activity-description">
+        <Typography
+          style={{ color: palette.primary.black }}
+          className="activity-description"
+        >
           {description}
         </Typography>
-
         <Typography style={{ color: palette.primary.black }} className="budget">
-          {budget && budget.abbreviation ? budget.abbreviation : "Loading..."}
+          {budget?.abbreviation || "Loading..."}
         </Typography>
         <FlexBetween className="wrap-buttons">
           <Button
             variant="contained"
-            style={{
-              color: palette.primary.white,
-              backgroundColor: palette.secondary.main,
-            }}
             className="button-detail"
             onClick={handleViewDetails}
           >
@@ -225,7 +172,7 @@ const ActivityWidget = ({
           backgroundColor: palette.primary.main,
           color: palette.primary.white,
         }}
-        onClick={patchSave}
+        onClick={handleSave}
       >
         {isSaved ? (
           <FavoriteOutlined sx={{ color: "#fff" }} />
@@ -234,7 +181,6 @@ const ActivityWidget = ({
         )}
       </IconButton>
 
-      {/* Delete Modal */}
       <Dialog open={openDeleteModal} onClose={handleCloseDeleteModal}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
@@ -290,7 +236,8 @@ ActivityWidget.propTypes = {
   budget: PropTypes.shape({
     abbreviation: PropTypes.string,
   }),
-  onDelete: PropTypes.func,
+  onSave: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default ActivityWidget;

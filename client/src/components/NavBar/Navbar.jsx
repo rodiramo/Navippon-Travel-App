@@ -39,7 +39,7 @@ const NavBar = () => {
   };
 
   const handleMyTripsClick = () => {
-    navigate("/my-trips");
+    navigate("/trips");
   };
 
   return (
@@ -63,7 +63,7 @@ const NavBar = () => {
           <Typography
             fontWeight="bold"
             fontSize="clamp(0.75rem, 1.5rem, 1.75rem)"
-            color="primary.white"
+            color="primary.light"
             sx={{
               "&:hover": {
                 color: theme.palette.primary.light,
@@ -117,7 +117,7 @@ const NavBar = () => {
           <UserProfilePicture userId={_id} picturePath={picturePath} />
           <FormControl variant="standard">
             <Select
-              value="My Profile"
+              value="my-profile"
               renderValue={() => <Typography>{fullName}</Typography>}
               sx={{
                 backgroundColor: neutralLight,
@@ -135,7 +135,7 @@ const NavBar = () => {
               }}
               input={<InputBase />}
             >
-              <MenuItem onClick={handleProfileClick}>
+              <MenuItem value="my-profile" onClick={handleProfileClick}>
                 <Button
                   variant="text"
                   color="inherit"
@@ -144,7 +144,7 @@ const NavBar = () => {
                   <Typography>My Profile</Typography>
                 </Button>
               </MenuItem>
-              <MenuItem onClick={handleMyTripsClick}>
+              <MenuItem value="my-trips" onClick={handleMyTripsClick}>
                 <Button
                   variant="text"
                   color="inherit"
@@ -153,7 +153,9 @@ const NavBar = () => {
                   <Typography>My Trips</Typography>
                 </Button>
               </MenuItem>
-              <MenuItem onClick={() => dispatch(setLogout())}>Log Out</MenuItem>
+              <MenuItem value="logout" onClick={() => dispatch(setLogout())}>
+                Log Out
+              </MenuItem>
             </Select>
           </FormControl>
 
@@ -218,14 +220,7 @@ const NavBar = () => {
                 Activities
               </Typography>
             </Link>
-            <Link to="/discover" style={{ textDecoration: "none" }}>
-              <Typography
-                variant="body1"
-                sx={{ color: theme.palette.primary.light, cursor: "pointer" }}
-              >
-                Discover
-              </Typography>
-            </Link>
+
             <Link to="/posts" style={{ textDecoration: "none" }}>
               <Typography
                 variant="body1"

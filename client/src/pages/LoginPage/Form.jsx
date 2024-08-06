@@ -54,8 +54,9 @@ const Form = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
+  const [generalError, setGeneralError] = useState(null);
 
-  // Handle user registration
+  //register
   const register = async (values, onSubmitProps) => {
     const formData = new FormData();
     for (let value in values) {
@@ -78,18 +79,22 @@ const Form = () => {
     }
   };
 
-  // Handle user login
+  // login
   const login = async (values, onSubmitProps) => {
-    const loggedInResponse = await fetch("http://localhost:3333/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    });
+    try {
+      const loggedInResponse = await fetch("http://localhost:3333/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
 
-    const loggedIn = await loggedInResponse.json();
-    onSubmitProps.resetForm();
-    if (loggedIn) { 
-      console.log('Logged In User:', loggedIn.user); 
+      if (!loggedInResponse.ok) {
+        throw new Error("User info not found"); // Handle specific error message
+      }
+
+      const loggedIn = await loggedInResponse.json();
+      onSubmitProps.resetForm();
+      console.log("Logged In User:", loggedIn.user);
       dispatch(
         setLogin({
           user: loggedIn.user,
@@ -97,11 +102,16 @@ const Form = () => {
         })
       );
       navigate("/home");
+    } catch (error) {
+      // Set error message in form state to be displayed to user
+      console.error("Login error:", error.message);
+      setGeneralError(error.message); // Update general error state
     }
   };
 
-  // Form submission handler
+  //submit
   const handleFormSubmit = async (values, onSubmitProps) => {
+    setGeneralError(null); // Clear previous errors
     if (isLogin) await login(values, onSubmitProps);
     if (isRegister) await register(values, onSubmitProps);
   };
@@ -131,6 +141,11 @@ const Form = () => {
               "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
             }}
           >
+            {generalError && (
+              <Typography color="error" gridColumn="span 4">
+                {generalError}
+              </Typography>
+            )}
             {isRegister && (
               <>
                 <TextField
@@ -139,7 +154,9 @@ const Form = () => {
                   onChange={handleChange}
                   value={values.firstName}
                   name="firstName"
-                  error={Boolean(touched.firstName) && Boolean(errors.firstName)}
+                  error={
+                    Boolean(touched.firstName) && Boolean(errors.firstName)
+                  }
                   helperText={touched.firstName && errors.firstName}
                   sx={{ gridColumn: "span 2" }}
                 />

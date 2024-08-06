@@ -38,7 +38,7 @@ export const createActivity = async (req, res) => {
       .populate("prefecture")
       .populate("budget");
 
-    res.status(201).json(newActivity);
+    res.status(201).json({ activities });
   } catch (err) {
     res.status(409).json({ message: err.message });
   }

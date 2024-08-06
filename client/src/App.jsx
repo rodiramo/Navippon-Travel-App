@@ -10,8 +10,8 @@ import ProfilePage from "./pages/ProfilePage/Profile.jsx";
 import ActivityDetails from "./pages/ActivitiesPage/ActivityDetails.jsx";
 import ActivitiesPage from "./pages/ActivitiesPage/ActivitiesPage.jsx";
 import AboutUsPage from "./pages/AboutUsPage/AboutUsPage.jsx";
-import TripsWidget from "./pages/widgets/TripsWidget.jsx";
 import TripView from "./components/TripView.jsx";
+import UserTripsPage from "./pages/TripPage/UserTripPage.jsx";
 import BlogPage from "./pages/BlogPage/BlogPage.jsx";
 import FilteredCategoriesPage from "./pages/ActivitiesPage/FilteredCategoriesPage.jsx";
 import FilteredPrefecturePage from "./pages/ActivitiesPage/FilteredPrefecturePage.jsx";
@@ -48,7 +48,7 @@ function App() {
               path="/activities/filtered-prefecture/:prefectureId"
               element={<FilteredPrefecturePage />}
             />
-            <Route path="/trips" element={<TripsWidget />} />
+            <Route path="/trips" element={<UserTripsPage />} />
             <Route path="/trips/:tripId" element={<TripView />} />
             <Route path="/activities/:id" element={<ActivityDetails />} />
             <Route path="/create-activity" element={<ActivityForm />} />

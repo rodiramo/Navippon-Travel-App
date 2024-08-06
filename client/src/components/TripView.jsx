@@ -57,26 +57,26 @@ const TripView = () => {
     <Box>
       <NavBar />
       <Box mt={2} p={2}>
-        <Typography variant="h4" color={primaryMain}>
+        <Typography variant="h1" color={primaryMain}>
           {trip.title}
         </Typography>
-        <Typography variant="h6" color="textSecondary">
+        <Typography variant="h2" color="textSecondary">
           {`${formatDate(trip.startDate)} to ${formatDate(trip.endDate)}`}
         </Typography>
         <Typography variant="body1" mt={2}>
           {trip.description}
         </Typography>
         <Box mt={2}>
-          <Typography variant="h6">Prefecture:</Typography>
+          <Typography variant="h2">Prefecture:</Typography>
           <Typography>{trip.prefecture.name}</Typography>
         </Box>
         <Box mt={2}>
-          <Typography variant="h6">Budget:</Typography>
+          <Typography variant="h2">Budget:</Typography>
           <Typography>{trip.budget.name}</Typography>{" "}
           {/* Adjust this if necessary */}
         </Box>
         <Box mt={2}>
-          <Typography variant="h6">Categories:</Typography>
+          <Typography variant="h2">Categories:</Typography>
           <List>
             {trip.categories.map((category) => (
               <ListItem key={category._id}>
@@ -86,7 +86,7 @@ const TripView = () => {
           </List>
         </Box>
         <Box mt={2}>
-          <Typography variant="h6">Days ({trip.days.length}):</Typography>
+          <Typography variant="h2">Days ({trip.days.length}):</Typography>
           <List>
             {trip.days.map((day) => (
               <ListItem key={day}>

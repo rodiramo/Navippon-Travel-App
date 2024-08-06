@@ -13,6 +13,7 @@ const LoginPage = () => {
         textAlign="center"
       >
         <Typography
+          variant="h1"
           fontWeight="bold"
           fontSize="32px"
           color="primary"

@@ -8,7 +8,7 @@ import Footer from "../../components/Footer/Footer.jsx";
 
 const FilteredPrefecturePage = () => {
   const [activities, setActivities] = useState([]);
-  const [prefectureName, setPrefectureName] = useState(""); // State for prefecture name
+  const [prefectureName, setPrefectureName] = useState("");
   const [error, setError] = useState(null);
   const { prefectureId } = useParams();
   const token = useSelector((state) => state.token);
@@ -52,6 +52,30 @@ const FilteredPrefecturePage = () => {
     fetchActivitiesAndPrefecture(prefectureId);
   }, [prefectureId, token]);
 
+  const handleDelete = async (activityId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3333/activities/${activityId}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to delete activity");
+      }
+
+      // Update local state
+      setActivities((prevActivities) =>
+        prevActivities.filter((activity) => activity._id !== activityId)
+      );
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
   if (error) return <Typography color="error">Error: {error}</Typography>;
 
   return (
@@ -76,7 +100,11 @@ const FilteredPrefecturePage = () => {
         <Grid container spacing={2}>
           {activities.map((activity) => (
             <Grid item key={activity._id} xs={12} sm={6} md={4}>
-              <ActivitySmall {...activity} />
+              <ActivitySmall
+                {...activity}
+                activityId={activity._id}
+                onDelete={handleDelete}
+              />
             </Grid>
           ))}
         </Grid>

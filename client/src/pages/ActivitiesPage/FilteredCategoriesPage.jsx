@@ -22,6 +22,7 @@ const FilteredCategoriesPage = () => {
 
   useEffect(() => {
     const fetchActivities = async () => {
+      setLoading(true);
       try {
         const response = await fetch(
           `http://localhost:3333/activities/filtered-category/${categoryName}`,
@@ -46,6 +47,30 @@ const FilteredCategoriesPage = () => {
 
     fetchActivities();
   }, [categoryName, token]);
+
+  const handleDelete = async (activityId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3333/activities/${activityId}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to delete activity");
+      }
+
+      // Update local state
+      setActivities((prevActivities) =>
+        prevActivities.filter((activity) => activity._id !== activityId)
+      );
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
   if (loading) return <CircularProgress />;
   if (error) return <Typography color="error">Error: {error}</Typography>;
@@ -89,7 +114,11 @@ const FilteredCategoriesPage = () => {
             <Grid container spacing={2} justifyContent="center">
               {activities.map((activity) => (
                 <Grid item key={activity._id} xs={12} sm={6} md={4}>
-                  <ActivitySmall {...activity} />
+                  <ActivitySmall
+                    {...activity}
+                    activityId={activity._id}
+                    onDelete={handleDelete}
+                  />
                 </Grid>
               ))}
             </Grid>

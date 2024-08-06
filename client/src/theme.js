@@ -64,7 +64,7 @@ export const themeSettings = (mode) => {
               dark: colorTokens.primary[200],
               main: colorTokens.primary[500],
               light: colorTokens.primary[300],
-              white: colorTokens.primary[0],
+              white: colorTokens.darkBlue[600],
               black: colorTokens.grey[0],
             },
             secondary: {

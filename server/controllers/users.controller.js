@@ -1,9 +1,67 @@
 import User from "../models/User.js";
-import Activity from "../models/Activity.js";
+import Category from "../models/Category.js";
+import Budget from "../models/Budget.js";
 import fs from "fs";
 import path from "path";
 
-/*read*/
+const getCategoriesAndBudgets = async () => {
+  try {
+    const categories = await Category.find();
+    const budgets = await Budget.find();
+    return { categories, budgets };
+  } catch (error) {
+    throw new Error("Error fetching categories or budgets");
+  }
+};
+
+export const getUserPreferences = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select("preferences");
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const { categories, budgets } = await getCategoriesAndBudgets();
+
+    res.json({
+      userPreferences: user.preferences || [],
+      categories,
+      budgets,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const createUserPreferences = async (req, res) => {
+  try {
+    const { categories, budgets } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.params.userId,
+      {
+        $set: {
+          "preferences.categories": categories,
+          "preferences.budgets": budgets,
+        },
+      },
+      { new: true }
+    );
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const {
+      categories: allCategories,
+      budgets: allBudgets,
+    } = await getCategoriesAndBudgets();
+
+    res.json({
+      message: "Preferences updated successfully!",
+      preferences: user.preferences,
+      categories: allCategories,
+      budgets: allBudgets,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const getUser = async (req, res) => {
   try {
     const { id } = req.params;
@@ -13,6 +71,7 @@ export const getUser = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
+
 export const getUserActivities = async (req, res) => {
   try {
     const { id } = req.params;
@@ -90,7 +149,6 @@ export const getUserFriends = async (req, res) => {
 
     const friends = await User.find({ _id: { $in: user.friends } });
 
-    // Return formatted list of friends
     const formattedFriends = friends.map(
       ({ _id, firstName, lastName, picturePath }) => ({
         _id,
@@ -107,7 +165,6 @@ export const getUserFriends = async (req, res) => {
   }
 };
 
-/* UPDATE */
 export const addRemoveFriend = async (req, res) => {
   try {
     const { id, friendId } = req.params;

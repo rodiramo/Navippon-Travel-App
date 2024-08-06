@@ -1,5 +1,7 @@
+// Import necessary dependencies
 import { createSlice } from "@reduxjs/toolkit";
 
+// Initial state
 const initialState = {
   mode: "light",
   user: { _id: null, friends: [], role: "", favorites: [] },
@@ -8,6 +10,7 @@ const initialState = {
   activities: [],
 };
 
+// Create slice
 export const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -55,7 +58,10 @@ export const authSlice = createSlice({
       );
     },
     setActivities: (state, action) => {
-      state.activities = action.payload;
+      state.activities = action.payload.map((activity) => ({
+        ...activity,
+        favoritedBy: activity.favoritedBy || [],
+      }));
     },
     setActivity: (state, action) => {
       const updatedActivity = action.payload.activity;
@@ -70,10 +76,29 @@ export const authSlice = createSlice({
     },
     setFavorites: (state, action) => {
       if (state.user) {
-        state.user.favorites = action.payload.favorites;
+        state.user.favorites = action.payload;
       } else {
         console.error("User does not exist");
       }
+    },
+    addFavoriteToActivity: (state, action) => {
+      const { activityId, userId } = action.payload;
+      state.activities = state.activities.map((activity) =>
+        activity._id === activityId
+          ? { ...activity, favoritedBy: [...activity.favoritedBy, userId] }
+          : activity
+      );
+    },
+    removeFavoriteFromActivity: (state, action) => {
+      const { activityId, userId } = action.payload;
+      state.activities = state.activities.map((activity) =>
+        activity._id === activityId
+          ? {
+              ...activity,
+              favoritedBy: activity.favoritedBy.filter((id) => id !== userId),
+            }
+          : activity
+      );
     },
   },
 });
@@ -90,6 +115,8 @@ export const {
   setActivity,
   removeActivity,
   setFavorites,
+  addFavoriteToActivity,
+  removeFavoriteFromActivity,
 } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -127,7 +127,7 @@ const HomePage = () => {
           <PrefecturesWidget />
         </Box>
 
-        {/* Popular Activities Section */}
+        {/* Popular Activities Section 
         <Box padding="2rem 6%">
           <Typography variant="h4" gutterBottom>
             Popular Activities
@@ -140,7 +140,6 @@ const HomePage = () => {
           ></Box>
         </Box>
 
-        {/* Blog Posts Section */}
         <Box padding="2rem 6%">
           <Typography variant="h4" gutterBottom>
             Read Our Communities Latests Posts
@@ -151,7 +150,7 @@ const HomePage = () => {
             flexWrap="wrap"
             gap="1rem"
           ></Box>
-        </Box>
+        </Box>*/}
       </Box>
       <Footer />
     </Box>

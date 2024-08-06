@@ -13,15 +13,29 @@ const FriendListWidget = ({ userId }) => {
   const friends = useSelector((state) => state.user.friends) || [];
 
   const getFriends = async () => {
+    console.log("Token:", token); // Debugging token
+
     try {
       const response = await fetch(
-        `http://localhost:3333/users/${userId}/friends`
+        `http://localhost:3333/users/${userId}/friends`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `Error fetching friends: ${response.status} - ${errorText}`
+        );
+      }
+
       const data = await response.json();
-      dispatch(setFriends(data));
+      dispatch(setFriends({ friends: data }));
     } catch (error) {
-      console.error("Error fetching friends:", error);
+      console.error("Error fetching friends:", error.message);
     }
   };
 

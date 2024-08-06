@@ -21,7 +21,7 @@ const TripsWidget = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const token = useSelector((state) => state.token);
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
   const handleToggleForm = () => {
     setShowForm((prev) => !prev);
@@ -56,7 +56,7 @@ const TripsWidget = () => {
   };
 
   const handleViewDetails = (tripId) => {
-    navigate(`/trips/${tripId}`); // Navigate to the trip details page
+    navigate(`/trips/${tripId}`);
   };
 
   return (
