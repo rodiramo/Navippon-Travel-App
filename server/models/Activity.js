@@ -1,5 +1,3 @@
-
-
 import mongoose from "mongoose";
 
 const ActivitySchema = new mongoose.Schema({
@@ -14,7 +12,7 @@ const ActivitySchema = new mongoose.Schema({
   },
   prefecture: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Prefecture",  
+    ref: "Prefecture",
   },
   coverPath: {
     type: String,
@@ -22,11 +20,10 @@ const ActivitySchema = new mongoose.Schema({
   },
   budget: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Budget",  
+    ref: "Budget",
   },
-  categories: [String], 
+  categories: [String],
   saves: { type: Map, of: Boolean },
- 
 });
 
 const Activity = mongoose.model("Activity", ActivitySchema);

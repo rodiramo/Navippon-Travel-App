@@ -12,7 +12,8 @@ import ActivitiesPage from "./pages/ActivitiesPage/ActivitiesPage.jsx";
 import DiscoverPage from "./pages/DiscoverPage/DiscoverPage.jsx";
 import AboutUsPage from "./pages/AboutUsPage/AboutUsPage.jsx";
 import BlogPage from "./pages/BlogPage/BlogPage.jsx";
-import FilteredActivities from "./pages/ActivitiesPage/FilteredActivities.jsx";
+import FilteredCategoriesPage from "./pages/ActivitiesPage/FilteredCategoriesPage.jsx";
+import FilteredPrefecturePage from "./pages/ActivitiesPage/FilteredPrefecturePage.jsx";
 import AdminPanel from "./pages/AdminPage/AdminPanel.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import ActivityForm from "./pages/ActivitiesPage/ActivityForm.jsx";
@@ -37,8 +38,12 @@ function App() {
             <Route path="/posts" element={<BlogPage />} />
             <Route path="/activities" element={<ActivitiesPage />} />
             <Route
-              path="/filtered-activities"
-              element={<FilteredActivities />}
+              path="/activities/filtered-category/:categoryName"
+              element={<FilteredCategoriesPage />}
+            />
+            <Route
+              path="/activities/filtered-prefecture/:prefectureId"
+              element={<FilteredPrefecturePage />}
             />
             <Route path="/activities/:id" element={<ActivityDetails />} />
             <Route path="/create-activity" element={<ActivityForm />} />

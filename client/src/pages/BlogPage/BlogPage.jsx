@@ -1,16 +1,32 @@
-// src/pages/BlogPage/BlogPage.jsx
+import { useEffect, useState } from "react";
 import { Box, useMediaQuery } from "@mui/material";
 import { useSelector } from "react-redux";
 import NavBar from "../../components/NavBar/Navbar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
-import PostsWidget from "../widgets/PostsWidget.jsx"; 
+import PostsWidget from "../widgets/PostsWidget.jsx";
 import MyPostWidget from "../widgets/MyPostWidget.jsx";
-
 
 const BlogPage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
-  const { _id } = useSelector((state) => state.user);
-  const { picturePath } = useSelector((state) => state.user);
+  const [picturePath, setPicturePath] = useState(null);
+  const userId = useSelector((state) => state.user._id);
+  const token = useSelector((state) => state.token);
+
+  useEffect(() => {
+    const fetchUserPicture = async () => {
+      try {
+        const response = await fetch(`http://localhost:3333/users/${userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const userData = await response.json();
+        setPicturePath(userData.picturePath);
+      } catch (err) {
+        console.error("Failed to fetch user picture", err);
+      }
+    };
+
+    fetchUserPicture();
+  }, [userId, token]);
 
   return (
     <Box>
@@ -27,8 +43,8 @@ const BlogPage = () => {
           flexBasis={isNonMobileScreens ? "42%" : undefined}
           mt={isNonMobileScreens ? undefined : "2rem"}
         >
-        <MyPostWidget picturePath={picturePath} />
-          <PostsWidget userId={_id} />
+          <MyPostWidget picturePath={picturePath} />
+          <PostsWidget userId={userId} />
         </Box>
         {isNonMobileScreens && (
           <Box flexBasis="26%">

@@ -8,6 +8,7 @@ import MyPostWidget from "../widgets/MyPostWidget";
 import PostsWidget from "../widgets/PostsWidget";
 import UserWidget from "../widgets/User.jsx";
 import FavoriteActivities from "../widgets/FavoriteActivities.jsx";
+import TripsWidget from "../widgets/TripsWidget.jsx";
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const { userId } = useParams();
@@ -49,6 +50,16 @@ const ProfilePage = () => {
 
         {/* right screen */}
         <Box>
+          {" "}
+          {/* trips */}
+          <Box
+            flexBasis={isNonMobileScreens ? "42%" : undefined}
+            mt={isNonMobileScreens ? undefined : "2rem"}
+          >
+            <Box m="2rem 0" />
+            <h2>My Trips</h2>
+            <TripsWidget />
+          </Box>
           {/* favorites */}
           <Box
             flexBasis={isNonMobileScreens ? "42%" : undefined}
@@ -67,7 +78,11 @@ const ProfilePage = () => {
             <MyPostWidget picturePath={user.picturePath} />
             <Box m="2rem 0" />
             <h2>My Posts</h2>
-            <PostsWidget userId={userId} isProfile />
+            <PostsWidget
+              userId={userId}
+              picturePath={user.userPicturePath}
+              isProfile
+            />
           </Box>
         </Box>
       </Box>

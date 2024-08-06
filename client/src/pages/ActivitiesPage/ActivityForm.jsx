@@ -46,6 +46,7 @@ const ActivityForm = () => {
   const navigate = useNavigate();
   const isEditMode = Boolean(activityId);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [existingImage, setExistingImage] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -96,6 +97,7 @@ const ActivityForm = () => {
             image: null,
           });
           setSelectedCategories(activityData.categories || []);
+          setExistingImage(activityData.coverPath || null);
         } else {
           setInitialData({
             activityName: "",
@@ -129,9 +131,12 @@ const ActivityForm = () => {
     formData.append("categories", JSON.stringify(selectedCategories));
     formData.append("prefecture", values.prefecture);
     formData.append("budget", values.budget);
+
     if (values.image) {
       formData.append("picture", values.image);
       formData.append("coverPath", values.image.name);
+    } else if (existingImage) {
+      formData.append("picture", existingImage);
     }
 
     const url = isEditMode
@@ -229,7 +234,7 @@ const ActivityForm = () => {
               <Field
                 name="activityName"
                 as={TextField}
-                label="Activity Name"
+                label="Activity Name*"
                 fullWidth
                 error={Boolean(touched.activityName && errors.activityName)}
                 helperText={<ErrorMessage name="activityName" />}
@@ -244,7 +249,7 @@ const ActivityForm = () => {
               <Field
                 name="description"
                 as={TextField}
-                label="Description"
+                label="Description*"
                 fullWidth
                 error={Boolean(touched.description && errors.description)}
                 helperText={<ErrorMessage name="description" />}
@@ -261,7 +266,7 @@ const ActivityForm = () => {
                   variant="h6"
                   style={{ color: palette.text.primary }}
                 >
-                  Prefecture
+                  Prefecture*
                 </Typography>
                 <Select
                   name="prefecture"
@@ -291,7 +296,7 @@ const ActivityForm = () => {
                   variant="h6"
                   style={{ color: palette.text.primary }}
                 >
-                  Budget
+                  Budget*
                 </Typography>
                 <Select
                   name="budget"
@@ -315,11 +320,14 @@ const ActivityForm = () => {
                   component="div"
                   style={{ color: palette.error.main }}
                 />
+              </FormControl>
+              <FormControl fullWidth style={{ marginBottom: spacing(2) }}>
                 <Typography
                   variant="h6"
-                  style={{ color: palette.text.primary, marginTop: "20px" }}
+                  style={{ color: palette.text.primary }}
                 >
-                  Cover Image
+                  Cover Image* (Unfortunately you have to upload a new image to
+                  update the activity)
                 </Typography>
                 <Dropzone
                   acceptedFiles=".jpg,.jpeg,.png"
@@ -343,14 +351,26 @@ const ActivityForm = () => {
                       >
                         <input {...getInputProps()} />
                         <Typography>
-                          Drag and drop an image here, or click to select one
+                          {values.image
+                            ? `Selected file: ${values.image.name}`
+                            : existingImage
+                            ? `Current file: ${existingImage.split("/").pop()}`
+                            : "Drag and drop an image here, or click to select one"}
                         </Typography>
                       </div>
-                      {values.image && (
+                      {existingImage && !values.image && (
                         <div style={{ marginTop: spacing(2) }}>
-                          <Typography>
-                            Selected file: {values.image.name}
-                          </Typography>
+                          <Typography>Current image:</Typography>
+                          <img
+                            src={`http://localhost:3333/assets/${existingImage}`}
+                            alt="Existing activity"
+                            style={{
+                              width: "100px",
+                              height: "100px",
+                              objectFit: "cover",
+                              borderRadius: "10px",
+                            }}
+                          />
                         </div>
                       )}
                     </section>
@@ -362,7 +382,7 @@ const ActivityForm = () => {
                     variant="h6"
                     style={{ color: palette.text.primary }}
                   >
-                    Categories
+                    Categories*
                   </Typography>
                   <Box display="flex" flexWrap="wrap">
                     {categories.map((category) => (
@@ -409,7 +429,7 @@ const ActivityForm = () => {
                                 height: "50px",
                               }}
                             />
-                          </Box>{" "}
+                          </Box>
                         </IconButton>
                         <Typography variant="body2">
                           {category.category}

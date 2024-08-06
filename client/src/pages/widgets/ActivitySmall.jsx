@@ -25,14 +25,15 @@ import WidgetWrapper from "../../components/Wrapper.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import { setActivity } from "../../state/state.js";
 import "../ActivitiesPage/Activity.css";
+
 const ActivitySmall = ({
   activityId,
   activityName,
   description,
   coverPath,
   categories = [],
-  prefecture,
-  budget,
+  prefecture = {},
+  budget = {},
   onDelete,
 }) => {
   const navigate = useNavigate();
@@ -164,7 +165,6 @@ const ActivitySmall = ({
       const updatedActivity = await activityResponse.json();
       dispatch(setActivity({ activity: updatedActivity }));
 
-      // Show success message
       setSnackbarMessage(
         isSaved
           ? "Activity removed from your profile!"
@@ -173,8 +173,6 @@ const ActivitySmall = ({
       setSnackbarSeverity(isSaved ? "info" : "success");
     } catch (error) {
       console.error("Error updating favorite activities:", error.message);
-
-      // Show error message
       setSnackbarMessage("Failed to save activity. Please try again.");
       setSnackbarSeverity("error");
     } finally {
@@ -194,7 +192,7 @@ const ActivitySmall = ({
           <Typography variant="h4" color="primary" className="activity-title">
             {activityName}{" "}
             <span className="prefecture-badge">
-              {prefecture && prefecture.name ? prefecture.name : "Loading..."}
+              {prefecture.name || "No prefecture name"}
             </span>
           </Typography>
           <Typography style={{ color: palette.primary.black }}>
@@ -211,7 +209,7 @@ const ActivitySmall = ({
             style={{ color: palette.primary.black }}
             className="budget-profile"
           >
-            {budget && budget.abbreviation ? budget.abbreviation : "Loading..."}
+            {budget.abbreviation || "No budget abbreviation"}
           </Typography>
           <FlexBetween className="wrap-buttons">
             <Button

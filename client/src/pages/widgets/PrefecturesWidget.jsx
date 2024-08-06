@@ -25,7 +25,7 @@ const PrefecturesWidget = () => {
   }, []);
 
   const handleClick = (prefectureId) => {
-    navigate(`/activities/filtered-activities?prefecture=${prefectureId}`);
+    navigate(`/activities/filtered-prefecture/${prefectureId}`);
   };
 
   if (error) return <Typography color="error">Error: {error}</Typography>;
@@ -33,14 +33,15 @@ const PrefecturesWidget = () => {
   return (
     <Box>
       <Typography variant="h5" gutterBottom>
-        Prefectures
+        Find your favorite attractions and restaurants in the region that
+        catches your attention.
       </Typography>
       <List
         sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
+          display: "flex",
           padding: 0,
+          flexWrap: "wrap",
+          justifyContent: "center",
         }}
       >
         {prefectures.map((prefecture) => (
@@ -49,11 +50,12 @@ const PrefecturesWidget = () => {
             key={prefecture._id}
             onClick={() => handleClick(prefecture._id)}
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              width: 'auto',
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
               margin: 1,
+              width: 150,
+              cursor: "pointer",
             }}
           >
             <Box
@@ -61,15 +63,16 @@ const PrefecturesWidget = () => {
               src={`http://localhost:3333/assets/${prefecture.image}`}
               alt={prefecture.name}
               sx={{
-                width: 50,
-                height: 50,
-                borderRadius: '50%',
+                width: 150,
+                height: 150,
+                borderRadius: "50%",
                 marginBottom: 1,
               }}
             />
             <ListItemText
               primary={prefecture.name}
-              sx={{ textAlign: 'center' }}
+              secondary={`Activities: ${prefecture.activityCount}`}
+              sx={{ textAlign: "center" }}
             />
           </ListItem>
         ))}

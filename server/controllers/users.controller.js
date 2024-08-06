@@ -4,7 +4,6 @@ import fs from "fs";
 import path from "path";
 
 /*read*/
-
 export const getUser = async (req, res) => {
   try {
     const { id } = req.params;
@@ -55,6 +54,7 @@ export const editUser = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 export const addRemoveFavoriteActivity = async (req, res) => {
   try {
     const { id, activityId } = req.params;

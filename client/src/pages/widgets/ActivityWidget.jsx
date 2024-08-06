@@ -144,10 +144,8 @@ const ActivityWidget = ({
         throw new Error("Failed to update favorite activities");
       }
 
-      // Update saved state based on server response
       setIsSaved(!isSaved);
 
-      // Fetch updated activity details if needed
       const activityResponse = await fetch(
         `http://localhost:3333/activities/${activityId}`,
         {
@@ -166,17 +164,17 @@ const ActivityWidget = ({
       const updatedActivity = await activityResponse.json();
       dispatch(setActivity({ activity: updatedActivity }));
 
-      // Show success message
       setSnackbarMessage(
         isSaved
           ? "Activity removed from your profile!"
           : "Activity has been saved to your profile!"
       );
       setSnackbarSeverity(isSaved ? "info" : "success");
+
+      navigate(`/profile/${loggedInUserId}`);
     } catch (error) {
       console.error("Error updating favorite activities:", error.message);
 
-      // Show error message
       setSnackbarMessage("Failed to save activity. Please try again.");
       setSnackbarSeverity("error");
     } finally {
@@ -185,11 +183,16 @@ const ActivityWidget = ({
   };
 
   return (
-    <WidgetWrapper m="2rem 0" className="activity-item">
+    <WidgetWrapper
+      m="2rem 0"
+      className="activity-item"
+      style={{ color: palette.primary.white }}
+    >
       <img
         src={`http://localhost:3333/assets/${coverPath}`}
         alt={activityName}
         className="activity-image"
+        style={{ color: palette.primary.black }}
       />
       <div className="activity-details">
         <Typography variant="h4" color="primary" className="activity-title">
@@ -269,7 +272,6 @@ const ActivityWidget = ({
         </DialogActions>
       </Dialog>
 
-      {/* Snackbar for notifications */}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}

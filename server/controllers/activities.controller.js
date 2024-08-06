@@ -1,8 +1,9 @@
 import Activity from "../models/Activity.js";
+import Category from "../models/Category.js";
+import Prefecture from "../models/Prefecture.js";
 import fs from "fs";
 import path from "path";
 
-// Create a new activity
 export const createActivity = async (req, res) => {
   try {
     const {
@@ -54,31 +55,6 @@ export const getActivities = async (req, res) => {
   }
 };
 
-export const filterActivities = async (req, res) => {
-  try {
-    const { category } = req.query;
-    const filter = {};
-
-    if (category) {
-      filter.categories = category;
-    }
-
-    const activities = await Activity.find(filter)
-      .populate("prefecture")
-      .populate("budget");
-
-    if (activities.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No activities found for this category" });
-    }
-
-    res.status(200).json(activities);
-  } catch (err) {
-    res.status(404).json({ message: err.message });
-  }
-};
-
 export const editActivity = async (req, res) => {
   try {
     const { id } = req.params;
@@ -88,6 +64,7 @@ export const editActivity = async (req, res) => {
       prefecture,
       budget,
       categories = [],
+      coverPath,
     } = req.body;
 
     const activity = await Activity.findById(id);
@@ -108,9 +85,16 @@ export const editActivity = async (req, res) => {
 
     if (req.file) {
       if (activity.coverPath) {
-        fs.existsSync(path.join("public/assets", activity.coverPath));
+        const oldImagePath = path.join("public/assets", activity.coverPath);
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath);
+        }
       }
       updatedData.coverPath = req.file.filename;
+    } else if (coverPath) {
+      updatedData.coverPath = coverPath;
+    } else {
+      updatedData.coverPath = activity.coverPath;
     }
 
     const updatedActivity = await Activity.findByIdAndUpdate(id, updatedData, {
@@ -125,6 +109,7 @@ export const editActivity = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
 export const getActivity = async (req, res) => {
   try {
     const { id } = req.params;
@@ -179,5 +164,58 @@ export const deleteActivity = async (req, res) => {
     res.status(200).json({ message: "Activity deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+};
+
+export const filterCategory = async (req, res) => {
+  try {
+    const categoryName = req.params.categoryName;
+
+    if (!categoryName) {
+      return res.status(400).json({ error: "Category name is required" });
+    }
+
+    const activities = await Activity.find({ categories: categoryName })
+      .populate("prefecture")
+      .populate("budget");
+
+    res.status(200).json(activities);
+  } catch (error) {
+    console.error("Error fetching activities:", error.message);
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", details: error.message });
+  }
+};
+
+export const filterPrefecture = async (req, res) => {
+  const { prefectureId } = req.params;
+
+  if (!prefectureId) {
+    console.log("Missing prefecture ID in path");
+    return res.status(400).json({ error: "Prefecture ID is required" });
+  }
+
+  try {
+    const isPrefectureValid = await Prefecture.exists({ _id: prefectureId });
+    if (!isPrefectureValid) {
+      console.log("Prefecture not found:", prefectureId);
+      return res.status(404).json({ error: "Prefecture not found" });
+    }
+
+    const activities = await Activity.find({ prefecture: prefectureId })
+      .populate("prefecture")
+      .populate("budget");
+
+    if (activities.length === 0) {
+      return res.status(204).json([]);
+    }
+
+    res.status(200).json(activities);
+  } catch (error) {
+    console.error("Error object:", error);
+    res
+      .status(500)
+      .json({ error: "Internal Server Error", details: error.message });
   }
 };

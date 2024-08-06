@@ -23,7 +23,7 @@ import {
 import FlexBetween from "../../components/FlexBetween.jsx";
 import Friend from "../../components/Friend.jsx";
 import WidgetWrapper from "../../components/Wrapper.jsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost, removePost } from "../../state/state.js";
 
@@ -38,10 +38,13 @@ const PostWidget = ({
   comments,
 }) => {
   const [isComments, setIsComments] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false); 
-  const [openEdit, setOpenEdit] = useState(false); 
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
   const [editDescription, setEditDescription] = useState(description);
-  const [commentText, setCommentText] = useState(""); 
+  const [commentText, setCommentText] = useState("");
+  const [currentUserPicturePath, setCurrentUserPicturePath] = useState(
+    userPicturePath
+  );
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
@@ -51,6 +54,25 @@ const PostWidget = ({
   const { palette } = useTheme();
   const main = palette.neutral.main;
   const primary = palette.primary.main;
+
+  useEffect(() => {
+    const fetchUserPicture = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3333/users/${postUserId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const userData = await response.json();
+        setCurrentUserPicturePath(userData.picturePath);
+      } catch (err) {
+        console.error("Failed to fetch user picture", err);
+      }
+    };
+
+    fetchUserPicture();
+  }, [postUserId, token]);
 
   const handleDeleteOpen = () => {
     setOpenDelete(true);
@@ -91,7 +113,7 @@ const PostWidget = ({
 
     if (response.ok) {
       dispatch(removePost({ postId }));
-      handleDeleteClose(); // Close the modal after deletion
+      handleDeleteClose();
     }
   };
 
@@ -102,29 +124,35 @@ const PostWidget = ({
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ userId: loggedInUserId, description: editDescription }),
+      body: JSON.stringify({
+        userId: loggedInUserId,
+        description: editDescription,
+      }),
     });
 
     const updatedPost = await response.json();
     dispatch(setPost({ post: updatedPost }));
-    handleEditClose(); // Close the modal after editing
+    handleEditClose();
   };
 
   const addComment = async () => {
-    const response = await fetch(`http://localhost:3333/posts/${postId}/comment`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userId: loggedInUserId, comment: commentText }),
-    });
+    const response = await fetch(
+      `http://localhost:3333/posts/${postId}/comment`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId: loggedInUserId, comment: commentText }),
+      }
+    );
 
     const updatedPost = await response.json();
     dispatch(setPost({ post: updatedPost }));
-    setCommentText(""); // Clear comment input after adding
+    setCommentText("");
   };
-  
+
   const deleteComment = async (userId, commentIndex) => {
     try {
       const response = await fetch(
@@ -135,29 +163,27 @@ const PostWidget = ({
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ userId, commentIndex }), // Pass the comment index
+          body: JSON.stringify({ userId, commentIndex }),
         }
       );
-  
+
       if (!response.ok) {
         throw new Error("Failed to delete comment");
       }
-  
+
       const updatedPost = await response.json();
       dispatch(setPost({ post: updatedPost }));
     } catch (error) {
       console.error("Error deleting comment:", error.message);
     }
   };
-  
-  
-  
+
   return (
     <WidgetWrapper m="2rem 0">
       <Friend
         friendId={postUserId}
         name={name}
-        userPicturePath={userPicturePath}
+        userPicturePath={currentUserPicturePath}
       />
       <Typography color={main} sx={{ mt: "1rem" }}>
         {description}
@@ -205,20 +231,20 @@ const PostWidget = ({
       </FlexBetween>
       {isComments && (
         <Box mt="0.5rem">
-    {comments.map((comment, i) => (
-  <Box key={`${name}-${i}`}>
-    <Divider />
-    <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-      {comment.comment}
+          {comments.map((comment, i) => (
+            <Box key={`${name}-${i}`}>
+              <Divider />
+              <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
+                {comment.comment}
 
-      {comment.userId === loggedInUserId && (
-        <IconButton onClick={() => deleteComment(comment.userId, i)}>
-          <DeleteOutline />
-        </IconButton>
-      )}
-    </Typography>
-  </Box>
-))}
+                {comment.userId === loggedInUserId && (
+                  <IconButton onClick={() => deleteComment(comment.userId, i)}>
+                    <DeleteOutline />
+                  </IconButton>
+                )}
+              </Typography>
+            </Box>
+          ))}
 
           <Divider />
         </Box>
@@ -253,7 +279,8 @@ const PostWidget = ({
         <DialogTitle id="alert-dialog-title">{"Delete Post"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete this post? This action cannot be undone.
+            Are you sure you want to delete this post? This action cannot be
+            undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

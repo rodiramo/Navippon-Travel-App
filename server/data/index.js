@@ -1,94 +1,108 @@
 import mongoose from "mongoose";
 
-const userIds = [
-  new mongoose.Types.ObjectId(),
-  new mongoose.Types.ObjectId(),
-];
+const userIds = [new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId()];
 
 export const budgets = [
-  { _id: new mongoose.Types.ObjectId(), name: "Low Price", abbreviation: "$", description: "Economical options" },
-  { _id: new mongoose.Types.ObjectId(), name: "Medium", abbreviation: "$$", description: "Moderate pricing" },
-  { _id: new mongoose.Types.ObjectId(), name: "High", abbreviation: "$$$", description: "Higher pricing" },
-  { _id: new mongoose.Types.ObjectId(), name: "Expensive", abbreviation: "$$$$", description: "Premium options" },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    name: "Low Price",
+    abbreviation: "$",
+    description: "Economical options",
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    name: "Medium",
+    abbreviation: "$$",
+    description: "Moderate pricing",
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    name: "High",
+    abbreviation: "$$$",
+    description: "Higher pricing",
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    name: "Expensive",
+    abbreviation: "$$$$",
+    description: "Premium options",
+  },
 ];
-
-
 
 export const prefectures = [
   {
     _id: new mongoose.Types.ObjectId(),
     name: "Tokyo",
-    image: "/images/tokyo.jpg",
+    image: "tokyo.jpg",
     cities: [],
   },
   {
     _id: new mongoose.Types.ObjectId(),
     name: "Kyoto",
-    image: "/images/kyoto.jpg",
+    image: "kyoto.jpg",
     cities: [],
   },
   {
     _id: new mongoose.Types.ObjectId(),
     name: "Osaka",
-    image: "/images/osaka.jpg",
+    image: "osaka.jpg",
     cities: [],
   },
   {
     _id: new mongoose.Types.ObjectId(),
     name: "Hokkaido",
-    image: "/images/hokkaido.jpg",
+    image: "hokkaido.jpg",
     cities: [],
   },
   {
     _id: new mongoose.Types.ObjectId(),
     name: "Fukuoka",
-    image: "/images/fukuoka.jpg",
+    image: "fukuoka.jpg",
     cities: [],
   },
   {
     _id: new mongoose.Types.ObjectId(),
     name: "Nagoya",
-    image: "/images/nagoya.jpg",
+    image: "nagoya.jpg",
     cities: [],
   },
   {
     _id: new mongoose.Types.ObjectId(),
     name: "Hiroshima",
-    image: "/images/hiroshima.jpg",
+    image: "hiroshima.jpg",
     cities: [],
   },
   {
     _id: new mongoose.Types.ObjectId(),
     name: "Sendai",
-    image: "/images/sendai.jpg",
+    image: "sendai.jpg",
     cities: [],
   },
   {
     _id: new mongoose.Types.ObjectId(),
     name: "Okinawa",
-    image: "/images/okinawa.jpg",
+    image: "okinawa.jpg",
     cities: [],
   },
   {
     _id: new mongoose.Types.ObjectId(),
     name: "Nara",
-    image: "/images/nara.jpg",
+    image: "nara.jpg",
     cities: [],
   },
   {
     _id: new mongoose.Types.ObjectId(),
     name: "Kobe",
-    image: "/images/kobe.jpg",
+    image: "kobe.jpg",
     cities: [],
   },
   {
     _id: new mongoose.Types.ObjectId(),
     name: "Yokohama",
-    image: "/images/yokohama.jpg",
+    image: "yokohama.jpg",
     cities: [],
   },
 ];
-
 
 export const users = [
   {
@@ -122,67 +136,187 @@ export const users = [
   },
 ];
 
-export const posts = [
- 
-  
-];
-
+export const posts = [];
 
 export const activities = [
   {
     _id: new mongoose.Types.ObjectId(),
     activityName: "Visit Kyoto Temples",
-    description: "Explore historic temples in Kyoto, such as Kinkaku-ji and Kiyomizu-dera.",
+    description:
+      "Explore historic temples in Kyoto, such as Kinkaku-ji and Kiyomizu-dera.",
     prefecture: prefectures[1]._id,
-    coverPath: "/images/kyoto_temples.jpg",
+    coverPath: "kyoto-temples.jpg",
     categories: ["Sightseeing", "Culture"],
     saves: [],
     location: "Kyoto, Japan",
-    budget: budgets[1]._id // Medium
+    budget: budgets[1]._id, // Medium
   },
   {
     _id: new mongoose.Types.ObjectId(),
     activityName: "Sushi Making Class",
     description: "Learn the art of sushi making from a local chef in Tokyo.",
     prefecture: prefectures[0]._id,
-    coverPath: "/images/sushi_class.jpg",
+    coverPath: "sushi-class.jpg",
     categories: ["Culinary", "Experience"],
     saves: [],
     location: "Tokyo, Japan",
-    budget: budgets[2]._id 
+    budget: budgets[2]._id,
   },
   {
     _id: new mongoose.Types.ObjectId(),
     activityName: "Hike Mount Fuji",
-    description: "Embark on a challenging hike to the summit of Mount Fuji for breathtaking views.",
+    description:
+      "Embark on a challenging hike to the summit of Mount Fuji for breathtaking views.",
     prefecture: prefectures[0]._id,
-    coverPath: "/images/mount_fuji.jpg",
+    coverPath: "mount-fuji.jpg",
     categories: ["Adventure", "Nature"],
     saves: [],
     location: "Shizuoka, Japan",
-    budget: budgets[3]._id 
+    budget: budgets[3]._id,
   },
   {
     _id: new mongoose.Types.ObjectId(),
     activityName: "Explore Okinawa Beaches",
-    description: "Relax on the pristine beaches of Okinawa and enjoy the crystal-clear waters.",
+    description:
+      "Relax on the pristine beaches of Okinawa and enjoy the crystal-clear waters.",
     prefecture: prefectures[8]._id,
-    coverPath: "/images/okinawa_beach.jpg",
+    coverPath: "okinawa-beach.jpg",
     categories: ["Beach", "Relaxation"],
     saves: [],
     location: "Okinawa, Japan",
-    budget: budgets[0]._id 
+    budget: budgets[0]._id,
   },
   {
     _id: new mongoose.Types.ObjectId(),
     activityName: "Visit Hiroshima Peace Memorial Park",
-    description: "Reflect on Historical at the Hiroshima Peace Memorial Park and Museum.",
+    description:
+      "Reflect on Historical at the Hiroshima Peace Memorial Park and Museum.",
     prefecture: prefectures[6]._id,
-    coverPath: "/images/hiroshima_peace.jpg",
+    coverPath: "hiroshima-memorial.jpg",
     categories: ["Historical", "Sightseeing"],
     saves: [],
     location: "Hiroshima, Japan",
-    budget: budgets[1]._id
+    budget: budgets[1]._id,
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    activityName: "Explore Osaka Castle",
+    description:
+      "Visit the historic Osaka Castle and enjoy panoramic views of the city.",
+    prefecture: prefectures[2]._id,
+    coverPath: "osaka-castle.jpg",
+    categories: ["Historical", "Sightseeing"],
+    saves: [],
+    location: "Osaka, Japan",
+    budget: budgets[1]._id, // Medium
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    activityName: "Sapporo Snow Festival",
+    description:
+      "Experience the famous Sapporo Snow Festival with stunning ice and snow sculptures.",
+    prefecture: prefectures[3]._id,
+    coverPath: "sapporo-snow-festival.jpg",
+    categories: ["Festival", "Winter"],
+    saves: [],
+    location: "Sapporo, Japan",
+    budget: budgets[0]._id,
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    activityName: "Relax at Beppu Hot Springs",
+    description:
+      "Unwind in the therapeutic hot springs of Beppu, one of Japan's premier hot spring resorts.",
+    prefecture: prefectures[4]._id,
+    coverPath: "beppu-hot-spring.jpg",
+    categories: ["Relaxation", "Nature"],
+    saves: [],
+    location: "Beppu, Japan",
+    budget: budgets[1]._id,
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    activityName: "Hiroshima Okonomiyaki Cooking Class",
+    description:
+      "Learn to make Hiroshima-style okonomiyaki in a fun and interactive cooking class.",
+    prefecture: prefectures[6]._id,
+    coverPath: "hiroshima-okonomiyaki.jpg",
+    categories: ["Culinary", "Experience"],
+    saves: [],
+    location: "Hiroshima, Japan",
+    budget: budgets[2]._id,
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    activityName: "Nara Deer Park Visit",
+    description:
+      "Meet the friendly deer in Nara Park and explore the historic temples nearby.",
+    prefecture: prefectures[9]._id,
+    coverPath: "nara-deer-park.jpg",
+    categories: ["Nature", "Sightseeing"],
+    saves: [],
+    location: "Nara, Japan",
+    budget: budgets[0]._id,
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    activityName: "Tokyo Skytree Observation Deck",
+    description:
+      "Enjoy breathtaking views of Tokyo from the observation deck of the Tokyo Skytree.",
+    prefecture: prefectures[0]._id,
+    coverPath: "tokyo-skytree.jpg",
+    categories: ["Sightseeing", "Modern"],
+    saves: [],
+    location: "Tokyo, Japan",
+    budget: budgets[1]._id,
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    activityName: "Fukuoka Yatai Food Tour",
+    description:
+      "Experience Fukuoka's street food scene with a guided tour of local yatai stalls.",
+    prefecture: prefectures[4]._id,
+    coverPath: "fukuoka-yatai.jpg",
+    categories: ["Culinary", "Experience"],
+    saves: [],
+    location: "Fukuoka, Japan",
+    budget: budgets[2]._id,
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    activityName: "Explore the Ghibli Museum",
+    description:
+      "Discover the magical world of Studio Ghibli at the Ghibli Museum in Mitaka.",
+    prefecture: prefectures[0]._id,
+    coverPath: "ghibli-museum.jpg",
+    categories: ["Culture", "Museum"],
+    saves: [],
+    location: "Mitaka, Tokyo, Japan",
+    budget: budgets[0]._id,
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    activityName: "Kobe Harborland Cruise",
+    description:
+      "Take a scenic cruise around Kobe Harbor and enjoy the city's waterfront attractions.",
+    prefecture: prefectures[10]._id,
+    coverPath: "kobe-harborland.jpg",
+    categories: ["Sightseeing", "Experience"],
+    saves: [],
+    location: "Kobe, Japan",
+    budget: budgets[1]._id,
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    activityName: "Sendai Tanabata Festival",
+    description:
+      "Celebrate the Sendai Tanabata Festival with colorful decorations and traditional performances.",
+    prefecture: prefectures[7]._id,
+    coverPath: "sendai-tanabata.jpg",
+    categories: ["Festival", "Culture"],
+    saves: [],
+    location: "Sendai, Japan",
+    budget: budgets[0]._id,
   },
 ];
 export const categories = [
@@ -213,7 +347,7 @@ export const categories = [
   {
     category: "Family",
     icon: "family.png",
-  }, 
+  },
   {
     category: "Sightseeing",
     icon: "sightseeing.png",
@@ -221,10 +355,6 @@ export const categories = [
   {
     category: "Kids",
     icon: "kids.png",
-  },
-  {
-    category: "Architecture",
-    icon: "architecture.png",
   },
   {
     category: "Concerts",
@@ -276,10 +406,10 @@ export const categories = [
   },
   {
     category: "Culinary",
-    icon: "culinary.png", 
+    icon: "culinary.png",
   },
   {
     category: "Adventure",
-    icon: "adventure.png", 
+    icon: "adventure.png",
   },
 ];

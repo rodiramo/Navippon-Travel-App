@@ -16,6 +16,7 @@ import budgetRoute from "./routes/budget.routes.js";
 import prefectureRoute from "./routes/prefectures.routes.js";
 import categoryRoute from "./routes/categories.routes.js";
 import activityRoute from "./routes/activities.routes.js";
+import tripsRoute from "./routes/trips.routes.js";
 import { editUser } from "./controllers/users.controller.js";
 import { register } from "./controllers/auth.controller.js";
 import {
@@ -82,6 +83,7 @@ app.use("/auth", authRoute);
 app.use("/admin", adminRoute);
 app.use("/users", userRoute);
 app.use("/posts", postRoute);
+app.use("/trips", tripsRoute);
 app.use("/budget", budgetRoute);
 app.use("/categories", categoryRoute);
 app.use("/prefectures", prefectureRoute);

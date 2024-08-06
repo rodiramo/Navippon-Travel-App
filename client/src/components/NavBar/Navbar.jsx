@@ -18,6 +18,7 @@ import { useNavigate, Link } from "react-router-dom";
 import FlexBetween from "../FlexBetween.jsx";
 import UserProfilePicture from "../../pages/widgets/UserProfilePic.jsx";
 import useAuth from "../../hooks/useAuth.js";
+import logo from "/assets/navippon-logo-white.png";
 
 const NavBar = () => {
   const { isAdmin } = useAuth();
@@ -48,32 +49,35 @@ const NavBar = () => {
       sx={{ width: "100%" }}
     >
       <FlexBetween gap="1.75rem">
-        <Typography
-          fontWeight="bold"
-          fontSize="clamp(1rem, 2rem, 2.25rem)"
-          color="primary.white"
+        <Box
+          display="flex"
+          alignItems="center"
           onClick={() => navigate("/home")}
-          sx={{
-            "&:hover": {
-              color: theme.palette.primary.light,
-              cursor: "pointer",
-            },
-          }}
+          sx={{ cursor: "pointer" }}
         >
-          Navippon
-        </Typography>
+          <img
+            src={logo}
+            alt="Navippon logo"
+            style={{ width: "40px", marginRight: "0.5rem" }}
+          />
+          <Typography
+            fontWeight="bold"
+            fontSize="clamp(0.75rem, 1.5rem, 1.75rem)"
+            color="primary.white"
+            sx={{
+              "&:hover": {
+                color: theme.palette.primary.light,
+                cursor: "pointer",
+              },
+            }}
+          >
+            Navippon
+          </Typography>
+        </Box>
       </FlexBetween>
 
       {isNonMobileScreens ? (
         <FlexBetween gap="2rem">
-          <Link to="/discover" style={{ textDecoration: "none" }}>
-            <Typography
-              variant="body1"
-              sx={{ color: theme.palette.primary.light, cursor: "pointer" }}
-            >
-              Discover
-            </Typography>
-          </Link>
           <Link to="/activities" style={{ textDecoration: "none" }}>
             <Typography
               variant="body1"

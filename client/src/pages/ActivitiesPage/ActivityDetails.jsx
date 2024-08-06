@@ -5,8 +5,6 @@ import {
   Typography,
   CircularProgress,
   Box,
-  ListItem,
-  ListItemText,
   Breadcrumbs,
   Link,
 } from "@mui/material";
@@ -85,6 +83,7 @@ const ActivityDetails = () => {
         <img
           src={`http://localhost:3333/assets/${activity.coverPath}`}
           alt={activity.activityName}
+          style={{ width: "100%", height: "auto", borderRadius: "8px" }}
         />
         <Typography variant="h4" color="primary" className="activity-title">
           {activity.activityName}
@@ -94,17 +93,16 @@ const ActivityDetails = () => {
         <Typography className="activity-description">
           {activity.description}
         </Typography>
-        <Box className="activity-categories">
+        <Box display="flex" flexWrap="wrap" justifyContent="center">
           {categoryDetails.map((category) => (
-            <ListItem
+            <Box
               key={category._id}
-              button
               sx={{
+                textAlign: "center",
                 display: "flex",
                 flexDirection: "column",
+                padding: 1,
                 alignItems: "center",
-                width: "auto",
-                margin: 1,
               }}
             >
               <Box
@@ -114,15 +112,15 @@ const ActivityDetails = () => {
                 sx={{
                   width: 50,
                   height: 50,
-                  borderRadius: "50%",
+                  borderRadius: "100%",
                   marginBottom: 1,
+                  backgroundColor: "#fff",
+                  margin: 1,
+                  boxShadow: `0px 1px 8px #CDD9E1`,
                 }}
               />
-              <ListItemText
-                primary={category.category}
-                sx={{ textAlign: "center" }}
-              />
-            </ListItem>
+              <Typography variant="body2">{category.category}</Typography>
+            </Box>
           ))}
         </Box>
         <Typography className="activity-location">
