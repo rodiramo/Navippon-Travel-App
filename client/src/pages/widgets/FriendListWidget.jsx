@@ -10,14 +10,14 @@ const FriendListWidget = ({ userId }) => {
   const { palette } = useTheme();
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
-  const friends = useSelector((state) => state.user.friends) || []; // Ensure it's always an array
+  const friends = useSelector((state) => state.user.friends) || [];
 
   const getFriends = async () => {
     try {
-      const response = await fetch(`http://localhost:3333/users/${userId}/friends`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch friends");
-      }
+      const response = await fetch(
+        `http://localhost:3333/users/${userId}/friends`
+      );
+
       const data = await response.json();
       dispatch(setFriends(data));
     } catch (error) {
@@ -58,7 +58,7 @@ const FriendListWidget = ({ userId }) => {
 };
 
 FriendListWidget.propTypes = {
-  userId: PropTypes.string.isRequired, 
+  userId: PropTypes.string.isRequired,
 };
 
 export default FriendListWidget;

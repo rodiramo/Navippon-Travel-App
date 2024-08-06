@@ -27,7 +27,7 @@ const ActivityDetails = () => {
         });
 
         if (!response.ok) {
-          throw new Error("Failed to fetch data");
+          throw new Error("Failed to fetch activity data");
         }
 
         const data = await response.json();
@@ -41,17 +41,21 @@ const ActivityDetails = () => {
 
     const fetchCategoryDetails = async (categoryNames) => {
       try {
-        const response = await fetch(`http://localhost:3333/categories`);
-        const categories = await response.json();
+        const response = await fetch("http://localhost:3333/categories");
+        if (!response.ok) throw new Error("Failed to fetch categories");
+        const data = await response.json();
 
-        const categoryMap = categories.reduce((acc, category) => {
+        const categoryMap = data.reduce((acc, category) => {
           acc[category.category] = category;
           return acc;
         }, {});
 
         const details = categoryNames.map(
-          (name) => categoryMap[name] || { category: name }
+          (name) =>
+            categoryMap[name] || { category: name, icon: "defaultIcon.png" }
         );
+
+        console.log("Category Details:", details);
         setCategoryDetails(details);
       } catch (error) {
         console.error("Failed to fetch categories", error);
@@ -68,7 +72,7 @@ const ActivityDetails = () => {
   return (
     <Box>
       <NavBar />
-      <Box className="activity-detail breadcrumbs-container">
+      <Box className="activity-detail breadcrumbs-container" sx={{ mb: 2 }}>
         <Breadcrumbs aria-label="breadcrumb">
           <Link color="inherit" href="/home">
             Home
@@ -79,57 +83,64 @@ const ActivityDetails = () => {
           <Typography color="textPrimary">{activity.activityName}</Typography>
         </Breadcrumbs>
       </Box>
-      <Box className="activity-header">
+      <Box className="activity-header" sx={{ mb: 4 }}>
         <img
           src={`http://localhost:3333/assets/${activity.coverPath}`}
           alt={activity.activityName}
           style={{ width: "100%", height: "auto", borderRadius: "8px" }}
         />
-        <Typography variant="h4" color="primary" className="activity-title">
+        <Typography
+          variant="h1"
+          color="primary"
+          className="activity-title"
+          sx={{ mt: 2 }}
+        >
           {activity.activityName}
         </Typography>
       </Box>
       <Box className="activity-body">
-        <Typography className="activity-description">
+        <Typography className="activity-description" sx={{ mb: 3 }}>
           {activity.description}
         </Typography>
-        <Box display="flex" flexWrap="wrap" justifyContent="center">
-          {categoryDetails.map((category) => (
-            <Box
-              key={category._id}
-              sx={{
-                textAlign: "center",
-                display: "flex",
-                flexDirection: "column",
-                padding: 1,
-                alignItems: "center",
-              }}
-            >
-              <Box
-                component="img"
-                src={`http://localhost:3333/assets/${category.icon}`}
-                alt={category.category}
-                sx={{
-                  width: 50,
-                  height: 50,
-                  borderRadius: "100%",
-                  marginBottom: 1,
-                  backgroundColor: "#fff",
-                  margin: 1,
-                  boxShadow: `0px 1px 8px #CDD9E1`,
-                }}
-              />
-              <Typography variant="body2">{category.category}</Typography>
-            </Box>
-          ))}
+        <Box
+          display="flex"
+          flexWrap="wrap"
+          justifyContent="center"
+          sx={{ mb: 3 }}
+        >
+          {categoryDetails.length
+            ? categoryDetails.map((category) => (
+                <Typography
+                  key={category.category}
+                  variant="body2"
+                  sx={{ mx: 1, fontWeight: "bold", color: "primary.main" }}
+                >
+                  {category.category}
+                </Typography>
+              ))
+            : "No categories"}
         </Box>
-        <Typography className="activity-location">
-          Prefecture:{" "}
-          {activity.prefecture ? activity.prefecture.name : "Loading..."}
+        <Typography className="activity-location" sx={{ mb: 1 }}>
+          <strong>Prefecture:</strong>{" "}
+          <Typography component="span" sx={{ color: "primary.main" }}>
+            {activity.prefecture ? activity.prefecture.name : "Loading..."}
+          </Typography>
         </Typography>
-        <Typography className="activity-location">
-          Budget: {activity.budget ? activity.budget.name : "Loading..."}{" "}
-          {activity.budget ? activity.budget.abbreviation : "Loading..."}
+        <Typography className="activity-location" sx={{ mb: 3 }}>
+          <strong>Budget:</strong>{" "}
+          <Box
+            component="span"
+            sx={{
+              display: "inline-block",
+              padding: "0.25em 0.5em",
+              borderRadius: "12px",
+              backgroundColor: "#e0f7fa",
+              fontWeight: "bold",
+            }}
+          >
+            {activity.budget ? activity.budget.name : "Loading..."}{" "}
+            {activity.budget ? activity.budget.abbreviation : "Loading..."}
+          </Box>
         </Typography>
       </Box>
       <Footer />

@@ -12,19 +12,28 @@ export const createTrip = async (req, res) => {
     budget,
   } = req.body;
 
-  console.log("Received data:", {
-    userId,
-    title,
-    description,
-    startDate,
-    endDate,
-    prefecture,
-    categories,
-    budget,
-  });
-
   if (!userId || !title || !startDate || !endDate || !prefecture) {
     return res.status(400).json({ error: "All fields are required" });
+  }
+
+  const overlappingTrips = await Trip.find({
+    userId,
+    $or: [
+      {
+        startDate: { $lte: endDate },
+        endDate: { $gte: startDate },
+      },
+      {
+        startDate: { $gte: startDate, $lte: endDate },
+        endDate: { $gte: startDate, $lte: endDate },
+      },
+    ],
+  });
+
+  if (overlappingTrips.length > 0) {
+    return res
+      .status(400)
+      .json({ error: "Date range overlaps with an existing trip" });
   }
 
   try {

@@ -34,6 +34,7 @@ const ActivitySmall = ({
   categories = [],
   prefecture = {},
   budget = {},
+  isFavorite,
   onDelete,
 }) => {
   const navigate = useNavigate();
@@ -44,7 +45,6 @@ const ActivitySmall = ({
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const loggedInUserId = useSelector((state) => state.user._id);
-  const [isSaved, setIsSaved] = useState(false);
   const role = useSelector((state) => state.user.role);
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
@@ -75,36 +75,6 @@ const ActivitySmall = ({
     fetchCategoryDetails();
   }, [categories]);
 
-  useEffect(() => {
-    const checkIfSaved = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:3333/users/${loggedInUserId}/favorites`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error("Error response from server:", errorText);
-          throw new Error("Failed to fetch favorite activities");
-        }
-
-        const favorites = await response.json();
-        setIsSaved(favorites.includes(activityId));
-      } catch (error) {
-        console.error("Error fetching favorite activities:", error.message);
-      }
-    };
-
-    if (loggedInUserId) {
-      checkIfSaved();
-    }
-  }, [loggedInUserId, activityId, token]);
-
   const handleEdit = () => {
     navigate(`/edit-activity/${activityId}`);
   };
@@ -115,7 +85,7 @@ const ActivitySmall = ({
   const handleDelete = async () => {
     try {
       if (onDelete) {
-        await onDelete(activityId);
+        await onDelete(activityId); // Use the onDelete prop here
       }
     } catch (error) {
       console.error("Failed to delete activity:", error.message);
@@ -125,9 +95,9 @@ const ActivitySmall = ({
 
   const handleViewDetails = () => navigate(`/activities/${activityId}`);
 
-  const patchSave = async () => {
+  const handleFavoriteToggle = async () => {
     try {
-      const method = isSaved ? "DELETE" : "PATCH";
+      const method = isFavorite ? "DELETE" : "PATCH";
       const response = await fetch(
         `http://localhost:3333/users/${loggedInUserId}/favorites/${activityId}`,
         {
@@ -144,8 +114,6 @@ const ActivitySmall = ({
         console.error("Error response from server:", errorText);
         throw new Error("Failed to update favorite activities");
       }
-
-      setIsSaved(!isSaved);
 
       const activityResponse = await fetch(
         `http://localhost:3333/activities/${activityId}`,
@@ -166,14 +134,14 @@ const ActivitySmall = ({
       dispatch(setActivity({ activity: updatedActivity }));
 
       setSnackbarMessage(
-        isSaved
-          ? "Activity removed from your profile!"
-          : "Activity has been saved to your profile!"
+        isFavorite
+          ? "Activity removed from your favorites!"
+          : "Activity added to your favorites!"
       );
-      setSnackbarSeverity(isSaved ? "info" : "success");
+      setSnackbarSeverity(isFavorite ? "info" : "success");
     } catch (error) {
       console.error("Error updating favorite activities:", error.message);
-      setSnackbarMessage("Failed to save activity. Please try again.");
+      setSnackbarMessage("Failed to update activity. Please try again.");
       setSnackbarSeverity("error");
     } finally {
       setSnackbarOpen(true);
@@ -241,9 +209,9 @@ const ActivitySmall = ({
             backgroundColor: palette.primary.main,
             color: palette.primary.white,
           }}
-          onClick={patchSave}
+          onClick={handleFavoriteToggle}
         >
-          {isSaved ? (
+          {isFavorite ? (
             <FavoriteOutlined sx={{ color: "#fff" }} />
           ) : (
             <FavoriteBorderOutlined />
@@ -308,6 +276,7 @@ ActivitySmall.propTypes = {
   budget: PropTypes.shape({
     abbreviation: PropTypes.string,
   }),
+  isFavorite: PropTypes.bool.isRequired,
   onDelete: PropTypes.func,
 };
 

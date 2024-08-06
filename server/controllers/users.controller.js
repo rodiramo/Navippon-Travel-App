@@ -111,30 +111,48 @@ export const getUserFriends = async (req, res) => {
 export const addRemoveFriend = async (req, res) => {
   try {
     const { id, friendId } = req.params;
+    console.log(
+      `Received PATCH request with id: ${id} and friendId: ${friendId}`
+    );
+
     const user = await User.findById(id);
     const friend = await User.findById(friendId);
 
+    if (!user || !friend) {
+      return res.status(404).json({ message: "User or friend not found" });
+    }
+
     if (user.friends.includes(friendId)) {
-      user.friends = user.friends.filter((id) => id !== friendId);
-      friend.friends = friend.friends.filter((id) => id !== id);
+      user.friends = user.friends.filter(
+        (currentFriendId) => currentFriendId !== friendId
+      );
+      friend.friends = friend.friends.filter(
+        (currentFriendId) => currentFriendId !== id
+      );
     } else {
       user.friends.push(friendId);
       friend.friends.push(id);
     }
+
     await user.save();
     await friend.save();
 
     const friends = await Promise.all(
-      user.friends.map((id) => User.findById(id))
+      user.friends.map((currentFriendId) => User.findById(currentFriendId))
     );
+
     const formattedFriends = friends.map(
-      ({ _id, firstName, lastName, picturePath }) => {
-        return { _id, firstName, lastName, picturePath };
-      }
+      ({ _id, firstName, lastName, picturePath }) => ({
+        _id,
+        firstName,
+        lastName,
+        picturePath,
+      })
     );
 
     res.status(200).json(formattedFriends);
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    console.error("Error in addRemoveFriend:", err);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };

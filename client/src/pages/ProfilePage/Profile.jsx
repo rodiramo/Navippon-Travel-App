@@ -1,4 +1,4 @@
-import { Box, useMediaQuery } from "@mui/material";
+import { Box, useMediaQuery, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -32,7 +32,14 @@ const ProfilePage = () => {
 
   return (
     <Box>
-      <Navbar />
+      <Navbar />{" "}
+      <Typography
+        variant="h1"
+        sx={{ textAlign: "center", fontWeight: "bold", marginTop: 2 }}
+        gutterBottom
+      >
+        My Profile
+      </Typography>
       <Box
         width="100%"
         padding="2rem 6%"

@@ -2,35 +2,36 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setActivities } from "../../state/state.js";
 import ActivityWidget from "./ActivityWidget.jsx";
-import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import "../ActivitiesPage/Activities.css";
 import SuccessMessage from "../../components/SuccessMessage.jsx";
 import ErrorMessage from "../../components/ErrorMessage.jsx";
 
 const ActivitiesWidget = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const { userId } = useParams();
   const activities = useSelector((state) => state.activities || []);
   const token = useSelector((state) => state.token);
   const [status, setStatus] = useState({ type: null, message: "" });
   const [showMessage, setShowMessage] = useState(false);
+  const [favoritesSet, setFavoritesSet] = useState(new Set());
 
-  const fetchActivities = async (url) => {
+  // Fetch all activities
+  const fetchActivities = async () => {
     try {
-      const response = await fetch(url, {
+      const response = await fetch("http://localhost:3333/activities", {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });
 
       if (!response.ok) {
-        throw new Error("Failed to fetch data");
+        throw new Error("Failed to fetch activities");
       }
 
       const data = await response.json();
-      console.log("Fetched activities:", data);
       dispatch(setActivities(data));
     } catch (error) {
-      console.error("Error fetching data:", error.message);
+      console.error("Error fetching activities:", error.message);
       setStatus({
         type: "error",
         message: "Failed to load activities. Please try again later.",
@@ -39,11 +40,36 @@ const ActivitiesWidget = () => {
     }
   };
 
-  useEffect(() => {
-    const url = `http://localhost:3333/activities`;
-    fetchActivities(url);
-  }, [token, dispatch]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Fetch user's favorites
+  const fetchFavorites = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3333/users/${userId}/favorites`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
+      if (response.ok) {
+        const favorites = await response.json();
+        const favoritesSet = new Set(favorites.map((item) => item._id));
+        setFavoritesSet(favoritesSet);
+      } else {
+        throw new Error("Failed to fetch favorites");
+      }
+    } catch (error) {
+      console.error("Error fetching favorites:", error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (token && userId) {
+      fetchActivities();
+      fetchFavorites();
+    }
+  }, [token, userId, dispatch]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Handle activity deletion
   const handleDelete = async (activityId) => {
     try {
       const response = await fetch(
@@ -55,44 +81,59 @@ const ActivitiesWidget = () => {
       );
 
       if (response.ok) {
-        fetchActivities(`http://localhost:3333/activities`);
+        fetchActivities();
         setStatus({
           type: "success",
           message: "Activity deleted successfully!",
         });
         setShowMessage(true);
       } else {
-        console.error("Failed to delete activity");
-        setStatus({
-          type: "error",
-          message: "Failed to delete activity. Please try again.",
-        });
-        setShowMessage(true);
+        throw new Error("Failed to delete activity");
       }
     } catch (error) {
-      console.error("Error deleting activity:", error);
+      console.error("Error deleting activity:", error.message);
       setStatus({
         type: "error",
-        message: "Error deleting activity. Please try again later.",
+        message: "Failed to delete activity. Please try again.",
       });
       setShowMessage(true);
     }
   };
 
-  const handleEdit = async (activityId) => {
+  // Handle favorite toggle
+  const handleFavoriteToggle = async (activityId, isFavorite) => {
     try {
-      navigate(`/edit-activity/${activityId}`);
+      const method = isFavorite ? "DELETE" : "PATCH";
+      const response = await fetch(
+        `http://localhost:3333/users/${userId}/favorites/${activityId}`,
+        {
+          method: method,
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update favorite activities");
+      }
+
+      const updatedFavorites = await response.json();
+      setFavoritesSet(new Set(updatedFavorites.map((item) => item._id)));
+
       setStatus({
         type: "success",
-        message: "Navigating to edit activity page.",
+        message: isFavorite
+          ? "Activity removed from favorites!"
+          : "Activity added to favorites!",
       });
       setShowMessage(true);
     } catch (error) {
-      console.error("Error editing activity:", error);
+      console.error("Error updating favorite activities:", error.message);
       setStatus({
         type: "error",
-        message:
-          "Error navigating to edit activity page. Please try again later.",
+        message: "Failed to update favorite activities. Please try again.",
       });
       setShowMessage(true);
     }
@@ -127,9 +168,11 @@ const ActivitiesWidget = () => {
           prefecture={activity.prefecture}
           budget={activity.budget}
           categories={activity.categories}
-          saves={activity.saves}
-          onDelete={handleDelete}
-          onEdit={handleEdit}
+          isFavorite={favoritesSet.has(activity._id)}
+          onFavoriteToggle={() =>
+            handleFavoriteToggle(activity._id, favoritesSet.has(activity._id))
+          }
+          onDelete={() => handleDelete(activity._id)}
         />
       ))}
     </>

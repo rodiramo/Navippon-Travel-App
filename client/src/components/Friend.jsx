@@ -32,12 +32,12 @@ const Friend = ({ friendId, name, userPicturePath }) => {
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   const isFriend =
-    Array.isArray(friends) && friends.find((friend) => friend._id === friendId);
+    Array.isArray(friends) && friends.some((friend) => friend._id === friendId);
 
   const patchFriend = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3333/users/${_id}/${friendId}`,
+        `http://localhost:3333/users/${_id}/friend/${friendId}`,
         {
           method: "PATCH",
           headers: {
@@ -127,7 +127,7 @@ const Friend = ({ friendId, name, userPicturePath }) => {
 Friend.propTypes = {
   friendId: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  userPicturePath: PropTypes.string.isRequired,
+  userPicturePath: PropTypes.string,
 };
 
 export default Friend;

@@ -16,7 +16,7 @@ const UserImage = ({ image, name, size = "60px" }) => {
 };
 
 UserImage.propTypes = {
-  image: PropTypes.string.isRequired,
+  image: PropTypes.string,
   name: PropTypes.string,
   size: PropTypes.string,
 };

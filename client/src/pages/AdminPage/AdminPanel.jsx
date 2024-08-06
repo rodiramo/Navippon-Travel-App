@@ -14,7 +14,7 @@ import {
   InputLabel,
 } from "@mui/material";
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
-import "./AdminPanel.css"; // Import the CSS file
+import "./AdminPanel.css";
 
 const AdminPanel = () => {
   const role = useSelector((state) => state.user.role);
@@ -72,7 +72,6 @@ const AdminPanel = () => {
         throw new Error("Failed to delete user");
       }
 
-      // Remove user from state after successful deletion
       setUsers(users.filter((user) => user._id !== selectedUser));
       setOpenDeleteModal(false);
     } catch (error) {
@@ -98,7 +97,6 @@ const AdminPanel = () => {
         throw new Error("Failed to update user role");
       }
 
-      // Update role in state
       setUsers(
         users.map((user) =>
           user._id === selectedUser ? { ...user, role: newRole } : user

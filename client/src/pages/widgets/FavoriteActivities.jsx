@@ -1,10 +1,18 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { Grid, Typography, CircularProgress, Alert } from "@mui/material";
+import {
+  Grid,
+  Typography,
+  CircularProgress,
+  Alert,
+  useTheme,
+} from "@mui/material";
 import ActivitySmall from "./ActivitySmall.jsx";
 
 const FavoriteActivities = () => {
+  const theme = useTheme();
+  const primaryMain = theme.palette.primary.main;
   const [favoriteActivities, setFavoriteActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,6 +20,7 @@ const FavoriteActivities = () => {
   const token = useSelector((state) => state.token);
   const [prefectureMap, setPrefectureMap] = useState({});
   const [budgetMap, setBudgetMap] = useState({});
+  const [favoritesSet, setFavoritesSet] = useState(new Set());
 
   useEffect(() => {
     const fetchPrefecturesAndBudgets = async () => {
@@ -64,6 +73,8 @@ const FavoriteActivities = () => {
         }
 
         const data = await response.json();
+        const favoritesSet = new Set(data.map((activity) => activity._id));
+        setFavoritesSet(favoritesSet);
 
         const transformedData = data.map((activity) => ({
           ...activity,
@@ -85,6 +96,36 @@ const FavoriteActivities = () => {
     }
   }, [userId, token, prefectureMap, budgetMap]);
 
+  const handleRemoveFromFavorites = async (activityId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3333/users/${userId}/favorites/${activityId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error response from server:", errorText);
+        throw new Error("Failed to remove from favorites");
+      }
+
+      setFavoritesSet((prevSet) => {
+        const updatedSet = new Set(prevSet);
+        updatedSet.delete(activityId);
+        return updatedSet;
+      });
+    } catch (error) {
+      setError(error.message);
+      console.error("Failed to remove from favorites", error);
+    }
+  };
+
   if (loading) {
     return <CircularProgress />;
   }
@@ -101,7 +142,7 @@ const FavoriteActivities = () => {
       <Grid container spacing={2}>
         {favoriteActivities.length ? (
           favoriteActivities.map((activity) => (
-            <Grid item xs={12} sm={6} md={4} key={activity._id}>
+            <Grid item key={activity._id}>
               <ActivitySmall
                 activityId={activity._id}
                 activityName={activity.activityName}
@@ -110,12 +151,18 @@ const FavoriteActivities = () => {
                 categories={activity.categories}
                 prefecture={activity.prefecture}
                 budget={activity.budget}
-                saves={activity.saves}
+                isFavorite={favoritesSet.has(activity._id)}
+                onDelete={() => handleRemoveFromFavorites(activity._id)}
               />
             </Grid>
           ))
         ) : (
-          <Typography variant="body1">No favorite activities found.</Typography>
+          <Typography
+            variant="body1"
+            sx={{ marginTop: 2, padding: 2, color: primaryMain }}
+          >
+            No favorite activities found.
+          </Typography>
         )}
       </Grid>
     </div>

@@ -43,7 +43,7 @@ const PostWidget = ({
   const [editDescription, setEditDescription] = useState(description);
   const [commentText, setCommentText] = useState("");
   const [currentUserPicturePath, setCurrentUserPicturePath] = useState(
-    userPicturePath
+    userPicturePath || "/assets/image.jpg"
   );
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
@@ -64,10 +64,20 @@ const PostWidget = ({
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+
         const userData = await response.json();
-        setCurrentUserPicturePath(userData.picturePath);
+        if (userData && userData.picturePath) {
+          setCurrentUserPicturePath(userData.picturePath);
+        } else {
+          setCurrentUserPicturePath("/assets/image.jpg");
+        }
       } catch (err) {
         console.error("Failed to fetch user picture", err);
+        setCurrentUserPicturePath("/assets/image.jpg");
       }
     };
 

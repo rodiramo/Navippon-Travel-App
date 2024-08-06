@@ -23,6 +23,7 @@ import FlexBetween from "../../components/FlexBetween.jsx";
 import WidgetWrapper from "../../components/Wrapper.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import { setActivity } from "../../state/state.js";
+
 import "../ActivitiesPage/Activities.css";
 
 const ActivityWidget = ({
@@ -86,11 +87,8 @@ const ActivityWidget = ({
           }
         );
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error("Error response from server:", errorText);
+        if (!response.ok)
           throw new Error("Failed to fetch favorite activities");
-        }
 
         const favorites = await response.json();
         setIsSaved(favorites.includes(activityId));
@@ -140,28 +138,13 @@ const ActivityWidget = ({
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error("Error response from server:", errorText);
-        throw new Error("Failed to update favorite activities");
+        throw new Error(errorText || "Failed to update favorite activities");
       }
 
+      const updatedActivity = await response.json();
       setIsSaved(!isSaved);
 
-      const activityResponse = await fetch(
-        `http://localhost:3333/activities/${activityId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!activityResponse.ok) {
-        const errorText = await activityResponse.text();
-        console.error("Error response from server:", errorText);
-        throw new Error("Failed to fetch updated activity");
-      }
-
-      const updatedActivity = await activityResponse.json();
+      // Update activity details in Redux store
       dispatch(setActivity({ activity: updatedActivity }));
 
       setSnackbarMessage(
@@ -170,8 +153,6 @@ const ActivityWidget = ({
           : "Activity has been saved to your profile!"
       );
       setSnackbarSeverity(isSaved ? "info" : "success");
-
-      navigate(`/profile/${loggedInUserId}`);
     } catch (error) {
       console.error("Error updating favorite activities:", error.message);
 

@@ -22,7 +22,11 @@ router.patch(
   verifyToken,
   addRemoveFavoriteActivity
 );
+router.delete(
+  "/:id/favorites/:activityId",
+  verifyToken,
+  addRemoveFavoriteActivity
+);
 
 router.patch("/:id/friend/:friendId", verifyToken, addRemoveFriend);
-
 export default router;

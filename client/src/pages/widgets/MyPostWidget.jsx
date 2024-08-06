@@ -150,6 +150,6 @@ const MyPostWidget = ({ picturePath }) => {
   );
 };
 MyPostWidget.propTypes = {
-  picturePath: PropTypes.string.isRequired,
+  picturePath: PropTypes.string,
 };
 export default MyPostWidget;

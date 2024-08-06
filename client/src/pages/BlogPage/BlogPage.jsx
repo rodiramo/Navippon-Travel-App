@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, useMediaQuery } from "@mui/material";
+import { Box, useMediaQuery, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import NavBar from "../../components/NavBar/Navbar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
@@ -30,7 +30,14 @@ const BlogPage = () => {
 
   return (
     <Box>
-      <NavBar />
+      <NavBar />{" "}
+      <Typography
+        variant="h1"
+        sx={{ textAlign: "center", fontWeight: "bold", marginTop: 2 }}
+        gutterBottom
+      >
+        The Community Posts
+      </Typography>
       <Box
         width="100%"
         padding="2rem 6%"
