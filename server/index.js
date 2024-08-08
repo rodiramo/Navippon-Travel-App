@@ -106,6 +106,5 @@ mongoose
     //  Category.insertMany(categories);
     // Activity.insertMany(activities);
     //  Prefecture.insertMany(prefectures);
-    //  Post.insertMany(posts);
   })
   .catch((error) => console.log(`${error} did not connect`));
