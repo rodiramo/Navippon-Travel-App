@@ -30,7 +30,13 @@ import { createPost } from "./controllers/posts.controller.js";
 //import Prefecture from "./models/Prefecture.js";
 //import Activity from "./models/Activity.js";
 //import Budget from "./models/Budget.js";
-//import {prefectures, categories, users, activities,  budgets } from "./data/index.js";
+//import {
+//  prefectures,
+//  categories,
+//  users,
+//  activities,
+//  budgets,
+//} from "./data/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -101,11 +107,11 @@ mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {
     app.listen(PORT, () => console.log(`Server is Running on Port ${PORT}`));
-    // Budget.insertMany(budgets);
+    //insertar data
+    //  Budget.insertMany(budgets);
     //  User.insertMany(users);
     //  Category.insertMany(categories);
-    // Activity.insertMany(activities);
+    //  Activity.insertMany(activities);
     //  Prefecture.insertMany(prefectures);
-    //  Post.insertMany(posts);
   })
   .catch((error) => console.log(`${error} did not connect`));

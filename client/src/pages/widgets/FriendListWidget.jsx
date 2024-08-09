@@ -5,6 +5,7 @@ import WidgetWrapper from "../../components/Wrapper.jsx";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setFriends } from "../../state/state.js";
+import config from '../../config'; 
 
 const FriendListWidget = ({ userId }) => {
   const { palette } = useTheme();
@@ -13,11 +14,11 @@ const FriendListWidget = ({ userId }) => {
   const friends = useSelector((state) => state.user.friends) || [];
 
   const getFriends = async () => {
-    console.log("Token:", token); // Debugging token
+    console.log("Token:", token); 
 
     try {
       const response = await fetch(
-        `http://localhost:3333/users/${userId}/friends`,
+        `${config.API_URL}/users/${userId}/friends`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

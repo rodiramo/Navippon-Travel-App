@@ -13,6 +13,7 @@ import {
   Button,
   IconButton,
 } from "@mui/material";
+import config from '../../config.js';
 import FlexBetween from "../../components/FlexBetween.jsx";
 import Dropzone from "react-dropzone";
 import UserImage from "../../components/UserImage.jsx";
@@ -41,7 +42,7 @@ const MyPostWidget = ({ picturePath }) => {
       formData.append("picturePath", image.name);
     }
 
-    const response = await fetch(`http://localhost:3333/posts`, {
+    const response = await fetch(`${config.API_URL}/posts`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
       body: formData,

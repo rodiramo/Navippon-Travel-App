@@ -51,10 +51,6 @@ const UserSchema = new mongoose.Schema(
       ref: "Activity",
       default: [],
     },
-    preferences: {
-      categories: [{ type: [mongoose.Schema.Types.ObjectId], ref: "Category" }],
-      budgets: [{ type: [mongoose.Schema.Types.ObjectId], ref: "Budget" }],
-    },
   },
   { timestamps: true }
 );

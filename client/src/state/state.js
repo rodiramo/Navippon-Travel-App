@@ -1,7 +1,6 @@
-// Import necessary dependencies
+
 import { createSlice } from "@reduxjs/toolkit";
 
-// Initial state
 const initialState = {
   mode: "light",
   user: { _id: null, friends: [], role: "", favorites: [] },
@@ -10,7 +9,6 @@ const initialState = {
   activities: [],
 };
 
-// Create slice
 export const authSlice = createSlice({
   name: "auth",
   initialState,

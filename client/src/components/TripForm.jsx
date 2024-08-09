@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import {
   Box,
   TextField,
@@ -10,8 +11,9 @@ import {
   FormControl,
 } from "@mui/material";
 import { useSelector } from "react-redux";
+import config from "../config.js";
 
-const TripForm = () => {
+const TripForm = ({ onTripCreated }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -31,7 +33,7 @@ const TripForm = () => {
   useEffect(() => {
     const fetchBudgetOptions = async () => {
       try {
-        const response = await fetch("http://localhost:3333/budget", {
+        const response = await fetch(`${config.API_URL}/budget`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await response.json();
@@ -43,7 +45,7 @@ const TripForm = () => {
 
     const fetchPrefectureOptions = async () => {
       try {
-        const response = await fetch("http://localhost:3333/prefectures", {
+        const response = await fetch(`${config.API_URL}/prefectures`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await response.json();
@@ -55,7 +57,7 @@ const TripForm = () => {
 
     const fetchCategoryOptions = async () => {
       try {
-        const response = await fetch("http://localhost:3333/categories", {
+        const response = await fetch(`${config.API_URL}/categories`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await response.json();
@@ -79,7 +81,7 @@ const TripForm = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3333/trips", {
+      const response = await fetch(`${config.API_URL}/trips`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -104,6 +106,7 @@ const TripForm = () => {
 
       setSuccess("Trip created successfully!");
       setError("");
+      onTripCreated();
     } catch (err) {
       setError(err.message);
       setSuccess("");
@@ -193,6 +196,10 @@ const TripForm = () => {
       </Button>
     </Box>
   );
+};
+
+TripForm.propTypes = {
+  onTripCreated: PropTypes.func.isRequired, // Validate that onTripCreated is a function and is required
 };
 
 export default TripForm;

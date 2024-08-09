@@ -1,4 +1,4 @@
-import NavBar from "../../components/NavBar/Navbar.jsx";
+import NavBar from "../../components/NavBar/NavBar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
 import { Box, Typography, useMediaQuery } from "@mui/material";
 import CategoriesWidget from "../widgets/CategoriesWidget.jsx";
@@ -12,7 +12,6 @@ const HomePage = () => {
     <Box>
       <NavBar />
       <Box>
-        {/* Hero Section */}
         <Box
           sx={{
             background: `linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.3)), url(${heroImage})`,

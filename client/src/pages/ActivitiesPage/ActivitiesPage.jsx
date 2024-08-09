@@ -1,4 +1,4 @@
-import NavBar from "../../components/NavBar/Navbar.jsx";
+import NavBar from "../../components/NavBar/NavBar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
 import ActivitiesWidget from "../widgets/ActivitiesWidget.jsx";
 import "./Activities.css";

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
   Typography,
@@ -7,16 +7,26 @@ import {
   Card,
   CardContent,
   Button,
+  Breadcrumbs,
+  Link,
+  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
-import NavBar from "../../components/NavBar/Navbar.jsx";
-import Footer from "../../components/Footer/Footer.jsx";
 import { useNavigate } from "react-router-dom";
+import { fetchTrips, deleteTrip } from "../../services/services.js";
+import NavBar from "../../components/NavBar/NavBar.jsx";
+import Footer from "../../components/Footer/Footer.jsx";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const UserTripsPage = () => {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const userId = useSelector((state) => state.user.id);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [tripToDelete, setTripToDelete] = useState(null);
   const token = useSelector((state) => state.token);
   const navigate = useNavigate();
 
@@ -24,16 +34,7 @@ const UserTripsPage = () => {
     const fetchUserTrips = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`http://localhost:3333/trips`, {
-          method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch user trips");
-        }
-
-        const data = await response.json();
+        const data = await fetchTrips(token);
         setTrips(data);
       } catch (error) {
         setError(error.message);
@@ -43,10 +44,34 @@ const UserTripsPage = () => {
     };
 
     fetchUserTrips();
-  }, [userId, token]);
+  }, [token]);
 
   const handleViewDetails = (tripId) => {
     navigate(`/trips/${tripId}`);
+  };
+
+  const handleOpenDialog = (tripId) => {
+    setTripToDelete(tripId);
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setTripToDelete(null);
+    setOpenDialog(false);
+  };
+
+  const handleDeleteTrip = async () => {
+    if (tripToDelete) {
+      try {
+        await deleteTrip(tripToDelete, token);
+        setTrips((prevTrips) =>
+          prevTrips.filter((trip) => trip._id !== tripToDelete)
+        );
+        handleCloseDialog();
+      } catch (error) {
+        setError(error.message);
+      }
+    }
   };
 
   if (loading) {
@@ -56,7 +81,13 @@ const UserTripsPage = () => {
   return (
     <Box>
       <NavBar />
-      <Box sx={{ padding: 3 }}>
+      <Box sx={{ padding: 3, height: "80vh" }}>
+        <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
+          <Link color="inherit" href="/home">
+            Home
+          </Link>
+          <Typography color="textPrimary">My Trips</Typography>
+        </Breadcrumbs>
         <Typography variant="h1" gutterBottom>
           My Trips
         </Typography>
@@ -83,6 +114,14 @@ const UserTripsPage = () => {
                 >
                   View Details
                 </Button>
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  onClick={() => handleOpenDialog(trip._id)}
+                  sx={{ ml: 2 }}
+                >
+                  <DeleteIcon />
+                </IconButton>
               </CardContent>
             </Card>
           ))
@@ -91,6 +130,20 @@ const UserTripsPage = () => {
         )}
       </Box>
       <Footer />
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <Typography>Are you sure you want to delete this trip?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={handleDeleteTrip} color="error">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

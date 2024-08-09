@@ -17,6 +17,7 @@ import { useDispatch } from "react-redux";
 import Dropzone from "react-dropzone";
 import { setLogin } from "../../state/state.js";
 import FlexBetween from "../../components/FlexBetween.jsx";
+import config from '../../config.js'; 
 
 // Validation schemas
 const registerSchema = yup.object().shape({
@@ -65,7 +66,7 @@ const Form = () => {
     formData.append("picturePath", values.picture.name);
 
     const savedUserResponse = await fetch(
-      "http://localhost:3333/auth/register",
+      `${config.API_URL}/auth/register`,
       {
         method: "POST",
         body: formData,
@@ -82,14 +83,14 @@ const Form = () => {
   // login
   const login = async (values, onSubmitProps) => {
     try {
-      const loggedInResponse = await fetch("http://localhost:3333/auth/login", {
+      const loggedInResponse = await fetch(`${config.API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
 
       if (!loggedInResponse.ok) {
-        throw new Error("User info not found"); // Handle specific error message
+        throw new Error("User info not found");
       }
 
       const loggedIn = await loggedInResponse.json();
@@ -103,15 +104,14 @@ const Form = () => {
       );
       navigate("/home");
     } catch (error) {
-      // Set error message in form state to be displayed to user
       console.error("Login error:", error.message);
-      setGeneralError(error.message); // Update general error state
+      setGeneralError(error.message); 
     }
   };
 
   //submit
   const handleFormSubmit = async (values, onSubmitProps) => {
-    setGeneralError(null); // Clear previous errors
+    setGeneralError(null); 
     if (isLogin) await login(values, onSubmitProps);
     if (isRegister) await register(values, onSubmitProps);
   };

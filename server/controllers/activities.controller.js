@@ -1,5 +1,5 @@
+import mongoose from "mongoose";
 import Activity from "../models/Activity.js";
-import Category from "../models/Category.js";
 import Prefecture from "../models/Prefecture.js";
 import fs from "fs";
 import path from "path";
@@ -31,12 +31,12 @@ export const createActivity = async (req, res) => {
       categories,
       saves: {},
     });
-
     await newActivity.save();
 
     const activities = await Activity.find()
       .populate("prefecture")
-      .populate("budget");
+      .populate("budget")
+      .sort({ createdAt: -1 });
 
     res.status(201).json({ activities });
   } catch (err) {
@@ -48,13 +48,15 @@ export const getActivities = async (req, res) => {
   try {
     const activities = await Activity.find()
       .populate("prefecture")
-      .populate("budget");
+      .populate("budget")
+      .sort({ createdAt: -1 });
     res.status(200).json(activities);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
 };
 
+// Edit existing activity
 export const editActivity = async (req, res) => {
   try {
     const { id } = req.params;
@@ -91,10 +93,8 @@ export const editActivity = async (req, res) => {
         }
       }
       updatedData.coverPath = req.file.filename;
-    } else if (coverPath) {
-      updatedData.coverPath = coverPath;
     } else {
-      updatedData.coverPath = activity.coverPath;
+      updatedData.coverPath = coverPath || activity.coverPath;
     }
 
     const updatedActivity = await Activity.findByIdAndUpdate(id, updatedData, {
@@ -126,35 +126,9 @@ export const getActivity = async (req, res) => {
   }
 };
 
-export const saveActivity = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { userId } = req.body;
-    const activity = await Activity.findById(id);
-
-    const isSaved = activity.saves.get(userId);
-    if (isSaved) {
-      activity.saves.delete(userId);
-    } else {
-      activity.saves.set(userId, true);
-    }
-
-    const updatedActivity = await Activity.findByIdAndUpdate(
-      id,
-      { saves: activity.saves },
-      { new: true }
-    );
-
-    res.status(200).json(updatedActivity);
-  } catch (err) {
-    res.status(404).json({ message: err.message });
-  }
-};
-
 export const deleteActivity = async (req, res) => {
   try {
     const { id } = req.params;
-
     const activity = await Activity.findByIdAndDelete(id);
 
     if (!activity) {

@@ -7,8 +7,7 @@ import {
   EditOutlined,
 } from "@mui/icons-material";
 import {
-  Box,
-  Divider,
+  TextField,
   IconButton,
   Typography,
   useTheme,
@@ -18,14 +17,15 @@ import {
   DialogContentText,
   DialogTitle,
   Button,
-  TextField,
 } from "@mui/material";
+import config from "../../config.js";
 import FlexBetween from "../../components/FlexBetween.jsx";
 import Friend from "../../components/Friend.jsx";
 import WidgetWrapper from "../../components/Wrapper.jsx";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost, removePost } from "../../state/state.js";
+import CommentsSection from "../../components/CommentSection.jsx";
 
 const PostWidget = ({
   postId,
@@ -58,12 +58,9 @@ const PostWidget = ({
   useEffect(() => {
     const fetchUserPicture = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:3333/users/${postUserId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const response = await fetch(`${config.API_URL}/users/${postUserId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         if (!response.ok) {
           throw new Error("Failed to fetch user data");
@@ -101,7 +98,7 @@ const PostWidget = ({
   };
 
   const patchLike = async () => {
-    const response = await fetch(`http://localhost:3333/posts/${postId}/like`, {
+    const response = await fetch(`${config.API_URL}/posts/${postId}/like`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -114,7 +111,7 @@ const PostWidget = ({
   };
 
   const deletePost = async () => {
-    const response = await fetch(`http://localhost:3333/posts/${postId}`, {
+    const response = await fetch(`${config.API_URL}/posts/${postId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -128,7 +125,7 @@ const PostWidget = ({
   };
 
   const editPost = async () => {
-    const response = await fetch(`http://localhost:3333/posts/${postId}/edit`, {
+    const response = await fetch(`${config.API_URL}/posts/${postId}/edit`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -146,17 +143,14 @@ const PostWidget = ({
   };
 
   const addComment = async () => {
-    const response = await fetch(
-      `http://localhost:3333/posts/${postId}/comment`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId: loggedInUserId, comment: commentText }),
-      }
-    );
+    const response = await fetch(`${config.API_URL}/posts/${postId}/comment`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId: loggedInUserId, comment: commentText }),
+    });
 
     const updatedPost = await response.json();
     dispatch(setPost({ post: updatedPost }));
@@ -166,7 +160,7 @@ const PostWidget = ({
   const deleteComment = async (userId, commentIndex) => {
     try {
       const response = await fetch(
-        `http://localhost:3333/posts/${postId}/comment`,
+        `${config.API_URL}/posts/${postId}/comment`,
         {
           method: "DELETE",
           headers: {
@@ -200,11 +194,11 @@ const PostWidget = ({
       </Typography>
       {picturePath && (
         <img
-          width="100%"
+          width="50%"
           height="auto"
           alt="post"
           style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-          src={`http://localhost:3333/assets/${picturePath}`}
+          src={`${config.API_URL}/assets/${picturePath}`}
         />
       )}
       <FlexBetween mt="0.25rem">
@@ -239,47 +233,19 @@ const PostWidget = ({
           </FlexBetween>
         )}
       </FlexBetween>
-      {isComments && (
-        <Box mt="0.5rem">
-          {comments.map((comment, i) => (
-            <Box key={`${name}-${i}`}>
-              <Divider />
-              <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-                {comment.comment}
 
-                {comment.userId === loggedInUserId && (
-                  <IconButton onClick={() => deleteComment(comment.userId, i)}>
-                    <DeleteOutline />
-                  </IconButton>
-                )}
-              </Typography>
-            </Box>
-          ))}
-
-          <Divider />
-        </Box>
-      )}
       {isComments && (
-        <Box mt="0.5rem">
-          <TextField
-            fullWidth
-            id="comment"
-            label="Add a comment"
-            variant="outlined"
-            value={commentText}
-            onChange={(e) => setCommentText(e.target.value)}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={addComment}
-            disabled={commentText.trim() === ""}
-            sx={{ mt: "0.5rem" }}
-          >
-            Comment
-          </Button>
-        </Box>
+        <CommentsSection
+          comments={comments}
+          postId={postId}
+          loggedInUserId={loggedInUserId}
+          addComment={addComment}
+          deleteComment={deleteComment}
+          commentText={commentText}
+          setCommentText={setCommentText}
+        />
       )}
+
       <Dialog
         open={openDelete}
         onClose={handleDeleteClose}

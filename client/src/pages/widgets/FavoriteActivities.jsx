@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import ActivitySmall from "./ActivitySmall.jsx";
 import { setActivities } from "../../state/state.js";
+import config from "../../config";
 
 const FavoriteActivities = () => {
   const theme = useTheme();
@@ -26,9 +27,7 @@ const FavoriteActivities = () => {
   useEffect(() => {
     const fetchPrefecturesAndBudgets = async () => {
       try {
-        const prefectureResponse = await fetch(
-          "http://localhost:3333/prefectures"
-        );
+        const prefectureResponse = await fetch(`${config.API_URL}/prefectures`);
         if (!prefectureResponse.ok)
           throw new Error("Failed to fetch prefectures");
         const prefectures = await prefectureResponse.json();
@@ -38,11 +37,11 @@ const FavoriteActivities = () => {
         }, {});
         setPrefectureMap(prefectureMap);
 
-        const budgetResponse = await fetch("http://localhost:3333/budget");
+        const budgetResponse = await fetch(`${config.API_URL}/budget`);
         if (!budgetResponse.ok) throw new Error("Failed to fetch budgets");
         const budgets = await budgetResponse.json();
         const budgetMap = budgets.reduce((acc, budget) => {
-          acc[budget._id] = budget.abbreviation;
+          acc[budget._id] = budget.name;
           return acc;
         }, {});
         setBudgetMap(budgetMap);
@@ -61,7 +60,7 @@ const FavoriteActivities = () => {
 
       try {
         const response = await fetch(
-          `http://localhost:3333/users/${userId}/activities`,
+          `${config.API_URL}/users/${userId}/activities`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -77,8 +76,8 @@ const FavoriteActivities = () => {
         const transformedData = data.map((activity) => ({
           ...activity,
           prefecture: { name: prefectureMap[activity.prefecture] || "Unknown" },
-          budget: { abbreviation: budgetMap[activity.budget] || "Unknown" },
-          isFavorite: true, // Assuming all activities in this list are favorites
+          budget: { name: budgetMap[activity.budget] || "Unknown" },
+          isSaved: true,
         }));
 
         setFavoriteActivities(transformedData);
@@ -95,10 +94,16 @@ const FavoriteActivities = () => {
     }
   }, [userId, token, prefectureMap, budgetMap]);
 
+  const handleRemoveFromFavorites = (activityId) => {
+    setFavoriteActivities((prevActivities) =>
+      prevActivities.filter((activity) => activity._id !== activityId)
+    );
+  };
+
   const handleDelete = async (activityId) => {
     try {
       const response = await fetch(
-        `http://localhost:3333/activities/${activityId}`,
+        `${config.API_URL}/activities/${activityId}`,
         {
           method: "DELETE",
           headers: {
@@ -113,7 +118,6 @@ const FavoriteActivities = () => {
         throw new Error("Failed to delete activity");
       }
 
-      // Update the state after deletion
       setFavoriteActivities((prevActivities) =>
         prevActivities.filter((activity) => activity._id !== activityId)
       );
@@ -147,15 +151,11 @@ const FavoriteActivities = () => {
           favoriteActivities.map((activity) => (
             <Grid item key={activity._id}>
               <ActivitySmall
+                {...activity}
+                isSaved={activity.isSaved}
                 activityId={activity._id}
-                activityName={activity.activityName}
-                description={activity.description}
-                coverPath={activity.coverPath}
-                categories={activity.categories}
-                prefecture={activity.prefecture}
-                budget={activity.budget}
-                isFavorite={activity.isFavorite}
                 onDelete={() => handleDelete(activity._id)}
+                onRemoveFromFavorites={handleRemoveFromFavorites}
               />
             </Grid>
           ))

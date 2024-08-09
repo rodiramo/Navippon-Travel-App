@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Typography, Box, IconButton } from "@mui/material";
 import PropTypes from "prop-types";
+import { fetchCategoryDetails } from '../../services/services'; 
+import config from '../../config'; 
 
 const CategoriesWidget = () => {
   const [categories, setCategories] = useState([]);
@@ -9,20 +11,15 @@ const CategoriesWidget = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const loadCategories = async () => {
       try {
-        const response = await fetch("http://localhost:3333/categories");
-        if (!response.ok) {
-          throw new Error("Failed to fetch categories");
-        }
-        const data = await response.json();
-        setCategories(data);
+        const data = await fetchCategoryDetails();        setCategories(data);
       } catch (error) {
         setError(error.message);
       }
     };
 
-    fetchCategories();
+    loadCategories();
   }, []);
 
   const handleCategoryClick = (categoryName) => {
@@ -65,7 +62,7 @@ const CategoriesWidget = () => {
             >
               <Box
                 component="img"
-                src={`http://localhost:3333/assets/${category.icon}`}
+                src={`${config.API_URL}/assets/${category.icon}`}
                 alt={category.category}
                 sx={{
                   width: 50,

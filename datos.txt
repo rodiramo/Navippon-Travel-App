@@ -1,0 +1,12 @@
+Carrera: Diseño y Desarrollo Web
+Materia: Aplicaciones Hibridas
+Año: 2024
+Turno: Tarde
+Comisión: AH
+Carácter de Entrega: Final
+
+Credenciales de Acceso al Panel de Administración:
+Usuario: admin@gmail.com
+Contraseña: 123456
+
+Información sobre el proyecto Final en el archivo "README.md"

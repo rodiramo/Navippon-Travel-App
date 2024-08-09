@@ -111,7 +111,7 @@ export const users = [
     lastName: "Rocio",
     email: "admin@gmail.com",
     password: "$2b$10$gO.ada9eeie4U5L24WZukuUng3kKVCNG96YFXfbyMCBKxH2j4Zqsq",
-    picturePath: "p11.jpeg",
+    picturePath: "admin-pfp.jpg",
     activities: [],
     location: "BS. AS",
     interests: [],
@@ -135,8 +135,6 @@ export const users = [
     __v: 0,
   },
 ];
-
-export const posts = [];
 
 export const activities = [
   {

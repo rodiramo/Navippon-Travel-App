@@ -19,9 +19,12 @@ import {
 import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Dropzone from "react-dropzone";
-import NavBar from "../../components/NavBar/Navbar.jsx";
+import NavBar from "../../components/NavBar/NavBar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
 import "./ActivityForm.css";
+import config from '../../config.js'; 
+
+
 
 const activitySchema = yup.object().shape({
   activityName: yup.string().required("Activity Name is required"),
@@ -52,9 +55,9 @@ const ActivityForm = () => {
     const fetchData = async () => {
       try {
         const [categoriesRes, prefecturesRes, budgetsRes] = await Promise.all([
-          fetch("http://localhost:3333/categories"),
-          fetch("http://localhost:3333/prefectures"),
-          fetch("http://localhost:3333/budget"),
+          fetch(`${config.API_URL}/categories`),
+          fetch(`${config.API_URL}/prefectures`),
+          fetch(`${config.API_URL}/budget`),
         ]);
 
         if (!categoriesRes.ok || !prefecturesRes.ok || !budgetsRes.ok) {
@@ -77,7 +80,7 @@ const ActivityForm = () => {
 
         if (isEditMode) {
           const activityRes = await fetch(
-            `http://localhost:3333/activities/${activityId}`,
+            `${config.API_URL}/activities/${activityId}`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }
@@ -140,8 +143,8 @@ const ActivityForm = () => {
     }
 
     const url = isEditMode
-      ? `http://localhost:3333/activities/${activityId}`
-      : `http://localhost:3333/activities`;
+      ? `${config.API_URL}/activities/${activityId}`
+      : `${config.API_URL}/activities`;
 
     const method = isEditMode ? "PATCH" : "POST";
 
@@ -362,7 +365,7 @@ const ActivityForm = () => {
                         <div style={{ marginTop: spacing(2) }}>
                           <Typography>Current image:</Typography>
                           <img
-                            src={`http://localhost:3333/assets/${existingImage}`}
+                            src={`${config.API_URL}/assets/${existingImage}`}
                             alt="Existing activity"
                             style={{
                               width: "100px",
@@ -421,7 +424,7 @@ const ActivityForm = () => {
                           >
                             <Box
                               component="img"
-                              src={`http://localhost:3333/assets/${category.icon}`}
+                              src={`${config.API_URL}/assets/${category.icon}`}
                               alt={category.category}
                               sx={{
                                 padding: "0.4rem",

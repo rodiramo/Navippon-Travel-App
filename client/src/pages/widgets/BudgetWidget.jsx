@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Typography, Box, List, ListItem, ListItemText } from "@mui/material";
+import config from '../../config'; 
 
 const PrefecturesWidget = () => {
   const [budgets, setBudget] = useState([]);
@@ -8,7 +9,7 @@ const PrefecturesWidget = () => {
   useEffect(() => {
     const fetchPrefectures = async () => {
       try {
-        const response = await fetch("http://localhost:3333/budget");
+        const response = await fetch(`${config.API_URL}/budget`);
         if (!response.ok) {
           throw new Error("Failed to fetch budget");
         }

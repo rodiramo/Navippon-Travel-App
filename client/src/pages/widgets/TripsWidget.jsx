@@ -1,17 +1,22 @@
 import { useState, useEffect } from "react";
-import { format } from "date-fns";
+import { useSelector } from "react-redux";
 import {
-  Typography,
   Box,
   Button,
+  Typography,
   List,
-  useTheme,
   ListItem,
   ListItemText,
+  useTheme,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
 import TripForm from "../../components/TripForm.jsx";
-import { useSelector } from "react-redux";
+import { fetchTrips, deleteTrip } from "../../services/services.js";
 import { useNavigate } from "react-router-dom";
+import { format } from "date-fns";
 
 const TripsWidget = () => {
   const theme = useTheme();
@@ -20,23 +25,28 @@ const TripsWidget = () => {
   const [trips, setTrips] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [tripToDelete, setTripToDelete] = useState(null);
   const token = useSelector((state) => state.token);
   const navigate = useNavigate();
+
+  const formatDate = (dateString) => {
+    return format(new Date(dateString), "dd.MM.yyyy");
+  };
 
   const handleToggleForm = () => {
     setShowForm((prev) => !prev);
   };
 
-  const fetchTrips = async () => {
+  const handleTripCreated = () => {
+    fetchTripsData();
+    setShowForm(false);
+  };
+
+  const fetchTripsData = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:3333/trips", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!response.ok) {
-        throw new Error("Failed to fetch trips");
-      }
-      const data = await response.json();
+      const data = await fetchTrips(token);
       setTrips(data);
     } catch (err) {
       setError(err.message);
@@ -47,16 +57,36 @@ const TripsWidget = () => {
 
   useEffect(() => {
     if (token) {
-      fetchTrips();
+      fetchTripsData();
     }
   }, [token]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const formatDate = (dateString) => {
-    return format(new Date(dateString), "dd.MM.yyyy");
-  };
-
   const handleViewDetails = (tripId) => {
     navigate(`/trips/${tripId}`);
+  };
+
+  const handleOpenDeleteDialog = (tripId) => {
+    setTripToDelete(tripId);
+    setOpenDeleteDialog(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setTripToDelete(null);
+    setOpenDeleteDialog(false);
+  };
+
+  const handleDeleteTrip = async () => {
+    if (tripToDelete) {
+      try {
+        await deleteTrip(tripToDelete, token);
+        setTrips((prevTrips) =>
+          prevTrips.filter((trip) => trip._id !== tripToDelete)
+        );
+        handleCloseDeleteDialog();
+      } catch (err) {
+        setError(err.message);
+      }
+    }
   };
 
   return (
@@ -66,7 +96,7 @@ const TripsWidget = () => {
       </Button>
       {showForm && (
         <Box mt={2}>
-          <TripForm />
+          <TripForm onTripCreated={handleTripCreated} />
         </Box>
       )}
       {loading && <Typography>Loading...</Typography>}
@@ -94,6 +124,15 @@ const TripsWidget = () => {
                         trip.endDate
                       )}`}
                     />
+                    <Typography>Click to View Details</Typography>
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={() => handleOpenDeleteDialog(trip._id)}
+                    sx={{ ml: 2 }}
+                  >
+                    Delete
                   </Button>
                 </ListItem>
               ))}
@@ -101,6 +140,20 @@ const TripsWidget = () => {
           )}
         </Box>
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <Typography>Are you sure you want to delete this trip?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteDialog}>Cancel</Button>
+          <Button onClick={handleDeleteTrip} color="error">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

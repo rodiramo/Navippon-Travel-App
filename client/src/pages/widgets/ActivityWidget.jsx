@@ -23,6 +23,8 @@ import FlexBetween from "../../components/FlexBetween.jsx";
 import WidgetWrapper from "../../components/Wrapper.jsx";
 import { useSelector } from "react-redux";
 import "../ActivitiesPage/Activities.css";
+import config from "../../config.js";
+import { fetchCategoryDetails } from "../../services/services.js";
 
 const ActivityWidget = ({
   activityId,
@@ -43,74 +45,55 @@ const ActivityWidget = ({
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [isSaved, setIsSaved] = useState(false);
-  const role = useSelector((state) => state.user.role); // Get role from Redux
+  const role = useSelector((state) => state.user.role);
 
   useEffect(() => {
-    const fetchCategoryDetails = async () => {
+    const fetchCategoryData = async () => {
       try {
-        const response = await fetch("http://localhost:3333/categories");
-        if (!response.ok) throw new Error("Failed to fetch categories");
-        const data = await response.json();
-
+        const data = await fetchCategoryDetails();
         const categoryMap = data.reduce((acc, category) => {
           acc[category.category] = category;
           return acc;
         }, {});
-
-        if (Array.isArray(categories)) {
-          const details = categories.map(
-            (name) => categoryMap[name] || { category: name }
-          );
-          setCategoryDetails(details);
-        }
+        const details = categories.map(
+          (name) => categoryMap[name] || { category: name }
+        );
+        setCategoryDetails(details);
       } catch (error) {
         console.error("Failed to fetch categories", error);
       }
     };
 
-    fetchCategoryDetails();
+    fetchCategoryData();
   }, [categories]);
 
   const handleEdit = () => navigate(`/edit-activity/${activityId}`);
   const handleOpenDeleteModal = () => setOpenDeleteModal(true);
   const handleCloseDeleteModal = () => setOpenDeleteModal(false);
 
-  const handleDelete = async () => {
-    try {
-      if (onDelete) {
-        await onDelete(activityId);
-        setSnackbarMessage("Activity deleted successfully!");
-        setSnackbarSeverity("success");
-      }
-    } catch (error) {
-      console.error("Failed to delete activity:", error.message);
-      setSnackbarMessage("Failed to delete activity. Please try again.");
-      setSnackbarSeverity("error");
-    } finally {
+  const handleDeleteActivity = async () => {
+    if (onDelete) {
+      await onDelete();
+      setSnackbarMessage("Activity deleted successfully!");
+      setSnackbarSeverity("success");
       setSnackbarOpen(true);
       handleCloseDeleteModal();
     }
   };
 
-  const handleViewDetails = () => navigate(`/activities/${activityId}`);
-
-  const handleSave = async () => {
-    try {
-      if (onSave) {
-        await onSave(isSaved);
-        setIsSaved(!isSaved);
-        setSnackbarMessage(
-          isSaved ? "Removed from favorites!" : "Added to favorites!"
-        );
-        setSnackbarSeverity("success");
-      }
-    } catch (error) {
-      console.error("Error updating favorite activities:", error.message);
-      setSnackbarMessage("Failed to save activity. Please try again.");
-      setSnackbarSeverity("error");
+  const handleSaveActivity = async () => {
+    if (onSave) {
+      await onSave(isSaved);
+      setIsSaved(!isSaved);
+      setSnackbarMessage(
+        isSaved ? "Removed from favorites!" : "Added to favorites!"
+      );
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
     }
-    setSnackbarOpen(true);
   };
+
+  const handleViewDetails = () => navigate(`/activities/${activityId}`);
 
   return (
     <WidgetWrapper
@@ -119,7 +102,7 @@ const ActivityWidget = ({
       style={{ backgroundColor: palette.primary.white }}
     >
       <img
-        src={`http://localhost:3333/assets/${coverPath}`}
+        src={`${config.API_URL}/assets/${coverPath}`}
         alt={activityName}
         className="activity-image"
         style={{ color: palette.primary.black }}
@@ -143,9 +126,7 @@ const ActivityWidget = ({
         >
           {description}
         </Typography>
-        <Typography style={{ color: palette.primary.black }} className="budget">
-          {budget?.abbreviation || "Loading..."}
-        </Typography>
+
         <FlexBetween className="wrap-buttons">
           <Button
             variant="contained"
@@ -172,7 +153,7 @@ const ActivityWidget = ({
           backgroundColor: palette.primary.main,
           color: palette.primary.white,
         }}
-        onClick={handleSave}
+        onClick={handleSaveActivity}
       >
         {isSaved ? (
           <FavoriteOutlined sx={{ color: "#fff" }} />
@@ -180,7 +161,9 @@ const ActivityWidget = ({
           <FavoriteBorderOutlined />
         )}
       </IconButton>
-
+      <Typography style={{ color: palette.primary.black }} className="budget">
+        {budget?.name || "Loading..."} {budget?.abbreviation || "Loading..."}
+      </Typography>
       <Dialog open={openDeleteModal} onClose={handleCloseDeleteModal}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
@@ -189,11 +172,12 @@ const ActivityWidget = ({
             undone.
           </Typography>
         </DialogContent>
+
         <DialogActions>
           <Button onClick={handleCloseDeleteModal} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleDelete} color="secondary">
+          <Button onClick={handleDeleteActivity} color="secondary">
             Delete
           </Button>
         </DialogActions>
@@ -234,6 +218,7 @@ ActivityWidget.propTypes = {
     name: PropTypes.string,
   }),
   budget: PropTypes.shape({
+    name: PropTypes.string,
     abbreviation: PropTypes.string,
   }),
   onSave: PropTypes.func.isRequired,

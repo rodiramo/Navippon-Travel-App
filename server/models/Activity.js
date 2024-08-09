@@ -23,7 +23,10 @@ const ActivitySchema = new mongoose.Schema({
     ref: "Budget",
   },
   categories: [String],
-  saves: { type: Map, of: Boolean },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Activity = mongoose.model("Activity", ActivitySchema);

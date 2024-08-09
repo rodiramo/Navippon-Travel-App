@@ -1,26 +1,4 @@
 /*activities page view */
-.search-results {
-  padding: 20px;
-}
-
-.search-results .filters {
-  display: flex;
-  flex-direction: column;
-  margin-right: 20px;
-}
-
-.filters label {
-  font-size: 1rem;
-  margin-bottom: 10px;
-}
-
-.filters input,
-.filters select {
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #96c6d9;
-  border-radius: 5px;
-}
 
 .activity-list {
   display: flex;
@@ -76,8 +54,7 @@
 }
 
 .budget {
-  position: absolute;
-  right: 85px;
+  margin-left: -33px !important;
   margin-top: 147px !important;
   font-weight: 500 !important;
   font-size: 1.25rem !important;
@@ -91,8 +68,7 @@
 }
 
 .favorite {
-  position: absolute !important;
-  right: 80px;
+  height: 37px;
   margin-top: -4px !important;
 }
 
@@ -121,13 +97,16 @@
   }
   .activity-description {
     font-size: 1rem;
-    color: #666;
     padding-top: 5px;
     text-align: center !important;
+  }
+  .favorite {
+    margin-top: 10px !important;
   }
   .budget {
     position: initial;
     right: 0px;
+    margin-left: 0px !important;
     margin-top: 0px !important;
   }
 }

@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setActivities } from "../../state/state.js";
 import ActivityWidget from "./ActivityWidget.jsx";
-import { CircularProgress, Typography, Box } from "@mui/material";
+import { Skeleton, Typography, Box } from "@mui/material";
+import {
+  fetchActivities,
+  saveOrUnsaveActivity,
+  deleteActivity,
+} from "../../services/services.js";
 
 const ActivitiesWidget = () => {
   const dispatch = useDispatch();
@@ -13,18 +18,9 @@ const ActivitiesWidget = () => {
   const loggedInUserId = useSelector((state) => state.user._id);
 
   useEffect(() => {
-    const fetchActivities = async () => {
+    const loadActivities = async () => {
       try {
-        const response = await fetch("http://localhost:3333/activities", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || "Failed to fetch activities");
-        }
-
-        const data = await response.json();
+        const data = await fetchActivities(token);
         dispatch(setActivities(data));
       } catch (error) {
         setError(error.message);
@@ -33,30 +29,17 @@ const ActivitiesWidget = () => {
       }
     };
 
-    fetchActivities();
+    loadActivities();
   }, [dispatch, token]);
 
-  const patchSave = async (activityId, isSaved) => {
+  const handleSave = async (activityId, isSaved) => {
     try {
-      const method = isSaved ? "DELETE" : "PATCH";
-      const response = await fetch(
-        `http://localhost:3333/users/${loggedInUserId}/favorites/${activityId}`,
-        {
-          method: method,
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
+      const updatedActivity = await saveOrUnsaveActivity(
+        loggedInUserId,
+        activityId,
+        isSaved,
+        token
       );
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || "Failed to update favorite activities");
-      }
-
-      const updatedActivity = await response.json();
-
       dispatch(
         setActivities(
           activities.map((activity) =>
@@ -73,19 +56,7 @@ const ActivitiesWidget = () => {
 
   const handleDelete = async (activityId) => {
     try {
-      const response = await fetch(
-        `http://localhost:3333/activities/${activityId}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || "Failed to delete activity");
-      }
-
+      await deleteActivity(activityId, token);
       dispatch(
         setActivities(
           activities.filter((activity) => activity._id !== activityId)
@@ -96,8 +67,32 @@ const ActivitiesWidget = () => {
     }
   };
 
-  if (loading) return <CircularProgress />;
-  if (error) return <Typography color="error">Error: {error}</Typography>;
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+          padding: 2,
+        }}
+      >
+        <Skeleton variant="text" width={300} height={40} />
+        <Skeleton
+          variant="rectangular"
+          width={350}
+          height={200}
+          sx={{ marginTop: 2, borderRadius: "8px" }}
+        />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return <Typography color="error">Error: {error}</Typography>;
+  }
 
   return (
     <Box
@@ -121,7 +116,7 @@ const ActivitiesWidget = () => {
               <ActivityWidget
                 {...activity}
                 activityId={activity._id}
-                onSave={(isSaved) => patchSave(activity._id, isSaved)}
+                onSave={(isSaved) => handleSave(activity._id, isSaved)}
                 onDelete={() => handleDelete(activity._id)}
               />
             </Box>

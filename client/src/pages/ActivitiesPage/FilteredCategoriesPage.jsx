@@ -10,8 +10,9 @@ import {
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import ActivitySmall from "../widgets/ActivitySmall.jsx";
-import NavBar from "../../components/NavBar/Navbar.jsx";
+import NavBar from "../../components/NavBar/NavBar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
+import config from "../../config.js";
 
 const FilteredCategoriesPage = () => {
   const [activities, setActivities] = useState([]);
@@ -25,7 +26,7 @@ const FilteredCategoriesPage = () => {
       setLoading(true);
       try {
         const response = await fetch(
-          `http://localhost:3333/activities/filtered-category/${categoryName}`,
+          `${config.API_URL}/activities/filtered-category/${categoryName}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -51,7 +52,7 @@ const FilteredCategoriesPage = () => {
   const handleDelete = async (activityId) => {
     try {
       const response = await fetch(
-        `http://localhost:3333/activities/${activityId}`,
+        `${config.API_URL}/activities/${activityId}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
@@ -63,7 +64,6 @@ const FilteredCategoriesPage = () => {
         throw new Error(errorData.message || "Failed to delete activity");
       }
 
-      // Update local state
       setActivities((prevActivities) =>
         prevActivities.filter((activity) => activity._id !== activityId)
       );

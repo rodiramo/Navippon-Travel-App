@@ -4,6 +4,7 @@ import UserImage from "../../components/UserImage.jsx";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import config from '../../config.js';
 
 const UserProfilePicture = ({ userId }) => {
   const [user, setUser] = useState(null);
@@ -11,7 +12,7 @@ const UserProfilePicture = ({ userId }) => {
   const token = useSelector((state) => state.token);
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:3333/users/${userId}`, {
+    const response = await fetch(`${config.API_URL}/users/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });

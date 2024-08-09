@@ -9,9 +9,10 @@ import {
   Breadcrumbs,
   Link,
 } from "@mui/material";
-import NavBar from "../../components/NavBar/Navbar.jsx";
+import NavBar from "../../components/NavBar/NavBar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
 import "./ActivityDetail.css";
+import config from '../../config.js'; 
 
 const ActivityDetails = () => {
   const { palette } = useTheme();
@@ -23,7 +24,7 @@ const ActivityDetails = () => {
   useEffect(() => {
     const fetchActivity = async () => {
       try {
-        const response = await fetch(`http://localhost:3333/activities/${id}`, {
+        const response = await fetch(`${config.API_URL}/activities/${id}`, {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -42,7 +43,7 @@ const ActivityDetails = () => {
 
     const fetchCategoryDetails = async (categoryNames) => {
       try {
-        const response = await fetch("http://localhost:3333/categories");
+        const response = await fetch(`${config.API_URL}/categories`);
         if (!response.ok) throw new Error("Failed to fetch categories");
         const data = await response.json();
 
@@ -86,7 +87,7 @@ const ActivityDetails = () => {
       </Box>
       <Box className="activity-header" sx={{ mb: 4 }}>
         <img
-          src={`http://localhost:3333/assets/${activity.coverPath}`}
+          src={`${config.API_URL}/assets/${activity.coverPath}`}
           alt={activity.activityName}
           style={{ width: "100%", height: "auto", borderRadius: "8px" }}
         />

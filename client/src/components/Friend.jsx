@@ -14,6 +14,8 @@ import { setFriends } from "../state/state.js";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 import { useState } from "react";
+import config from '../config.js';
+
 
 const Friend = ({ friendId, name, userPicturePath }) => {
   const dispatch = useDispatch();
@@ -37,7 +39,7 @@ const Friend = ({ friendId, name, userPicturePath }) => {
   const patchFriend = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3333/users/${_id}/friend/${friendId}`,
+        `${config.API_URL}/users/${_id}/friend/${friendId}`,
         {
           method: "PATCH",
           headers: {
