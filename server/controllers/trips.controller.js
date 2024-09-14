@@ -16,16 +16,30 @@ export const createTrip = async (req, res) => {
     return res.status(400).json({ error: "All fields are required" });
   }
 
+  const today = new Date();
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  if (start < today) {
+    return res.status(400).json({ error: "Start date cannot be before today" });
+  }
+
+  if (end <= start || end - start < 24 * 60 * 60 * 1000) {
+    return res.status(400).json({
+      error: "End date must be at least one day after the start date",
+    });
+  }
+
   const overlappingTrips = await Trip.find({
     userId,
     $or: [
       {
-        startDate: { $lte: endDate },
-        endDate: { $gte: startDate },
+        startDate: { $lte: end },
+        endDate: { $gte: start },
       },
       {
-        startDate: { $gte: startDate, $lte: endDate },
-        endDate: { $gte: startDate, $lte: endDate },
+        startDate: { $gte: start, $lte: end },
+        endDate: { $gte: start, $lte: end },
       },
     ],
   });
@@ -67,14 +81,13 @@ export const getUserTrips = async (req, res) => {
     const trips = await Trip.find({ userId })
       .populate("prefecture")
       .populate("categories")
-      .populate("budget");
-
+      .populate("budget")
+      .sort({ startDate: 1 });
     res.json(trips);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
 export const getTripById = async (req, res) => {
   try {
     const trip = await Trip.findById(req.params.id)

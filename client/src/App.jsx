@@ -18,14 +18,10 @@ import FilteredPrefecturePage from "./pages/ActivitiesPage/FilteredPrefecturePag
 import AdminPanel from "./pages/AdminPage/AdminPanel.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import ActivityForm from "./pages/ActivitiesPage/ActivityForm.jsx";
-import useAuth from "./hooks/useAuth.js";
 import NotFound from "./pages/NotFound.jsx";
 
 function App() {
   const mode = useSelector((state) => state.mode);
-  const { isAuthenticated, isAdmin } = useAuth();
-  console.log("Is Authenticated:", isAuthenticated);
-  console.log("Is Admin:", isAdmin);
 
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
 

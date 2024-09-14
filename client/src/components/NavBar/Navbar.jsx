@@ -78,6 +78,15 @@ const NavBar = () => {
 
       {isNonMobileScreens ? (
         <FlexBetween gap="2rem">
+          {" "}
+          <Link to="/home" style={{ textDecoration: "none" }}>
+            <Typography
+              variant="body1"
+              sx={{ color: theme.palette.primary.light, cursor: "pointer" }}
+            >
+              Home
+            </Typography>
+          </Link>
           <Link to="/activities" style={{ textDecoration: "none" }}>
             <Typography
               variant="body1"
@@ -102,7 +111,6 @@ const NavBar = () => {
               About Us
             </Typography>
           </Link>
-
           {isAdmin && (
             <Link to="/admin" style={{ textDecoration: "none" }}>
               <Typography
@@ -113,7 +121,6 @@ const NavBar = () => {
               </Typography>
             </Link>
           )}
-
           <UserProfilePicture userId={_id} picturePath={picturePath} />
           <FormControl variant="standard">
             <Select
@@ -158,7 +165,6 @@ const NavBar = () => {
               </MenuItem>
             </Select>
           </FormControl>
-
           <IconButton onClick={() => dispatch(setMode())}>
             {theme.palette.mode === "dark" ? (
               <DarkMode sx={{ fontSize: "25px", color: "white" }} />

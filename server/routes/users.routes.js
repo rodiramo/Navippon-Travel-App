@@ -5,8 +5,7 @@ import {
   getUserActivities,
   addRemoveFavoriteActivity,
   getUserFriends,
-  getUserPreferences,
-  createUserPreferences,
+  checkIfActivityIsSaved,
   addRemoveFriend,
 } from "../controllers/users.controller.js";
 import { verifyToken } from "../middleware/auth.middleware.js";
@@ -27,8 +26,5 @@ router.delete(
   verifyToken,
   addRemoveFavoriteActivity
 );
-
-router.get("/:id/preferences", verifyToken, getUserPreferences);
-router.patch("/:id/preferences", verifyToken, createUserPreferences);
 router.patch("/:id/friend/:friendId", verifyToken, addRemoveFriend);
 export default router;

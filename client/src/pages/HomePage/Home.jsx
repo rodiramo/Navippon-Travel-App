@@ -1,25 +1,25 @@
-import NavBar from "../../components/NavBar/Navbar.jsx";
+import NavBar from "../../components/NavBar/NavBar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
-import { Box, Typography, useMediaQuery } from "@mui/material";
+import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import CategoriesWidget from "../widgets/CategoriesWidget.jsx";
 import PrefecturesWidget from "../widgets/PrefecturesWidget.jsx";
-import heroImage from "/assets/home-bg.jpg";
+import heroImage from "/assets/home-bg.jpeg";
+import "./Home.css";
+import SearchBar from "../widgets/SearchBar.jsx";
 
 const HomePage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
-
+  const { palette } = useTheme();
   return (
     <Box>
       <NavBar />
       <Box>
-        {/* Hero Section */}
         <Box
           sx={{
             background: `linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.3)), url(${heroImage})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
-            height: "20vh",
-            borderRadius: "0rem 0rem 5rem 5rem",
+            height: "50vh",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -34,15 +34,20 @@ const HomePage = () => {
             sx={{ textAlign: "center", fontWeight: "bold" }}
             gutterBottom
           >
-            Explore Japan Your Way
+            Navega Japón a Tu Manera
           </Typography>
+          <SearchBar />
         </Box>
-
+        <div
+          className="bg-shape"
+          style={{ background: palette.background.default }}
+        ></div>
         {/* How It Works Section */}
         <Box padding="2rem 6%">
-          <Typography variant="h4" gutterBottom>
-            How It Works
+          <Typography variant="h4" className="subtitle" gutterBottom>
+            ¿Cómo Funciona?
           </Typography>
+          <p>Navippon te ayuda a planificar tu viaje</p>
           <Box
             display="flex"
             flexDirection={isNonMobileScreens ? "row" : "column"}
@@ -51,7 +56,7 @@ const HomePage = () => {
             <Box flexBasis={isNonMobileScreens ? "33%" : "100%"}>
               <img
                 src="/assets/find.png"
-                alt="Navippon Logo"
+                alt="Encuentra"
                 style={{
                   width: "250px",
                   marginRight: "0.5rem",
@@ -59,46 +64,46 @@ const HomePage = () => {
                 }}
               />
               <Typography variant="h6">
-                Filter according to your preferences
+                Filtra según tus preferencias
               </Typography>
               <Typography>
-                Discover the magic of Japan tailored to your tastes. Our app
-                allows you to filter tourist attractions by categories.
+                Descubre la magia de Japón adaptada a tus gustos. Nuestra
+                aplicación te permite filtrar atracciones turísticas por
+                categorías.
               </Typography>
             </Box>
             <Box flexBasis={isNonMobileScreens ? "33%" : "100%"}>
-              {" "}
               <img
                 src="/assets/connect.png"
-                alt="Navippon Logo"
+                alt="Conectar"
                 style={{
                   width: "250px",
                   marginRight: "0.5rem",
                   marginBottom: "1rem",
                 }}
               />
-              <Typography variant="h6">Connect with People</Typography>
+              <Typography variant="h6">Conéctate con Personas</Typography>
               <Typography>
-                There are many people that are interested in Japanese culture
-                and travelling to Japan, connect with them and follow what they
-                are posting about.
+                Hay muchas personas interesadas en la cultura japonesa y en
+                viajar a Japón, conéctate con ellas y sigue lo que están
+                publicando.
               </Typography>
             </Box>
             <Box flexBasis={isNonMobileScreens ? "33%" : "100%"}>
-              {" "}
               <img
                 src="/assets/itinerary.png"
-                alt="Navippon Logo"
+                alt="Planificar"
                 style={{
                   width: "250px",
                   marginRight: "0.5rem",
                   marginBottom: "1rem",
                 }}
               />
-              <Typography variant="h6">Plan your itinerary</Typography>
+              <Typography variant="h6">Planifica tu itinerario</Typography>
               <Typography>
-                Organize your personalized itinerary, save your favorite places,
-                and create your travel plan to enjoy Japan to the fullest.
+                Organiza tu itinerario personalizado, guarda tus lugares
+                favoritos y crea tu plan de viaje para disfrutar Japón al
+                máximo.
               </Typography>
             </Box>
           </Box>
@@ -106,9 +111,10 @@ const HomePage = () => {
 
         {/* Categories Section */}
         <Box padding="2rem 6%" textAlign="center">
-          <Typography variant="h4" gutterBottom>
-            Explore by Category
+          <Typography variant="h4" className="subtitle" gutterBottom>
+            Navega por Categoría
           </Typography>
+
           <Box
             display="flex"
             justifyContent="center"
@@ -119,18 +125,39 @@ const HomePage = () => {
           </Box>
         </Box>
 
+        {/* Another Section */}
+        <Box className="section-flex">
+          <Box>
+            <img src="/assets/home-japan.jpg" alt="Templo de Kioto" />
+          </Box>
+          <Box>
+            <Typography variant="h4" className="subtitle" gutterBottom>
+              Haz de tu viaje un gran éxito con Navippon{" "}
+            </Typography>
+            <p>
+              Con Navippon, cada paso de tu viaje se transforma en una
+              experiencia inolvidable. Personaliza tu aventura, descubre lugares
+              únicos y crea recuerdos que durarán toda la vida. Deja que
+              Navippon sea tu guía confiable en el viaje de tus sueños.
+            </p>
+          </Box>
+        </Box>
         {/* Regions Section */}
         <Box padding="2rem 6%">
-          <Typography variant="h4" gutterBottom>
-            Explore Japan by Region
+          <Typography variant="h4" className="subtitle" gutterBottom>
+            Navega Japón por Región
           </Typography>
+          <p>
+            Encuentra tus atractivos y restaurantes favoritos en la región que
+            más te llame la atención.
+          </p>
           <PrefecturesWidget />
         </Box>
 
         {/* Popular Activities Section 
         <Box padding="2rem 6%">
           <Typography variant="h4" gutterBottom>
-            Popular Activities
+            Actividades Populares
           </Typography>
           <Box
             display="flex"
@@ -142,7 +169,7 @@ const HomePage = () => {
 
         <Box padding="2rem 6%">
           <Typography variant="h4" gutterBottom>
-            Read Our Communities Latests Posts
+            Lee las Últimas Publicaciones de Nuestra Comunidad
           </Typography>
           <Box
             display="flex"

@@ -21,15 +21,20 @@ import {
 } from "@mui/material";
 import FlexBetween from "../../components/FlexBetween.jsx";
 import WidgetWrapper from "../../components/Wrapper.jsx";
-import { useSelector, useDispatch } from "react-redux";
-import { setActivity } from "../../state/state.js";
+import { useSelector } from "react-redux";
 import "../ActivitiesPage/Activity.css";
+import {
+  fetchCategoryDetails,
+  saveOrUnsaveActivity,
+} from "../../services/services.js";
+import config from "../../config.js";
 
 const ActivitySmall = ({
   activityId,
   activityName,
   description,
-  isFavorite = false,
+  isSaved = false,
+  onRemoveFromFavorites,
   coverPath,
   categories = [],
   prefecture = {},
@@ -45,16 +50,13 @@ const ActivitySmall = ({
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const loggedInUserId = useSelector((state) => state.user._id);
   const role = useSelector((state) => state.user.role);
-  const dispatch = useDispatch();
+
   const token = useSelector((state) => state.token);
 
   useEffect(() => {
-    const fetchCategoryDetails = async () => {
+    const fetchCategories = async () => {
       try {
-        const response = await fetch("http://localhost:3333/categories");
-        if (!response.ok) throw new Error("Failed to fetch categories");
-        const data = await response.json();
-
+        const data = await fetchCategoryDetails();
         const categoryMap = data.reduce((acc, category) => {
           acc[category.category] = category;
           return acc;
@@ -71,7 +73,7 @@ const ActivitySmall = ({
       }
     };
 
-    fetchCategoryDetails();
+    fetchCategories();
   }, [categories]);
 
   const handleEdit = () => {
@@ -103,48 +105,18 @@ const ActivitySmall = ({
 
   const handleFavoriteToggle = async () => {
     try {
-      const method = isFavorite ? "DELETE" : "PATCH";
-      const response = await fetch(
-        `http://localhost:3333/users/${loggedInUserId}/favorites/${activityId}`,
-        {
-          method: method,
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await saveOrUnsaveActivity(loggedInUserId, activityId, isSaved, token);
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Error response from server:", errorText);
-        throw new Error("Failed to update favorite activities");
+      if (isSaved && onRemoveFromFavorites) {
+        onRemoveFromFavorites(activityId);
       }
-
-      const activityResponse = await fetch(
-        `http://localhost:3333/activities/${activityId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!activityResponse.ok) {
-        const errorText = await activityResponse.text();
-        console.error("Error response from server:", errorText);
-        throw new Error("Failed to fetch updated activity");
-      }
-
-      const updatedActivity = await activityResponse.json();
-      dispatch(setActivity({ activity: updatedActivity }));
 
       setSnackbarMessage(
-        isFavorite
+        isSaved
           ? "Activity removed from your favorites!"
           : "Activity added to your favorites!"
       );
-      setSnackbarSeverity(isFavorite ? "info" : "success");
+      setSnackbarSeverity(isSaved ? "info" : "success");
     } catch (error) {
       console.error("Error updating favorite activities:", error.message);
       setSnackbarMessage("Failed to update activity. Please try again.");
@@ -158,7 +130,7 @@ const ActivitySmall = ({
     <WidgetWrapper className="container-favorites activity-item activity-item-profile">
       <Box className="">
         <img
-          src={`http://localhost:3333/assets/${coverPath}`}
+          src={`${config.API_URL}/assets/${coverPath}`}
           alt={activityName}
           className="activity-image-profile"
         />
@@ -183,7 +155,7 @@ const ActivitySmall = ({
             style={{ color: palette.primary.black }}
             className="budget-profile"
           >
-            {budget.abbreviation || "No budget abbreviation"}
+            {budget.name || "No budget name"}
           </Typography>
           <FlexBetween className="wrap-buttons">
             <Button
@@ -194,7 +166,7 @@ const ActivitySmall = ({
               View Details
             </Button>{" "}
             <IconButton onClick={handleFavoriteToggle}>
-              {isFavorite ? (
+              {isSaved ? (
                 <Typography
                   style={{
                     color: palette.primary.main,
@@ -276,10 +248,11 @@ ActivitySmall.propTypes = {
     name: PropTypes.string,
   }),
   budget: PropTypes.shape({
-    abbreviation: PropTypes.string,
+    name: PropTypes.string,
   }),
-  isFavorite: PropTypes.bool.isRequired,
+  isSaved: PropTypes.bool.isRequired,
   onDelete: PropTypes.func.isRequired,
+  onRemoveFromFavorites: PropTypes.func.isRequired,
 };
 
 export default ActivitySmall;

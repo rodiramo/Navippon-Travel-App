@@ -1,25 +1,37 @@
 /*activities page view */
-.search-results {
+.content {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  gap: 20px;
   padding: 20px;
 }
 
-.search-results .filters {
+.filters-widget {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  margin-right: 20px;
+  gap: 20px;
 }
 
-.filters label {
-  font-size: 1rem;
-  margin-bottom: 10px;
+.filter-buttons .MuiButton-root {
+  text-transform: none;
 }
 
-.filters input,
-.filters select {
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #96c6d9;
-  border-radius: 5px;
+.filter-buttons {
+  display: flex;
+}
+
+.filter-buttons button {
+  border-radius: 0px !important;
+}
+.filter-buttons button:nth-child(1) {
+  border-radius: 2rem 0rem 0rem 2rem !important;
+}
+.filter-buttons button:nth-child(3) {
+  border-radius: 0rem 2rem 2rem 0rem !important;
 }
 
 .activity-list {
@@ -29,7 +41,7 @@
 
 .activity-item {
   display: flex;
-  padding: 20px;
+  padding: 20px !important;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
 }
@@ -76,8 +88,7 @@
 }
 
 .budget {
-  position: absolute;
-  right: 85px;
+  margin-left: -33px !important;
   margin-top: 147px !important;
   font-weight: 500 !important;
   font-size: 1.25rem !important;
@@ -91,8 +102,7 @@
 }
 
 .favorite {
-  position: absolute !important;
-  right: 80px;
+  height: 37px;
   margin-top: -4px !important;
 }
 
@@ -102,7 +112,11 @@
   justify-content: flex-start !important;
   flex-direction: row !important;
 }
-
+@media (max-width: 800px) {
+  .content {
+    grid-template-columns: 1fr;
+  }
+}
 @media (max-width: 700px) {
   .activity-item {
     flex-direction: column;
@@ -121,13 +135,16 @@
   }
   .activity-description {
     font-size: 1rem;
-    color: #666;
     padding-top: 5px;
     text-align: center !important;
+  }
+  .favorite {
+    margin-top: 10px !important;
   }
   .budget {
     position: initial;
     right: 0px;
+    margin-left: 0px !important;
     margin-top: 0px !important;
   }
 }

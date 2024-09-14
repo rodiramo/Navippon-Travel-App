@@ -3,8 +3,9 @@ import { useParams, Link as RouterLink } from "react-router-dom";
 import { Typography, Box, Grid, Breadcrumbs, Link } from "@mui/material";
 import ActivitySmall from "../widgets/ActivitySmall.jsx";
 import { useSelector } from "react-redux";
-import NavBar from "../../components/NavBar/Navbar.jsx";
+import NavBar from "../../components/NavBar/NavBar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
+import config from "../../config.js";
 
 const FilteredPrefecturePage = () => {
   const [activities, setActivities] = useState([]);
@@ -17,7 +18,7 @@ const FilteredPrefecturePage = () => {
     const fetchActivitiesAndPrefecture = async () => {
       try {
         const activitiesResponse = await fetch(
-          `http://localhost:3333/activities/filtered-prefecture/${prefectureId}`,
+          `${config.API_URL}/activities/filtered-prefecture/${prefectureId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -33,7 +34,7 @@ const FilteredPrefecturePage = () => {
         setActivities(activitiesData);
 
         const prefectureResponse = await fetch(
-          `http://localhost:3333/prefectures/${prefectureId}`
+          `${config.API_URL}/prefectures/${prefectureId}`
         );
 
         if (!prefectureResponse.ok) {
@@ -55,7 +56,7 @@ const FilteredPrefecturePage = () => {
   const handleDelete = async (activityId) => {
     try {
       const response = await fetch(
-        `http://localhost:3333/activities/${activityId}`,
+        `${config.API_URL}/activities/${activityId}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
@@ -67,7 +68,6 @@ const FilteredPrefecturePage = () => {
         throw new Error(errorData.message || "Failed to delete activity");
       }
 
-      // Update local state
       setActivities((prevActivities) =>
         prevActivities.filter((activity) => activity._id !== activityId)
       );
@@ -79,7 +79,13 @@ const FilteredPrefecturePage = () => {
   if (error) return <Typography color="error">Error: {error}</Typography>;
 
   return (
-    <Box>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+      }}
+    >
       <NavBar />
       <Box sx={{ marginBottom: 2, marginTop: 3, marginLeft: 2 }}>
         <Breadcrumbs aria-label="breadcrumb">

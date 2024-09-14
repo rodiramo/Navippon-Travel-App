@@ -19,6 +19,8 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Dropzone from "react-dropzone";
+import config from '../../config.js';
+
 
 const User = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null);
@@ -36,7 +38,7 @@ const User = ({ userId, picturePath }) => {
   const dark = palette.neutral.dark;
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:3333/users/${userId}`, {
+    const response = await fetch(`${config.API_URL}/users/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -89,7 +91,7 @@ const User = ({ userId, picturePath }) => {
       formDataToSend.append("picture", formData.image);
     }
 
-    const response = await fetch(`http://localhost:3333/users/${userId}`, {
+    const response = await fetch(`${config.API_URL}/users/${userId}`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -147,26 +149,7 @@ const User = ({ userId, picturePath }) => {
 
       <Divider />
 
-      {/* THIRD ROW 
-      <Box p="1rem 0">
-        <Typography fontSize="1rem" color={main} fontWeight="500" mb="1rem">
-          Preferences
-        </Typography>
-
-        <FlexBetween gap="1rem" mb="0.5rem">
-          <FlexBetween gap="1rem">
-            <img src="../assets/twitter.png" alt="twitter" />
-            <Box>
-              <Typography color={main} fontWeight="500">
-                Going Out..
-              </Typography>
-              <Typography color={medium}>Social Network</Typography>
-            </Box>
-          </FlexBetween>
-          <EditOutlined sx={{ color: main }} />
-        </FlexBetween>
-      </Box>
-      */}
+    
       {/* EDIT USER MODAL */}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>

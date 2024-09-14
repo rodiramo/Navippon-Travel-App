@@ -1,5 +1,6 @@
-import NavBar from "../../components/NavBar/Navbar.jsx";
+import NavBar from "../../components/NavBar/NavBar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
+import FiltersWidget from "../widgets/FiltersWidget.jsx";
 import ActivitiesWidget from "../widgets/ActivitiesWidget.jsx";
 import "./Activities.css";
 import { Button } from "@mui/material";
@@ -30,7 +31,10 @@ const ActivitiesPage = () => {
           </Button>
         )}
       </Box>
-      <ActivitiesWidget />
+      <Box className="content">
+        <FiltersWidget />
+        <ActivitiesWidget />
+      </Box>
       <Footer />
     </Box>
   );

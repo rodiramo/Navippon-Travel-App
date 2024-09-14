@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import NavBar from "../../components/NavBar/Navbar";
+import NavBar from "../../components/NavBar/NavBar";
 import Footer from "../../components/Footer/Footer";
 import { useEffect, useState } from "react";
 import {
@@ -12,9 +12,11 @@ import {
   Select,
   FormControl,
   InputLabel,
+  CircularProgress,
 } from "@mui/material";
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import "./AdminPanel.css";
+import config from "../../config.js";
 
 const AdminPanel = () => {
   const role = useSelector((state) => state.user.role);
@@ -34,7 +36,7 @@ const AdminPanel = () => {
 
     const fetchUsers = async () => {
       try {
-        const response = await fetch("http://localhost:3333/admin/user-list", {
+        const response = await fetch(`${config.API_URL}/admin/user-list`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -58,7 +60,7 @@ const AdminPanel = () => {
   const handleDelete = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3333/admin/user/${selectedUser}`,
+        `${config.API_URL}/admin/user/${selectedUser}`,
         {
           method: "DELETE",
           headers: {
@@ -82,7 +84,7 @@ const AdminPanel = () => {
   const handleRoleChange = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3333/admin/user/${selectedUser}`,
+        `${config.API_URL}/admin/user/${selectedUser}`,
         {
           method: "PATCH",
           headers: {
@@ -134,7 +136,18 @@ const AdminPanel = () => {
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "85vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   if (error) {
@@ -144,83 +157,91 @@ const AdminPanel = () => {
   return (
     <Box>
       <NavBar />
-      <div className="header">
-        <h1>Admin Panel</h1>
-      </div>
-      <div className="table-container">
+      <Box
+        sx={{
+          display: "flex",
+          height: "85vh",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
         <div className="header">
-          <h2>Users List</h2>
+          <h1>Admin Panel</h1>
         </div>
-        {users.length === 0 ? (
-          <p style={{ textAlign: "center" }}>No users found</p>
-        ) : (
-          <>
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Role</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((user) => (
-                  <tr key={user._id}>
-                    <td>{user._id}</td>
-                    <td>
-                      {user.firstName} {user.lastName}
-                    </td>
-                    <td>{user.email}</td>
-                    <td>{user.role}</td>
-                    <td>
-                      <IconButton
-                        onClick={() => openEditRoleModal(user._id, user.role)}
-                      >
-                        <EditIcon color="primary" />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => openDeleteConfirmationModal(user._id)}
-                      >
-                        <DeleteIcon color="error" />
-                      </IconButton>
-                    </td>
+        <div className="table-container">
+          <div className="header">
+            <h2>Users List</h2>
+          </div>
+          {users.length === 0 ? (
+            <p style={{ textAlign: "center" }}>No users found</p>
+          ) : (
+            <>
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {users.map((user) => (
+                    <tr key={user._id}>
+                      <td>{user._id}</td>
+                      <td>
+                        {user.firstName} {user.lastName}
+                      </td>
+                      <td>{user.email}</td>
+                      <td>{user.role}</td>
+                      <td>
+                        <IconButton
+                          onClick={() => openEditRoleModal(user._id, user.role)}
+                        >
+                          <EditIcon color="primary" />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => openDeleteConfirmationModal(user._id)}
+                        >
+                          <DeleteIcon color="error" />
+                        </IconButton>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
 
-            <div className="list-view">
-              {users.map((user) => (
-                <div className="user-item" key={user._id}>
-                  <strong>ID:</strong> {user._id}
-                  <br />
-                  <strong>Name:</strong> {user.firstName} {user.lastName}
-                  <br />
-                  <strong>Email:</strong> {user.email}
-                  <br />
-                  <strong>Role:</strong> {user.role}
-                  <br />
-                  <IconButton
-                    onClick={() => openEditRoleModal(user._id, user.role)}
-                  >
-                    <EditIcon color="primary" />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => openDeleteConfirmationModal(user._id)}
-                  >
-                    <DeleteIcon color="error" />
-                  </IconButton>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
+              <div className="list-view">
+                {users.map((user) => (
+                  <div className="user-item" key={user._id}>
+                    <strong>ID:</strong> {user._id}
+                    <br />
+                    <strong>Name:</strong> {user.firstName} {user.lastName}
+                    <br />
+                    <strong>Email:</strong> {user.email}
+                    <br />
+                    <strong>Role:</strong> {user.role}
+                    <br />
+                    <IconButton
+                      onClick={() => openEditRoleModal(user._id, user.role)}
+                    >
+                      <EditIcon color="primary" />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => openDeleteConfirmationModal(user._id)}
+                    >
+                      <DeleteIcon color="error" />
+                    </IconButton>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      </Box>
       <Footer />
 
-      {/* Confirmation Modal for Deletion */}
       <Modal
         open={openDeleteModal}
         onClose={closeDeleteConfirmationModal}
@@ -246,7 +267,6 @@ const AdminPanel = () => {
         </div>
       </Modal>
 
-      {/* Modal for Editing User Role */}
       <Modal
         open={openEditModal}
         onClose={closeEditRoleModal}

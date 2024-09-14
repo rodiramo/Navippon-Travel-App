@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Typography, Box, List, ListItem, ListItemText } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import config from "../../config.js";
 
 const PrefecturesWidget = () => {
   const [prefectures, setPrefectures] = useState([]);
@@ -10,7 +11,7 @@ const PrefecturesWidget = () => {
   useEffect(() => {
     const fetchPrefectures = async () => {
       try {
-        const response = await fetch("http://localhost:3333/prefectures");
+        const response = await fetch(`${config.API_URL}/prefectures`);
         if (!response.ok) {
           throw new Error("Failed to fetch prefectures");
         }
@@ -32,10 +33,6 @@ const PrefecturesWidget = () => {
 
   return (
     <Box>
-      <Typography variant="h5" gutterBottom>
-        Find your favorite attractions and restaurants in the region that
-        catches your attention.
-      </Typography>
       <List
         sx={{
           display: "flex",
@@ -60,7 +57,7 @@ const PrefecturesWidget = () => {
           >
             <Box
               component="img"
-              src={`http://localhost:3333/assets/${prefecture.image}`}
+              src={`${config.API_URL}/assets/${prefecture.image}`}
               alt={prefecture.name}
               sx={{
                 width: 150,

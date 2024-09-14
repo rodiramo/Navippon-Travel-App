@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "../../state/state.js";
 import PostWidget from "./PostWidget.jsx";
+import config from '../../config.js';
 
 const PostsWidget = ({ userId, isProfile = false }) => {
   const dispatch = useDispatch();
@@ -29,8 +30,8 @@ const PostsWidget = ({ userId, isProfile = false }) => {
 
   useEffect(() => {
     const url = isProfile
-      ? `http://localhost:3333/posts/${userId}/posts`
-      : "http://localhost:3333/posts";
+      ? `${config.API_URL}/posts/${userId}/posts`
+      : `${config.API_URL}/posts`;
 
     fetchPosts(url);
   }, [userId, isProfile, token, dispatch]); // eslint-disable-line react-hooks/exhaustive-deps

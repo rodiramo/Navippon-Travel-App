@@ -1,6 +1,6 @@
 import { Box, Typography, useTheme } from "@mui/material";
 import Footer from "../../components/Footer/Footer.jsx";
-import NavBar from "../../components/NavBar/Navbar.jsx";
+import NavBar from "../../components/NavBar/NavBar.jsx";
 
 const AboutPage = () => {
   const theme = useTheme();
@@ -45,11 +45,12 @@ const AboutPage = () => {
             mb: "2rem",
           }}
         >
-          <Box sx={{ flex: 1, textAlign: "left" }}>
+          <Box sx={{ flex: 1, textAlign: "left", marginLeft: "2rem" }}>
             <Box
               sx={{
                 display: "flex",
                 mb: "1rem",
+
                 flexDirection: "column",
               }}
             >
@@ -84,7 +85,7 @@ const AboutPage = () => {
                 width: "100%",
                 height: "auto",
                 maxWidth: "400px",
-                borderRadius: "20rem 0rem 0rem 20rem",
+                borderRadius: "2rem",
               }}
             />
           </Box>

@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Box, useMediaQuery, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
-import NavBar from "../../components/NavBar/Navbar.jsx";
+import NavBar from "../../components/NavBar/NavBar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
 import PostsWidget from "../widgets/PostsWidget.jsx";
 import MyPostWidget from "../widgets/MyPostWidget.jsx";
+import config from '../../config.js';
+
 
 const BlogPage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
@@ -15,7 +17,7 @@ const BlogPage = () => {
   useEffect(() => {
     const fetchUserPicture = async () => {
       try {
-        const response = await fetch(`http://localhost:3333/users/${userId}`, {
+        const response = await fetch(`${config.API_URL}/users/${userId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const userData = await response.json();

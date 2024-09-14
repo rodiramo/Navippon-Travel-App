@@ -17,6 +17,7 @@ import { useDispatch } from "react-redux";
 import Dropzone from "react-dropzone";
 import { setLogin } from "../../state/state.js";
 import FlexBetween from "../../components/FlexBetween.jsx";
+import config from "../../config.js";
 
 // Validation schemas
 const registerSchema = yup.object().shape({
@@ -24,6 +25,10 @@ const registerSchema = yup.object().shape({
   lastName: yup.string().required("required"),
   email: yup.string().email("Invalid Email").required("required"),
   password: yup.string().required("required"),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("password"), null], "Passwords must match")
+    .required("required"),
   picture: yup.string(),
 });
 
@@ -38,6 +43,7 @@ const initialValuesRegister = {
   lastName: "",
   email: "",
   password: "",
+  confirmPassword: "",
   picture: "",
 };
 
@@ -64,13 +70,10 @@ const Form = () => {
     }
     formData.append("picturePath", values.picture.name);
 
-    const savedUserResponse = await fetch(
-      "http://localhost:3333/auth/register",
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
+    const savedUserResponse = await fetch(`${config.API_URL}/auth/register`, {
+      method: "POST",
+      body: formData,
+    });
 
     const savedUser = await savedUserResponse.json();
     onSubmitProps.resetForm();
@@ -82,14 +85,14 @@ const Form = () => {
   // login
   const login = async (values, onSubmitProps) => {
     try {
-      const loggedInResponse = await fetch("http://localhost:3333/auth/login", {
+      const loggedInResponse = await fetch(`${config.API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
 
       if (!loggedInResponse.ok) {
-        throw new Error("User info not found"); // Handle specific error message
+        throw new Error("User info not found");
       }
 
       const loggedIn = await loggedInResponse.json();
@@ -103,15 +106,14 @@ const Form = () => {
       );
       navigate("/home");
     } catch (error) {
-      // Set error message in form state to be displayed to user
       console.error("Login error:", error.message);
-      setGeneralError(error.message); // Update general error state
+      setGeneralError(error.message);
     }
   };
 
   //submit
   const handleFormSubmit = async (values, onSubmitProps) => {
-    setGeneralError(null); // Clear previous errors
+    setGeneralError(null);
     if (isLogin) await login(values, onSubmitProps);
     if (isRegister) await register(values, onSubmitProps);
   };
@@ -149,7 +151,7 @@ const Form = () => {
             {isRegister && (
               <>
                 <TextField
-                  label="First Name"
+                  label="First Name*"
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.firstName}
@@ -161,7 +163,7 @@ const Form = () => {
                   sx={{ gridColumn: "span 2" }}
                 />
                 <TextField
-                  label="Last Name"
+                  label="Last Name*"
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.lastName}
@@ -205,7 +207,7 @@ const Form = () => {
               </>
             )}
             <TextField
-              label="Email"
+              label="Email*"
               onBlur={handleBlur}
               onChange={handleChange}
               value={values.email}
@@ -215,7 +217,7 @@ const Form = () => {
               sx={{ gridColumn: "span 4" }}
             />
             <TextField
-              label="Password"
+              label="Password*"
               type={values.showPassword ? "text" : "password"}
               onBlur={handleBlur}
               onChange={handleChange}
@@ -236,6 +238,23 @@ const Form = () => {
                 ),
               }}
             />
+
+            {isRegister && (
+              <TextField
+                label="Confirm Password*"
+                type={values.showPassword ? "text" : "password"}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.confirmPassword}
+                name="confirmPassword"
+                error={
+                  Boolean(touched.confirmPassword) &&
+                  Boolean(errors.confirmPassword)
+                }
+                helperText={touched.confirmPassword && errors.confirmPassword}
+                sx={{ gridColumn: "span 4" }}
+              />
+            )}
             <Box>
               <Button
                 fullWidth

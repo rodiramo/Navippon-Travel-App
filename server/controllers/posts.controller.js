@@ -19,8 +19,8 @@ export const createPost = async (req, res) => {
     });
     await newPost.save();
 
-    const posts = await Post.find(); 
-    res.status(201).json(posts); 
+    const posts = await Post.find().sort({ createdAt: -1 });
+    res.status(201).json(posts);
   } catch (err) {
     res.status(409).json({ message: err.message });
   }
@@ -28,8 +28,8 @@ export const createPost = async (req, res) => {
 
 export const getFeedPosts = async (req, res) => {
   try {
-    const posts = await Post.find(); 
-    res.status(200).json(posts); 
+    const posts = await Post.find().sort({ createdAt: -1 });
+    res.status(200).json(posts);
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
@@ -38,7 +38,7 @@ export const getFeedPosts = async (req, res) => {
 export const getUserPosts = async (req, res) => {
   try {
     const { userId } = req.params;
-    const posts = await Post.find({ userId }); 
+    const posts = await Post.find({ userId });
     res.status(200).json(posts);
   } catch (err) {
     res.status(404).json({ message: err.message });
@@ -72,14 +72,16 @@ export const likePost = async (req, res) => {
 
 export const editPost = async (req, res) => {
   try {
-    const postId = req.params.id; 
-    const updatedData = req.body; 
+    const postId = req.params.id;
+    const updatedData = req.body;
 
     if (!postId) {
       return res.status(400).json({ message: "Post ID is required" });
     }
 
-    const updatedPost = await Post.findByIdAndUpdate(postId, updatedData, { new: true });
+    const updatedPost = await Post.findByIdAndUpdate(postId, updatedData, {
+      new: true,
+    });
 
     if (!updatedPost) {
       return res.status(404).json({ message: "Post not found" });
@@ -115,7 +117,9 @@ export const deletePost = async (req, res) => {
       console.log("Failed to delete comments for post:", postId);
     }
 
-    res.status(200).json({ message: "Post and associated comments deleted successfully" });
+    res
+      .status(200)
+      .json({ message: "Post and associated comments deleted successfully" });
   } catch (error) {
     console.error("Error in deletePost:", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -132,9 +136,18 @@ export const addComment = async (req, res) => {
       return res.status(404).json({ message: "Post not found" });
     }
 
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
     const newComment = {
       userId,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      userPicturePath: user.picturePath,
       comment,
+      createdAt: new Date(),
     };
 
     post.comments.push(newComment);
@@ -162,7 +175,9 @@ export const deleteComment = async (req, res) => {
 
     const comment = post.comments[commentIndex];
     if (comment.userId !== userId) {
-      return res.status(403).json({ message: "You are not authorized to delete this comment" });
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to delete this comment" });
     }
 
     post.comments.splice(commentIndex, 1);

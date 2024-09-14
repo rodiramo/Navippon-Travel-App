@@ -2,13 +2,15 @@ import { Box, useMediaQuery, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import Navbar from "../../components/NavBar/Navbar.jsx";
+import NavBar from "../../components/NavBar/NavBar.jsx";
 import FriendListWidget from "../widgets/FriendListWidget.jsx";
 import MyPostWidget from "../widgets/MyPostWidget";
 import PostsWidget from "../widgets/PostsWidget";
 import UserWidget from "../widgets/User.jsx";
 import FavoriteActivities from "../widgets/FavoriteActivities.jsx";
 import TripsWidget from "../widgets/TripsWidget.jsx";
+import config from '../../config.js'; 
+
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const { userId } = useParams();
@@ -16,7 +18,7 @@ const ProfilePage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:3333/users/${userId}`, {
+    const response = await fetch(`${config.API_URL}/users/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -32,7 +34,7 @@ const ProfilePage = () => {
 
   return (
     <Box>
-      <Navbar />{" "}
+      <NavBar />{" "}
       <Typography
         variant="h1"
         sx={{ textAlign: "center", fontWeight: "bold", marginTop: 2 }}
