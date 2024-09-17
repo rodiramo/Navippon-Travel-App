@@ -53,6 +53,7 @@ export const colorTokens = {
     900: "#08112A",
   },
 };
+
 // mui theme settings
 export const themeSettings = (mode) => {
   return {
@@ -116,7 +117,7 @@ export const themeSettings = (mode) => {
       fontFamily: ["Poppins", "sans-serif"].join(","),
       fontSize: 12,
       h1: {
-        fontFamily: ["Poppins", "sans-serif"].join(","),
+        fontFamily: ["SifonnPro", "sans-serif"].join(","),
         fontSize: 40,
       },
       h2: {
