@@ -61,9 +61,10 @@ const NavBar = () => {
             style={{ width: "40px", marginRight: "0.5rem" }}
           />
           <Typography
+            fontFamily="SifonnPro"
             fontWeight="bold"
             fontSize="clamp(0.75rem, 1.5rem, 1.75rem)"
-            color="primary.light"
+            color="white"
             sx={{
               "&:hover": {
                 color: theme.palette.primary.light,

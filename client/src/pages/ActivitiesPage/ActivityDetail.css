@@ -1,20 +1,21 @@
 .activity-detail {
   padding: 20px;
 }
-
+.cover-image {
+  height: 30vw;
+  width: 100%;
+  object-fit: cover;
+  position: relative;
+  left: 50%; /* Aligns image to the center */
+  transform: translateX(-50%);
+  /* Fixes alignment due to full width */
+}
 .activity-header {
   display: flex;
   flex-direction: column;
+  position: relative;
   align-items: center;
   text-align: center;
-}
-
-.activity-header img {
-  width: 100%;
-  max-width: 600px;
-  height: auto;
-  border-radius: 10px;
-  margin-bottom: 20px;
 }
 
 .activity-title {
@@ -59,12 +60,13 @@
 }
 
 .breadcrumbs-container {
-  margin: 20px 0;
-}
+  position: absolute;
+  top: 10px; /* Adjust as needed */
+  left: 10px; /* Adjust as needed */
+  z-index: 1; /* Ensure it's on top of the image */
 
-.breadcrumbs-container .MuiBreadcrumbs-root {
-  font-size: 1rem;
-  color: #ff4081;
+  padding: 10px; /* Optional: Adds some padding around breadcrumbs */
+  border-radius: 20rem; /* Optional: Rounds the corners */
 }
 
 .breadcrumbs-container .MuiBreadcrumbs-separator {

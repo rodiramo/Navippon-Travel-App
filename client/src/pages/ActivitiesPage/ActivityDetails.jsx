@@ -1,14 +1,15 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   Typography,
   CircularProgress,
   Box,
+  IconButton,
   useTheme,
-  Breadcrumbs,
-  Link,
 } from "@mui/material";
+
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import NavBar from "../../components/NavBar/NavBar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
 import "./ActivityDetail.css";
@@ -20,6 +21,7 @@ const ActivityDetails = () => {
   const [activity, setActivity] = useState(null);
   const [categoryDetails, setCategoryDetails] = useState([]);
   const token = useSelector((state) => state.token);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchActivity = async () => {
@@ -74,23 +76,29 @@ const ActivityDetails = () => {
   return (
     <Box>
       <NavBar />
-      <Box className="activity-detail breadcrumbs-container" sx={{ mb: 2 }}>
-        <Breadcrumbs aria-label="breadcrumb">
-          <Link color="inherit" href="/home">
-            Inicio
-          </Link>
-          <Link color="inherit" href="/activities">
-            Actividades
-          </Link>
-          <Typography color="textPrimary">{activity.activityName}</Typography>
-        </Breadcrumbs>
-      </Box>
+
       <Box className="activity-header" sx={{ mb: 4 }}>
         <img
           src={`${config.API_URL}/assets/${activity.coverPath}`}
           alt={activity.activityName}
-          style={{ width: "100%", height: "auto", borderRadius: "8px" }}
+          className="cover-image"
         />
+
+        <Box
+          className="breadcrumbs-container"
+          sx={{
+            backgroundColor: palette.primary.main,
+          }}
+        >
+          <IconButton
+            sx={{ color: palette.primary.white }}
+            onClick={() => navigate(-1)}
+            aria-label="go back"
+          >
+            <ArrowBackIcon />
+          </IconButton>
+        </Box>
+
         <Typography
           variant="h1"
           color="primary"

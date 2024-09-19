@@ -89,12 +89,14 @@ const ActivitySmall = ({
         await onDelete(activityId);
       }
 
-      setSnackbarMessage("Activity deleted successfully!");
+      setSnackbarMessage("¡Actividad eliminada con éxito!");
       setSnackbarSeverity("success");
       setSnackbarOpen(true);
     } catch (error) {
       console.error("Failed to delete activity:", error.message);
-      setSnackbarMessage("Failed to delete activity. Please try again.");
+      setSnackbarMessage(
+        "Error al eliminar la actividad. Por favor, inténtelo de nuevo."
+      );
       setSnackbarSeverity("error");
     } finally {
       handleCloseDeleteModal();
@@ -113,13 +115,15 @@ const ActivitySmall = ({
 
       setSnackbarMessage(
         isSaved
-          ? "Activity removed from your favorites!"
-          : "Activity added to your favorites!"
+          ? "¡Actividad eliminada de tus favoritos!"
+          : "¡Actividad añadida a tus favoritos!"
       );
       setSnackbarSeverity(isSaved ? "info" : "success");
     } catch (error) {
       console.error("Error updating favorite activities:", error.message);
-      setSnackbarMessage("Failed to update activity. Please try again.");
+      setSnackbarMessage(
+        "Error al actualizar la actividad. Por favor, inténtelo de nuevo."
+      );
       setSnackbarSeverity("error");
     } finally {
       setSnackbarOpen(true);
@@ -138,14 +142,14 @@ const ActivitySmall = ({
           <Typography variant="h4" color="primary" className="activity-title">
             {activityName}{" "}
             <span className="prefecture-badge">
-              {prefecture.name || "No prefecture name"}
+              {prefecture.name || "Sin nombre de prefectura"}
             </span>
           </Typography>
           <Typography style={{ color: palette.primary.black }}>
-            Categories:{" "}
+            Categorías:{" "}
             {categoryDetails.length
               ? categoryDetails.map((category) => category.category).join(", ")
-              : "No categories"}
+              : "Sin categorías"}
           </Typography>
           <Typography color="text.secondary" className="activity-description">
             {description}
@@ -155,7 +159,7 @@ const ActivitySmall = ({
             style={{ color: palette.primary.black }}
             className="budget-profile"
           >
-            {budget.name || "No budget name"}
+            {budget.name || "Sin nombre de presupuesto"}
           </Typography>
           <FlexBetween className="wrap-buttons">
             <Button
@@ -163,7 +167,7 @@ const ActivitySmall = ({
               className="button-detail"
               onClick={handleViewDetails}
             >
-              View Details
+              Ver Detalles
             </Button>{" "}
             <IconButton onClick={handleFavoriteToggle}>
               {isSaved ? (
@@ -173,7 +177,7 @@ const ActivitySmall = ({
                     textDecoration: "underline",
                   }}
                 >
-                  Remove from Favorites
+                  Eliminar de Favoritos
                 </Typography>
               ) : (
                 <FavoriteBorderOutlined />
@@ -194,19 +198,19 @@ const ActivitySmall = ({
 
         {/* Delete Modal */}
         <Dialog open={openDeleteModal} onClose={handleCloseDeleteModal}>
-          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogTitle>Confirmar Eliminación</DialogTitle>
           <DialogContent>
             <Typography>
-              Are you sure you want to delete this activity? This action cannot
-              be undone.
+              ¿Estás seguro de que deseas eliminar esta actividad? Esta acción
+              no se puede deshacer.
             </Typography>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseDeleteModal} color="primary">
-              Cancel
+              Cancelar
             </Button>
             <Button onClick={handleDelete} color="secondary">
-              Delete
+              Eliminar
             </Button>
           </DialogActions>
         </Dialog>
