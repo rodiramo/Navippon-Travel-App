@@ -119,6 +119,22 @@ const NavBar = () => {
                 Inicio
               </Button>
             </Link>
+            <Link to="/about-us" style={{ textDecoration: "none" }}>
+              <Button
+                variant="text"
+                sx={{
+                  color: isActiveLink("/about-us")
+                    ? theme.palette.primary.main
+                    : "white",
+                  "&:hover": {
+                    color: theme.palette.primary.main,
+                  },
+                  textTransform: "none",
+                }}
+              >
+                Nosotros
+              </Button>
+            </Link>
             <Link to="/activities" style={{ textDecoration: "none" }}>
               <Button
                 variant="text"
@@ -132,7 +148,7 @@ const NavBar = () => {
                   textTransform: "none",
                 }}
               >
-                Actividades
+                Explora
               </Button>
             </Link>
             <Link to="/posts" style={{ textDecoration: "none" }}>
@@ -151,11 +167,11 @@ const NavBar = () => {
                 Blog
               </Button>
             </Link>
-            <Link to="/about-us" style={{ textDecoration: "none" }}>
+            <Link to="/activities" style={{ textDecoration: "none" }}>
               <Button
                 variant="text"
                 sx={{
-                  color: isActiveLink("/about-us")
+                  color: isActiveLink("/activities")
                     ? theme.palette.primary.main
                     : "white",
                   "&:hover": {
@@ -164,7 +180,7 @@ const NavBar = () => {
                   textTransform: "none",
                 }}
               >
-                Sobre Nosotros
+                Contacto
               </Button>
             </Link>
           </Box>
