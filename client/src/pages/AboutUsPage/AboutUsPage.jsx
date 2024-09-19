@@ -31,7 +31,7 @@ const AboutPage = () => {
             variant="h1"
             sx={{ textAlign: "center", fontWeight: "bold" }}
           >
-            About Us
+            Sobre Nosotros
           </Typography>
         </Box>
       </Box>
@@ -50,13 +50,12 @@ const AboutPage = () => {
               sx={{
                 display: "flex",
                 mb: "1rem",
-
                 flexDirection: "column",
               }}
             >
               <img
                 src="/assets/navippon-icon.png"
-                alt="Navippon Logo"
+                alt="Logo de Navippon"
                 style={{
                   width: "60px",
                   marginRight: "0.5rem",
@@ -64,23 +63,24 @@ const AboutPage = () => {
                 }}
               />
               <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-                What is Navippon?
+                ¿Qué es Navippon?
               </Typography>
             </Box>
             <Typography variant="body1">
-              In a world where leisure travel is increasingly popular, we have
-              developed an application that offers users the opportunity to{" "}
+              En un mundo donde los viajes de ocio son cada vez más populares,
+              hemos desarrollado una aplicación que ofrece a los usuarios la
+              oportunidad de{" "}
               <span style={{ color: primaryMain }}>
-                discover the perfect destination
+                descubrir el destino perfecto
               </span>{" "}
-              for an unforgettable vacation in Japan. This application is
-              designed to provide travelers with a guide.
+              para unas vacaciones inolvidables en Japón. Esta aplicación está
+              diseñada para proporcionar a los viajeros una guía.
             </Typography>
           </Box>
           <Box sx={{ flex: 1, textAlign: "center" }}>
             <img
               src="/assets/what-is-navippon.jpg"
-              alt="What is Navippon"
+              alt="Qué es Navippon"
               style={{
                 width: "100%",
                 height: "auto",
@@ -93,7 +93,7 @@ const AboutPage = () => {
 
         <Box sx={{ display: "flex", justifyContent: "center", mb: "2rem" }}>
           <Typography variant="h5" sx={{ mr: "1rem", fontWeight: "bold" }}>
-            - Our Principles -
+            Nuestros Principios
           </Typography>
         </Box>
 
@@ -105,56 +105,82 @@ const AboutPage = () => {
             mb: "2rem",
           }}
         >
-          <Box sx={{ textAlign: "center", mb: { xs: "2rem", md: 0 } }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              textAlign: "center",
+              mb: { xs: "2rem", md: 0 },
+            }}
+          >
             <img
               src="/assets/mission-icon.png"
-              alt="Mission Icon"
+              alt="Ícono de Misión"
               style={{ width: "50px", height: "50px" }}
             />
             <Typography variant="h6" sx={{ mt: "1rem", fontWeight: "bold" }}>
-              Mission
+              Misión
             </Typography>
             <Typography variant="body1" sx={{ mt: "1rem" }}>
-              Our mission at Navippon is to be the{" "}
-              <span style={{ color: primaryMain }}>trusted companion</span> for
-              travelers who want to explore the richness and beauty of Japan. We
-              are committed to providing our users with the tools and
-              information they need to plan personalized and meaningful trips.
+              Nuestra misión en Navippon es ser el{" "}
+              <span style={{ color: primaryMain }}>compañero confiable</span>{" "}
+              para los viajeros que desean explorar la riqueza y belleza de
+              Japón. Estamos comprometidos a proporcionar a nuestros usuarios
+              las herramientas y la información que necesitan para planificar
+              viajes personalizados y significativos.
             </Typography>
           </Box>
-          <Box sx={{ textAlign: "center", mb: { xs: "2rem", md: 0 } }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              textAlign: "center",
+              mb: { xs: "2rem", md: 0 },
+            }}
+          >
             <img
               src="/assets/values-icon.png"
-              alt="Values Icon"
+              alt="Ícono de Valores"
               style={{ width: "50px", height: "50px" }}
             />
             <Typography variant="h6" sx={{ mt: "1rem", fontWeight: "bold" }}>
-              Values
+              Valores
             </Typography>
             <Typography variant="body1" sx={{ mt: "1rem" }}>
-              We love Japan in all its dimensions and share that passion with
-              our users. We strive to promote{" "}
+              Amamos Japón en todas sus dimensiones y compartimos esa pasión con
+              nuestros usuarios. Nos esforzamos por promover el{" "}
               <span style={{ color: primaryMain }}>
-                understanding and respect
+                entendimiento y respeto
               </span>{" "}
-              for Japanese culture in every travel experience we offer.
+              por la cultura japonesa en cada experiencia de viaje que
+              ofrecemos.
             </Typography>
           </Box>
-          <Box sx={{ textAlign: "center" }}>
+          <Box
+            sx={{
+              textAlign: "center",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
             <img
               src="/assets/vision-icon.png"
-              alt="Vision Icon"
+              alt="Ícono de Visión"
               style={{ width: "50px", height: "50px" }}
             />
             <Typography variant="h6" sx={{ mt: "1rem", fontWeight: "bold" }}>
-              Vision
+              Visión
             </Typography>
             <Typography variant="body1" sx={{ mt: "1rem" }}>
-              Our vision at Navippon is to become the leading platform for
-              exploration and travel planning in Japan. We aim to be recognized
-              for our <span style={{ color: primaryMain }}>excellence</span> in
-              providing travelers with an experience where they can discover the
-              authenticity of Japan.
+              Nuestra visión en Navippon es convertirnos en la plataforma líder
+              para la exploración y planificación de viajes en Japón. Aspiramos
+              a ser reconocidos por nuestra{" "}
+              <span style={{ color: primaryMain }}>excelencia</span>
+              en proporcionar a los viajeros una experiencia donde puedan
+              descubrir la autenticidad de Japón.
             </Typography>
           </Box>
         </Box>
@@ -173,7 +199,7 @@ const AboutPage = () => {
           <Box sx={{ flex: 1, textAlign: "center", mb: { xs: "2rem", md: 0 } }}>
             <img
               src="/assets/our-community.jpg"
-              alt="Our Community"
+              alt="Nuestra Comunidad"
               style={{
                 width: "100%",
                 height: "auto",
@@ -184,13 +210,13 @@ const AboutPage = () => {
           </Box>
           <Box sx={{ flex: 1, textAlign: "left" }}>
             <Typography variant="h5" sx={{ mb: "1rem", fontWeight: "bold" }}>
-              - Our Community -
+              Nuestra Comunidad
             </Typography>
             <Typography variant="body1">
-              Our community is fundamental to us. We look forward to seeing it
-              grow and flourish with new members passionate about Japan.
-              Encouraging discussions, sharing adventures, and connecting with
-              lovers of Japanese culture from around the world.
+              Nuestra comunidad es fundamental para nosotros. Esperamos verla
+              crecer y florecer con nuevos miembros apasionados por Japón.
+              Fomentando discusiones, compartiendo aventuras y conectando con
+              amantes de la cultura japonesa de todo el mundo.
             </Typography>
           </Box>
         </Box>
@@ -208,14 +234,14 @@ const AboutPage = () => {
         >
           <Box sx={{ flex: 1, textAlign: "left" }}>
             <Typography variant="h5" sx={{ mb: "1rem", fontWeight: "bold" }}>
-              - Why Japan? -
+              ¿Por qué Japón?
             </Typography>
             <Typography variant="body1">
-              Traveling to Japan is a unique experience that immerses you in a
-              millennia-old culture, breathtaking landscapes, and cutting-edge
-              technology. You will discover the serenity of ancient temples, the
-              excitement of modern cities, and delicious Japanese cuisine. Japan
-              awaits you with unparalleled wonders!
+              Viajar a Japón es una experiencia única que te sumerge en una
+              cultura milenaria, paisajes impresionantes y tecnología de punta.
+              Descubrirás la serenidad de los templos antiguos, la emoción de
+              las ciudades modernas y la deliciosa gastronomía japonesa. ¡Japón
+              te espera con maravillas inigualables!
             </Typography>
           </Box>
           <Box sx={{ flex: 1, textAlign: "center" }}>
