@@ -123,6 +123,7 @@ const NavBar = () => {
               <Button
                 variant="text"
                 sx={{
+                  fontFamily: theme.typography.fontFamily,
                   color: isActiveLink("/about-us")
                     ? theme.palette.primary.main
                     : "white",
@@ -139,6 +140,7 @@ const NavBar = () => {
               <Button
                 variant="text"
                 sx={{
+                  fontFamily: theme.typography.fontFamily,
                   color: isActiveLink("/activities")
                     ? theme.palette.primary.main
                     : "white",

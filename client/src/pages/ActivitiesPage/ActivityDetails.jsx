@@ -5,11 +5,16 @@ import {
   Typography,
   CircularProgress,
   Box,
+  Tabs,
+  Tab,
   IconButton,
+  Button,
   useTheme,
 } from "@mui/material";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import NavBar from "../../components/NavBar/NavBar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
 import "./ActivityDetail.css";
@@ -18,6 +23,7 @@ import config from "../../config.js";
 const ActivityDetails = () => {
   const { palette } = useTheme();
   const { id } = useParams();
+  const [tabValue, setTabValue] = useState(0);
   const [activity, setActivity] = useState(null);
   const [categoryDetails, setCategoryDetails] = useState([]);
   const token = useSelector((state) => state.token);
@@ -36,6 +42,7 @@ const ActivityDetails = () => {
         }
 
         const data = await response.json();
+        console.log("Fetched Activity Data:", data);
         setActivity(data);
         fetchCategoryDetails(data.categories);
       } catch (error) {
@@ -107,142 +114,156 @@ const ActivityDetails = () => {
         >
           {activity.activityName}
         </Typography>
+        <IconButton sx={{ color: palette.primary.white }} aria-label="favorite">
+          <FavoriteIcon />
+        </IconButton>
+        <Button
+          variant="contained"
+          sx={{ borderRadius: "20px", marginLeft: "1rem" }}
+          startIcon={<AddCircleIcon />}
+          onClick={() => console.log("Add to Trip")}
+        >
+          Añadir a Viaje
+        </Button>
       </Box>
-      <Box className="activity-body">
-        <Typography
-          className="activity-description"
-          sx={{ mb: 3 }}
-          style={{ color: palette.primary.dark }}
+      <Box
+        className="activity-body"
+        sx={{ width: "100%", bgcolor: "background.paper" }}
+      >
+        <Tabs
+          value={tabValue}
+          onChange={(e, newValue) => setTabValue(newValue)}
+          variant="fullWidth"
+          aria-label="activity details and reviews"
         >
-          {activity.description}
-        </Typography>
-
-        {/* Categorías */}
-        <Box
-          display="flex"
-          flexWrap="wrap"
-          justifyContent="center"
-          sx={{ mb: 3 }}
-        >
-          {categoryDetails.length
-            ? categoryDetails.map((category) => (
-                <Typography
-                  key={category.category}
-                  variant="body2"
-                  sx={{
-                    mx: 1,
-                    fontWeight: "bold",
-                    color: "#FF4081",
-                    padding: 1,
-                    borderRadius: 20,
-                    backgroundColor: "#FFE4E7",
-                  }}
-                >
-                  {category.category}
+          <Tab label="Descripción" />
+          <Tab label="Reseñas" />
+        </Tabs>
+        <Box sx={{ p: 2, bgcolor: "white", borderRadius: "8px" }}>
+          {tabValue === 0 && (
+            <Box display="flex">
+              <Box flex={2} sx={{ pr: 2 }}>
+                <Typography sx={{ mb: 3, color: palette.primary.dark }}>
+                  {activity.description}
                 </Typography>
-              ))
-            : "Sin categorías"}
-        </Box>
-
-        {/* Prefectura */}
-        <Typography className="activity-location" sx={{ mb: 1 }}>
-          <strong>Prefectura:</strong>{" "}
-          <Typography component="span" style={{ color: palette.primary.black }}>
-            {activity.prefecture ? activity.prefecture.name : "Cargando..."}
-          </Typography>
-        </Typography>
-
-        {/* Presupuesto */}
-        <Typography className="activity-location" sx={{ mb: 3 }}>
-          <strong>Presupuesto:</strong>{" "}
-          <Box
-            component="span"
-            sx={{
-              display: "inline-block",
-              padding: "0.25em 0.5em",
-              color: "#305D7F",
-              borderRadius: "12px",
-              backgroundColor: "#CBE3EB",
-              fontWeight: "bold",
-            }}
-          >
-            {activity.budget ? activity.budget.name : "Cargando..."}{" "}
-            {activity.budget ? activity.budget.abbreviation : "Cargando..."}
-          </Box>
-        </Typography>
-
-        {/* Ciudad */}
-        <Typography className="activity-location" sx={{ mb: 3 }}>
-          <strong>Ciudad:</strong> {activity.city.join(", ")}
-        </Typography>
-
-        {/* Precio y Rango de Precio */}
-        <Typography className="activity-location" sx={{ mb: 3 }}>
-          <strong>Precio:</strong> ${activity.price}
-        </Typography>
-        <Typography className="activity-location" sx={{ mb: 3 }}>
-          <strong>Rango de Precio:</strong> ${activity.range_price.min} - $
-          {activity.range_price.max}
-        </Typography>
-
-        {/* Horarios */}
-        <Typography className="activity-location" sx={{ mb: 3 }}>
-          <strong>Hora de Apertura:</strong> {activity.opening_time}
-        </Typography>
-        <Typography className="activity-location" sx={{ mb: 3 }}>
-          <strong>Hora de Cierre:</strong> {activity.closing_time}
-        </Typography>
-
-        {/* Contacto y Sitio Web */}
-        <Typography className="activity-location" sx={{ mb: 3 }}>
-          <strong>Contacto:</strong> {activity.contact}
-        </Typography>
-        <Typography className="activity-location" sx={{ mb: 3 }}>
-          <strong>Sitio Web:</strong>{" "}
-          <a href={activity.website} target="_blank" rel="noopener noreferrer">
-            {activity.website}
-          </a>
-        </Typography>
-
-        {/* Ubicación */}
-        <Typography className="activity-location" sx={{ mb: 3 }}>
-          <strong>Coordenadas de Ubicación:</strong>{" "}
-          {activity.location.coordinates.join(", ")}
-        </Typography>
-
-        {/* Disponibilidad */}
-        <Typography className="activity-location" sx={{ mb: 3 }}>
-          <strong>Disponible todo el año:</strong>{" "}
-          {activity.availability.all_year ? "Sí" : "No"}
-        </Typography>
-        <Typography className="activity-location" sx={{ mb: 3 }}>
-          <strong>Mejor Temporada:</strong>{" "}
-          {activity.availability.best_season.join(", ")}
-        </Typography>
-
-        {/* Imágenes */}
-        <Box className="activity-images" sx={{ mb: 3 }}>
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            Imágenes:
-          </Typography>
-          <Box display="flex" gap={2} flexWrap="wrap">
-            {activity.images && activity.images.length ? (
-              activity.images.map((img, index) => (
-                <img
-                  key={index}
-                  src={`${config.API_URL}/assets/${img}`}
-                  alt={`Imagen de la actividad ${index + 1}`}
-                  style={{
-                    width: "150px",
-                    height: "auto",
+                {/* Display additional activity details here */}
+                <Typography sx={{ mb: 1 }}>
+                  <strong>Prefectura:</strong>{" "}
+                  {activity.prefecture
+                    ? activity.prefecture.name
+                    : "Cargando..."}
+                </Typography>
+                <Typography sx={{ mb: 1 }}>
+                  <strong>Presupuesto:</strong>{" "}
+                  {activity.budget ? activity.budget.name : "Cargando..."}{" "}
+                  {activity.budget
+                    ? activity.budget.abbreviation
+                    : "Cargando..."}
+                </Typography>
+                <Typography sx={{ mb: 1 }}>
+                  <strong>Ciudad:</strong> {activity.city.join(", ")}
+                </Typography>
+                <Typography sx={{ mb: 1 }}>
+                  <strong>Precio:</strong> ${activity.price}
+                </Typography>{" "}
+                {/* Categorías */}
+                <Box
+                  display="flex"
+                  flexWrap="wrap"
+                  justifyContent="center"
+                  sx={{ mb: 3 }}
+                >
+                  {categoryDetails.length
+                    ? categoryDetails.map((category) => (
+                        <Typography
+                          key={category.category}
+                          variant="body2"
+                          sx={{
+                            mx: 1,
+                            fontWeight: "bold",
+                            color: "#FF4081",
+                            padding: 1,
+                            borderRadius: 20,
+                            backgroundColor: "#FFE4E7",
+                          }}
+                        >
+                          {category.category}
+                        </Typography>
+                      ))
+                    : "Sin categorías"}
+                </Box>
+                <Typography sx={{ mb: 1 }}>
+                  <strong>Rango de Precio:</strong> ${activity.range_price.min}{" "}
+                  - ${activity.range_price.max}
+                </Typography>
+                <Typography sx={{ mb: 1 }}>
+                  <strong>Hora de Apertura:</strong> {activity.opening_time}
+                </Typography>
+                <Typography sx={{ mb: 1 }}>
+                  <strong>Hora de Cierre:</strong> {activity.closing_time}
+                </Typography>
+                <Typography sx={{ mb: 1 }}>
+                  <strong>Coordenadas de Ubicación:</strong>{" "}
+                  {activity.location.coordinates.join(", ")}
+                </Typography>
+                <Typography sx={{ mb: 1 }}>
+                  <strong>Disponible todo el año:</strong>{" "}
+                  {activity.availability.all_year ? "Sí" : "No"}
+                </Typography>
+                <Typography sx={{ mb: 1 }}>
+                  <strong>Mejor Temporada:</strong>{" "}
+                  {activity.availability.best_season.join(", ")}
+                </Typography>
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="h6" sx={{ mb: 2 }}>
+                    Imágenes:
+                  </Typography>
+                  <Box display="flex" gap={2} flexWrap="wrap">
+                    {activity.images && activity.images.length ? (
+                      activity.images.map((img, index) => (
+                        <img
+                          key={index}
+                          src={`${config.API_URL}/assets/${img}`}
+                          alt={`Imagen de la actividad ${index + 1}`}
+                          style={{
+                            width: "150px",
+                            height: "auto",
+                            borderRadius: "8px",
+                          }}
+                        />
+                      ))
+                    ) : (
+                      <Typography>No hay imágenes disponibles</Typography>
+                    )}
+                  </Box>
+                </Box>
+              </Box>
+              <Box flex={1}>
+                {/* Contact and Map Column */}
+                <Typography variant="h6">Contacto:</Typography>
+                <Typography>{activity.contact}</Typography>
+                <Typography variant="h6" sx={{ mt: 2 }}>
+                  Ubicación:
+                </Typography>
+                <Box
+                  sx={{
+                    width: "100%",
+                    height: "200px",
+                    backgroundColor: "#E0E0E0", // Placeholder for map
                     borderRadius: "8px",
                   }}
-                />
-              ))
-            ) : (
-              <Typography>No hay imágenes disponibles</Typography>
-            )}
-          </Box>
+                ></Box>
+              </Box>
+            </Box>
+          )}
+          {tabValue === 1 && (
+            <Box>
+              {/* Placeholder for Reviews */}
+              <Typography variant="h6">Reseñas:</Typography>
+              <Typography>No hay reseñas disponibles.</Typography>
+              {/* You can fetch and display actual reviews here */}
+            </Box>
+          )}
         </Box>
       </Box>
       <Footer />

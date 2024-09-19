@@ -232,6 +232,7 @@ ActivityWidget.propTypes = {
   prefecture: PropTypes.shape({
     name: PropTypes.string,
   }),
+  coordinates: PropTypes.arrayOf(PropTypes.number).isRequired,
   budget: PropTypes.shape({
     name: PropTypes.string,
     abbreviation: PropTypes.string,
