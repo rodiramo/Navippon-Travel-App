@@ -3,12 +3,10 @@ import { Box } from "@mui/material";
 import UserImage from "../../components/UserImage.jsx";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import config from '../../config.js';
+import config from "../../config.js";
 
 const UserProfilePicture = ({ userId }) => {
   const [user, setUser] = useState(null);
-  const navigate = useNavigate();
   const token = useSelector((state) => state.token);
 
   const getUser = async () => {
@@ -29,7 +27,7 @@ const UserProfilePicture = ({ userId }) => {
   }
 
   return (
-    <Box onClick={() => navigate(`/profile/${userId}`)}>
+    <Box>
       <UserImage image={user.picturePath} name={user.firstName} />
     </Box>
   );

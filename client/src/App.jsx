@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
+import "./index.css";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme.js";
@@ -19,7 +20,6 @@ import AdminPanel from "./pages/AdminPage/AdminPanel.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import ActivityForm from "./pages/ActivitiesPage/ActivityForm.jsx";
 import NotFound from "./pages/NotFound.jsx";
-
 function App() {
   const mode = useSelector((state) => state.mode);
 

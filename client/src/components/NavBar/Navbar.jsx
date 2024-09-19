@@ -1,21 +1,28 @@
 import { useState } from "react";
 import {
   Box,
-  Button,
-  IconButton,
-  InputBase,
   Typography,
-  Select,
+  Menu,
   MenuItem,
-  FormControl,
+  IconButton,
+  Button,
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import { DarkMode, LightMode, Menu, Close } from "@mui/icons-material";
+import {
+  Menu as MenuIcon,
+  Close as CloseIcon,
+  LightMode,
+  DarkMode,
+  TravelExplore,
+  Favorite,
+  Person,
+} from "@mui/icons-material";
+import LogoutIcon from "@mui/icons-material/Logout";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { setMode, setLogout } from "../../state/state.js";
-import { useNavigate, Link } from "react-router-dom";
-import FlexBetween from "../FlexBetween.jsx";
 import UserProfilePicture from "../../pages/widgets/UserProfilePic.jsx";
 import useAuth from "../../hooks/useAuth.js";
 import logo from "/assets/navippon-logo-white.png";
@@ -25,281 +32,307 @@ const NavBar = () => {
   const userState = useSelector((state) => state.user);
   const user = userState || {};
   const { picturePath, _id } = user;
-  const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
   const theme = useTheme();
-  const neutralLight = theme.palette.neutral.light;
+  const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+  const location = useLocation(); // Hook to get the current location
+  const navigate = useNavigate(); // Hook to navigate programmatically
   const nav = theme.palette.background.nav;
-  const fullName = `${user.firstName} ${user.lastName}`;
+  const fullName = `${user?.firstName || "Usuario"} ${user?.lastName || ""}`;
 
-  const handleProfileClick = () => {
-    navigate(`/profile/${_id}`);
+  const handleLogout = () => {
+    dispatch(setLogout());
   };
 
-  const handleMyTripsClick = () => {
-    navigate("/trips");
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
   };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  // Utility function to determine if a link is active
+  const isActiveLink = (path) => location.pathname === path;
 
   return (
-    <FlexBetween
-      padding="1rem 2rem"
-      backgroundColor={nav}
-      sx={{ width: "100%" }}
-    >
-      <FlexBetween gap="1.75rem">
-        <Box
-          display="flex"
-          alignItems="center"
-          onClick={() => navigate("/home")}
-          sx={{ cursor: "pointer" }}
-        >
-          <img
-            src={logo}
-            alt="Navippon logo"
-            style={{ width: "40px", marginRight: "0.5rem" }}
-          />
-          <Typography
-            fontFamily="SifonnPro"
-            fontWeight="bold"
-            fontSize="clamp(0.75rem, 1.5rem, 1.75rem)"
-            color="white"
+    <nav style={{ backgroundColor: nav, zIndex: 1000 }}>
+      <Box
+        className="max-w-screen-xl flex items-center justify-between mx-auto p-4"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        {/* Logo Section */}
+        <Box sx={{ flexShrink: 0 }}>
+          <Link
+            to="/home"
+            style={{
+              textDecoration: "none",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <img
+              src={logo}
+              alt="Logo Navippon"
+              style={{ height: "40px", marginRight: "0.5rem" }}
+            />
+            <Typography
+              fontFamily="SifonnPro"
+              fontWeight="bold"
+              fontSize="clamp(1rem, 1.5rem, 1.75rem)"
+              color="white"
+              sx={{ textTransform: "none" }}
+            >
+              Navippon
+            </Typography>
+          </Link>
+        </Box>
+        {/* Centered Links */}
+        {isNonMobileScreens ? (
+          <Box
             sx={{
-              "&:hover": {
-                color: theme.palette.primary.light,
-                cursor: "pointer",
+              display: "flex",
+              flexGrow: 1,
+              justifyContent: "center",
+              gap: "1rem",
+            }}
+          >
+            <Link to="/home" style={{ textDecoration: "none" }}>
+              <Button
+                variant="text"
+                sx={{
+                  color: isActiveLink("/home")
+                    ? theme.palette.primary.main
+                    : "white",
+                  "&:hover": {
+                    color: theme.palette.primary.main,
+                  },
+                  textTransform: "none",
+                }}
+              >
+                Inicio
+              </Button>
+            </Link>
+            <Link to="/activities" style={{ textDecoration: "none" }}>
+              <Button
+                variant="text"
+                sx={{
+                  color: isActiveLink("/activities")
+                    ? theme.palette.primary.main
+                    : "white",
+                  "&:hover": {
+                    color: theme.palette.primary.main,
+                  },
+                  textTransform: "none",
+                }}
+              >
+                Actividades
+              </Button>
+            </Link>
+            <Link to="/posts" style={{ textDecoration: "none" }}>
+              <Button
+                variant="text"
+                sx={{
+                  color: isActiveLink("/posts")
+                    ? theme.palette.primary.main
+                    : "white",
+                  "&:hover": {
+                    color: theme.palette.primary.main,
+                  },
+                  textTransform: "none",
+                }}
+              >
+                Blog
+              </Button>
+            </Link>
+            <Link to="/about-us" style={{ textDecoration: "none" }}>
+              <Button
+                variant="text"
+                sx={{
+                  color: isActiveLink("/about-us")
+                    ? theme.palette.primary.main
+                    : "white",
+                  "&:hover": {
+                    color: theme.palette.primary.main,
+                  },
+                  textTransform: "none",
+                }}
+              >
+                Sobre Nosotros
+              </Button>
+            </Link>
+          </Box>
+        ) : (
+          <IconButton
+            onClick={() => setIsMobileMenuOpen(true)}
+            sx={{ color: "white" }}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
+        {/* User Avatar Section */}
+        <Box sx={{ flexShrink: 0 }}>
+          {isNonMobileScreens && (
+            <>
+              <IconButton
+                onClick={() => dispatch(setMode())}
+                sx={{ color: "white" }}
+              >
+                {theme.palette.mode === "dark" ? <DarkMode /> : <LightMode />}
+              </IconButton>
+              <IconButton onClick={handleMenuOpen} sx={{ p: 0 }}>
+                <UserProfilePicture userId={_id} picturePath={picturePath} />
+              </IconButton>
+            </>
+          )}
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+            PaperProps={{
+              sx: {
+                bgcolor: theme.palette.primary.white,
+                borderRadius: "0.5rem",
+                boxShadow: theme.shadows[5],
+                mt: 1,
+                minWidth: "150px",
               },
             }}
           >
-            Navippon
-          </Typography>
-        </Box>
-      </FlexBetween>
-
-      {isNonMobileScreens ? (
-        <FlexBetween gap="2rem">
-          {" "}
-          <Link to="/home" style={{ textDecoration: "none" }}>
-            <Typography
-              variant="body1"
-              sx={{ color: theme.palette.primary.light, cursor: "pointer" }}
+            <MenuItem sx={{ display: "flex", alignItems: "center" }}>
+              <Typography>{fullName}</Typography>
+            </MenuItem>
+            <MenuItem
+              onClick={() => navigate(`/profile/${_id}`)}
+              sx={{ display: "flex", alignItems: "center" }}
             >
-              Home
-            </Typography>
-          </Link>
-          <Link to="/activities" style={{ textDecoration: "none" }}>
-            <Typography
-              variant="body1"
-              sx={{ color: theme.palette.primary.light, cursor: "pointer" }}
+              <Person sx={{ marginRight: "1rem" }} />
+              <Typography>Mi Perfil</Typography>
+            </MenuItem>
+            <MenuItem
+              component={Link}
+              to="/trips"
+              sx={{ display: "flex", alignItems: "center" }}
             >
-              Activities
-            </Typography>
-          </Link>
-          <Link to="/posts" style={{ textDecoration: "none" }}>
-            <Typography
-              variant="body1"
-              sx={{ color: theme.palette.primary.light, cursor: "pointer" }}
+              <TravelExplore sx={{ marginRight: "1rem" }} />
+              <Typography>Mis Viajes</Typography>
+            </MenuItem>
+            <MenuItem
+              component={Link}
+              to="/favorites"
+              sx={{ display: "flex", alignItems: "center" }}
             >
-              Blog
-            </Typography>
-          </Link>
-          <Link to="/about-us" style={{ textDecoration: "none" }}>
-            <Typography
-              variant="body1"
-              sx={{ color: theme.palette.primary.light, cursor: "pointer" }}
-            >
-              About Us
-            </Typography>
-          </Link>
-          {isAdmin && (
-            <Link to="/admin" style={{ textDecoration: "none" }}>
-              <Typography
-                variant="body1"
-                sx={{ color: theme.palette.primary.light, cursor: "pointer" }}
+              <Favorite sx={{ marginRight: "1rem" }} />
+              <Typography>Favoritos</Typography>
+            </MenuItem>
+            {isAdmin && (
+              <MenuItem
+                component={Link}
+                to="/admin"
+                sx={{ display: "flex", alignItems: "center" }}
               >
-                Admin Dashboard
-              </Typography>
-            </Link>
-          )}
-          <UserProfilePicture userId={_id} picturePath={picturePath} />
-          <FormControl variant="standard">
-            <Select
-              value="my-profile"
-              renderValue={() => <Typography>{fullName}</Typography>}
-              sx={{
-                backgroundColor: neutralLight,
-                width: "210px",
-                borderRadius: "30rem",
-                p: "0.25rem 1rem",
-                "& .MuiSvgIcon-root": {
-                  pr: "0.25rem",
-                  width: "3rem",
-                },
-                "& .MuiSelect-select:focus": {
-                  backgroundColor: neutralLight,
-                  borderRadius: "30rem",
-                },
-              }}
-              input={<InputBase />}
-            >
-              <MenuItem value="my-profile" onClick={handleProfileClick}>
-                <Button
-                  variant="text"
-                  color="inherit"
-                  sx={{ textTransform: "none", width: "100%" }}
-                >
-                  <Typography>My Profile</Typography>
-                </Button>
+                <AdminPanelSettingsIcon sx={{ marginRight: "1rem" }} />
+                <Typography>Panel de Administración</Typography>
               </MenuItem>
-              <MenuItem value="my-trips" onClick={handleMyTripsClick}>
-                <Button
-                  variant="text"
-                  color="inherit"
-                  sx={{ textTransform: "none", width: "100%" }}
-                >
-                  <Typography>My Trips</Typography>
-                </Button>
-              </MenuItem>
-              <MenuItem value="logout" onClick={() => dispatch(setLogout())}>
-                Log Out
-              </MenuItem>
-            </Select>
-          </FormControl>
-          <IconButton onClick={() => dispatch(setMode())}>
-            {theme.palette.mode === "dark" ? (
-              <DarkMode sx={{ fontSize: "25px", color: "white" }} />
-            ) : (
-              <LightMode sx={{ fontSize: "25px", color: "white" }} />
             )}
-          </IconButton>
-        </FlexBetween>
-      ) : (
-        <IconButton
-          onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
-          sx={{ color: "white" }}
-        >
-          <Menu />
-        </IconButton>
-      )}
-
-      {!isNonMobileScreens && isMobileMenuToggled && (
-        <Box
-          position="fixed"
-          top="0"
-          right="0"
-          bottom="0"
-          width="100%"
-          zIndex="10"
-          backgroundColor={theme.palette.background.nav}
-          p="1rem"
-        >
-          <Box display="flex" justifyContent="flex-end">
-            <IconButton
-              onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
+            <MenuItem
+              onClick={handleLogout}
+              sx={{ display: "flex", alignItems: "center" }}
             >
-              <Close sx={{ fontSize: "25px", color: "white" }} />
-            </IconButton>
-          </Box>
-          <FlexBetween
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-            gap="2rem"
+              <LogoutIcon sx={{ marginRight: "1rem" }} />
+              <Typography>Salir</Typography>
+            </MenuItem>
+          </Menu>
+        </Box>
+        {isMobileMenuOpen && (
+          <Box
+            className="fixed top-0 right-0 bottom-0 w-3/4 bg-gray-800 text-white p-4"
+            sx={{
+              zIndex: 10000,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+            }}
           >
             <IconButton
-              onClick={() => dispatch(setMode())}
-              sx={{ fontSize: "25px" }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              sx={{ alignSelf: "flex-end", color: "white" }}
             >
-              {theme.palette.mode === "light" ? (
-                <DarkMode sx={{ fontSize: "25px", color: "white" }} />
-              ) : (
-                <LightMode sx={{ fontSize: "25px", color: "white" }} />
-              )}
+              <CloseIcon />
             </IconButton>
-
-            <Link to="/activities" style={{ textDecoration: "none" }}>
-              <Typography
-                variant="body1"
-                sx={{ color: theme.palette.primary.light, cursor: "pointer" }}
+            <Link to="/home" style={{ textDecoration: "none" }}>
+              <Button
+                variant="text"
+                sx={{
+                  color: "white",
+                  textTransform: "none",
+                }}
               >
-                Activities
-              </Typography>
+                Inicio
+              </Button>
             </Link>
-
+            <Link to="/activities" style={{ textDecoration: "none" }}>
+              <Button
+                variant="text"
+                sx={{
+                  color: "white",
+                  textTransform: "none",
+                }}
+              >
+                Actividades
+              </Button>
+            </Link>
             <Link to="/posts" style={{ textDecoration: "none" }}>
-              <Typography
-                variant="body1"
-                sx={{ color: theme.palette.primary.light, cursor: "pointer" }}
+              <Button
+                variant="text"
+                sx={{
+                  color: "white",
+                  textTransform: "none",
+                }}
               >
                 Blog
-              </Typography>
+              </Button>
             </Link>
             <Link to="/about-us" style={{ textDecoration: "none" }}>
-              <Typography
-                variant="body1"
-                sx={{ color: theme.palette.primary.light, cursor: "pointer" }}
+              <Button
+                variant="text"
+                sx={{
+                  color: "white",
+                  textTransform: "none",
+                }}
               >
-                About Us
-              </Typography>
+                Sobre Nosotros
+              </Button>
             </Link>
             {isAdmin && (
               <Link to="/admin" style={{ textDecoration: "none" }}>
-                <Typography
-                  variant="body1"
-                  sx={{ color: theme.palette.primary.light, cursor: "pointer" }}
+                <Button
+                  variant="text"
+                  sx={{
+                    color: "white",
+                    textTransform: "none",
+                  }}
                 >
-                  Admin Dashboard
-                </Typography>
+                  Panel de Administración
+                </Button>
               </Link>
             )}
-            <FormControl variant="standard">
-              <Select
-                value="My Profile"
-                renderValue={() => <Typography>{fullName}</Typography>}
-                sx={{
-                  backgroundColor: neutralLight,
-                  width: "200px",
-                  borderRadius: "0.25rem",
-                  p: "0.25rem 1rem",
-                  "& .MuiSvgIcon-root": {
-                    pr: "0.25rem",
-                    width: "3rem",
-                  },
-                  "& .MuiSelect-select:focus": {
-                    backgroundColor: neutralLight,
-                  },
-                }}
-                input={<InputBase />}
-              >
-                <MenuItem onClick={handleProfileClick}>
-                  <Button
-                    variant="text"
-                    color="inherit"
-                    sx={{ textTransform: "none", width: "100%" }}
-                  >
-                    <Typography>My Profile</Typography>
-                  </Button>
-                </MenuItem>
-                <MenuItem onClick={handleMyTripsClick}>
-                  <Button
-                    variant="text"
-                    color="inherit"
-                    sx={{ textTransform: "none", width: "100%" }}
-                  >
-                    <Typography>My Trips</Typography>
-                  </Button>
-                </MenuItem>
-                <MenuItem onClick={() => dispatch(setLogout())}>
-                  Log Out
-                </MenuItem>
-              </Select>
-            </FormControl>
-          </FlexBetween>
-        </Box>
-      )}
-    </FlexBetween>
+            <Button onClick={() => dispatch(setMode())} sx={{ color: "white" }}>
+              {theme.palette.mode === "dark" ? <DarkMode /> : <LightMode />}
+            </Button>
+            <Button onClick={handleLogout} sx={{ color: "white" }}>
+              Salir
+            </Button>
+          </Box>
+        )}
+      </Box>
+    </nav>
   );
 };
 
