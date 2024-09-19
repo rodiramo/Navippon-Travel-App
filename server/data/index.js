@@ -157,7 +157,7 @@ export const activities = [
     categories: ["Turismo", "Cultura", "Templos"],
     saves: [],
     budget: budgets[1]._id,
-    city: prefectures[1]._id,
+    city: prefectures[1].cities[1],
     price: 50.0,
     range_price: { min: 0.0, max: 100.0 },
     opening_time: "09:00",

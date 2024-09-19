@@ -1,11 +1,10 @@
 .bg-searchbar {
   margin-top: 4rem;
   margin-bottom: 1rem;
-  border-radius: 2rem;
+  border-radius: 10rem;
   display: flex;
   align-items: flex-end;
-  padding-bottom: 1rem;
-  width: 800px;
+  padding: 1rem;
   padding-left: 1rem;
   padding-right: 0.5rem;
   backdrop-filter: blur(10px);

@@ -12,7 +12,7 @@ import {
 import NavBar from "../../components/NavBar/NavBar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
 import "./ActivityDetail.css";
-import config from '../../config.js'; 
+import config from "../../config.js";
 
 const ActivityDetails = () => {
   const { palette } = useTheme();
@@ -30,21 +30,21 @@ const ActivityDetails = () => {
         });
 
         if (!response.ok) {
-          throw new Error("Failed to fetch activity data");
+          throw new Error("No se pudo obtener los datos de la actividad");
         }
 
         const data = await response.json();
         setActivity(data);
         fetchCategoryDetails(data.categories);
       } catch (error) {
-        console.error("Error fetching activity:", error.message);
+        console.error("Error al obtener la actividad:", error.message);
       }
     };
 
     const fetchCategoryDetails = async (categoryNames) => {
       try {
         const response = await fetch(`${config.API_URL}/categories`);
-        if (!response.ok) throw new Error("Failed to fetch categories");
+        if (!response.ok) throw new Error("No se pudo obtener las categorías");
         const data = await response.json();
 
         const categoryMap = data.reduce((acc, category) => {
@@ -57,10 +57,10 @@ const ActivityDetails = () => {
             categoryMap[name] || { category: name, icon: "defaultIcon.png" }
         );
 
-        console.log("Category Details:", details);
+        console.log("Detalles de Categorías:", details);
         setCategoryDetails(details);
       } catch (error) {
-        console.error("Failed to fetch categories", error);
+        console.error("No se pudo obtener las categorías", error);
       }
     };
 
@@ -77,10 +77,10 @@ const ActivityDetails = () => {
       <Box className="activity-detail breadcrumbs-container" sx={{ mb: 2 }}>
         <Breadcrumbs aria-label="breadcrumb">
           <Link color="inherit" href="/home">
-            Home
+            Inicio
           </Link>
           <Link color="inherit" href="/activities">
-            Activities
+            Actividades
           </Link>
           <Typography color="textPrimary">{activity.activityName}</Typography>
         </Breadcrumbs>
@@ -108,6 +108,8 @@ const ActivityDetails = () => {
         >
           {activity.description}
         </Typography>
+
+        {/* Categorías */}
         <Box
           display="flex"
           flexWrap="wrap"
@@ -131,16 +133,20 @@ const ActivityDetails = () => {
                   {category.category}
                 </Typography>
               ))
-            : "No categories"}
+            : "Sin categorías"}
         </Box>
+
+        {/* Prefectura */}
         <Typography className="activity-location" sx={{ mb: 1 }}>
-          <strong>Prefecture:</strong>{" "}
+          <strong>Prefectura:</strong>{" "}
           <Typography component="span" style={{ color: palette.primary.black }}>
-            {activity.prefecture ? activity.prefecture.name : "Loading..."}
+            {activity.prefecture ? activity.prefecture.name : "Cargando..."}
           </Typography>
         </Typography>
+
+        {/* Presupuesto */}
         <Typography className="activity-location" sx={{ mb: 3 }}>
-          <strong>Budget:</strong>{" "}
+          <strong>Presupuesto:</strong>{" "}
           <Box
             component="span"
             sx={{
@@ -152,10 +158,84 @@ const ActivityDetails = () => {
               fontWeight: "bold",
             }}
           >
-            {activity.budget ? activity.budget.name : "Loading..."}{" "}
-            {activity.budget ? activity.budget.abbreviation : "Loading..."}
+            {activity.budget ? activity.budget.name : "Cargando..."}{" "}
+            {activity.budget ? activity.budget.abbreviation : "Cargando..."}
           </Box>
         </Typography>
+
+        {/* Ciudad */}
+        <Typography className="activity-location" sx={{ mb: 3 }}>
+          <strong>Ciudad:</strong> {activity.city.join(", ")}
+        </Typography>
+
+        {/* Precio y Rango de Precio */}
+        <Typography className="activity-location" sx={{ mb: 3 }}>
+          <strong>Precio:</strong> ${activity.price}
+        </Typography>
+        <Typography className="activity-location" sx={{ mb: 3 }}>
+          <strong>Rango de Precio:</strong> ${activity.range_price.min} - $
+          {activity.range_price.max}
+        </Typography>
+
+        {/* Horarios */}
+        <Typography className="activity-location" sx={{ mb: 3 }}>
+          <strong>Hora de Apertura:</strong> {activity.opening_time}
+        </Typography>
+        <Typography className="activity-location" sx={{ mb: 3 }}>
+          <strong>Hora de Cierre:</strong> {activity.closing_time}
+        </Typography>
+
+        {/* Contacto y Sitio Web */}
+        <Typography className="activity-location" sx={{ mb: 3 }}>
+          <strong>Contacto:</strong> {activity.contact}
+        </Typography>
+        <Typography className="activity-location" sx={{ mb: 3 }}>
+          <strong>Sitio Web:</strong>{" "}
+          <a href={activity.website} target="_blank" rel="noopener noreferrer">
+            {activity.website}
+          </a>
+        </Typography>
+
+        {/* Ubicación */}
+        <Typography className="activity-location" sx={{ mb: 3 }}>
+          <strong>Coordenadas de Ubicación:</strong>{" "}
+          {activity.location.coordinates.join(", ")}
+        </Typography>
+
+        {/* Disponibilidad */}
+        <Typography className="activity-location" sx={{ mb: 3 }}>
+          <strong>Disponible todo el año:</strong>{" "}
+          {activity.availability.all_year ? "Sí" : "No"}
+        </Typography>
+        <Typography className="activity-location" sx={{ mb: 3 }}>
+          <strong>Mejor Temporada:</strong>{" "}
+          {activity.availability.best_season.join(", ")}
+        </Typography>
+
+        {/* Imágenes */}
+        <Box className="activity-images" sx={{ mb: 3 }}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Imágenes:
+          </Typography>
+          <Box display="flex" gap={2} flexWrap="wrap">
+            {activity.images && activity.images.length ? (
+              activity.images.map((img, index) => (
+                <img
+                  key={index}
+                  src={`${config.API_URL}/assets/${img}`}
+                  alt={`Imagen de la actividad ${index + 1}`}
+                  style={{
+                    width: "150px",
+                    height: "auto",
+                    borderRadius: "8px",
+                  }}
+                />
+              ))
+            ) : (
+              <Typography>No hay imágenes disponibles</Typography>
+            )}
+          </Box>
+        </Box>
       </Box>
       <Footer />
     </Box>

@@ -11,7 +11,6 @@ const SearchBar = () => {
         justifyContent="center"
       >
         <div className="space">
-          <p>¿Qué estás buscando?</p>
           <input type="text" placeholder="¿Qué estás buscando?" />
         </div>{" "}
         <div className="space">
