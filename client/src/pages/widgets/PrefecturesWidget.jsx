@@ -43,16 +43,14 @@ const PrefecturesWidget = () => {
       >
         {prefectures.map((prefecture) => (
           <ListItem
-            button
             key={prefecture._id}
-            onClick={() => handleClick(prefecture._id)}
             sx={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               margin: 1,
               width: 150,
-              cursor: "pointer",
+              textAlign: "center",
             }}
           >
             <Box
@@ -61,10 +59,16 @@ const PrefecturesWidget = () => {
               alt={prefecture.name}
               sx={{
                 width: 150,
-                height: 150,
+                height: 120,
                 borderRadius: "50%",
                 marginBottom: 1,
+                transition: "opacity 0.3s ease",
+                opacity: 1,
+                "&:hover": {
+                  opacity: 0.8,
+                },
               }}
+              onClick={() => handleClick(prefecture._id)}
             />
             <ListItemText
               primary={prefecture.name}

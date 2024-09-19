@@ -51,7 +51,7 @@ const ActivitiesWidget = () => {
         )
       );
     } catch (error) {
-      console.error("Error updating favorite activities:", error.message);
+      console.error("Error editando la actividad:", error.message);
     }
   };
   const handleFilterChange = (filterType) => {
@@ -66,7 +66,7 @@ const ActivitiesWidget = () => {
         )
       );
     } catch (error) {
-      console.error("Error deleting activity:", error.message);
+      console.error("Error borrando la actividad: ", error.message);
     }
   };
 
@@ -111,26 +111,26 @@ const ActivitiesWidget = () => {
           color="primary"
           onClick={() => handleFilterChange("activities")}
         >
-          Activities
+          Actividades
         </Button>
         <Button
           variant={filter === "restaurants" ? "contained" : "outlined"}
           color="primary"
           onClick={() => handleFilterChange("restaurants")}
         >
-          Restaurants
+          Restaurantes
         </Button>
         <Button
           variant={filter === "hotels" ? "contained" : "outlined"}
           color="primary"
           onClick={() => handleFilterChange("hotels")}
         >
-          Hotels
+          Hoteles
         </Button>
       </Box>
       {activities.length === 0 ? (
         <Typography variant="h6" color="text.secondary">
-          No activities available.
+          No hay Actividades disponibles
         </Typography>
       ) : (
         <Box justifyContent="center">

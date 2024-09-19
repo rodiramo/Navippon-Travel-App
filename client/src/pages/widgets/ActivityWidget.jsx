@@ -60,7 +60,7 @@ const ActivityWidget = ({
         );
         setCategoryDetails(details);
       } catch (error) {
-        console.error("Failed to fetch categories", error);
+        console.error("No se pudo obtener las categorías", error);
       }
     };
 
@@ -74,7 +74,7 @@ const ActivityWidget = ({
   const handleDeleteActivity = async () => {
     if (onDelete) {
       await onDelete();
-      setSnackbarMessage("Activity deleted successfully!");
+      setSnackbarMessage("¡Actividad eliminada exitosamente!");
       setSnackbarSeverity("success");
       setSnackbarOpen(true);
       handleCloseDeleteModal();
@@ -86,7 +86,7 @@ const ActivityWidget = ({
       await onSave(isSaved);
       setIsSaved(!isSaved);
       setSnackbarMessage(
-        isSaved ? "Removed from favorites!" : "Added to favorites!"
+        isSaved ? "¡Eliminado de favoritos!" : "¡Agregado a favoritos!"
       );
       setSnackbarSeverity("success");
       setSnackbarOpen(true);
@@ -111,14 +111,14 @@ const ActivityWidget = ({
         <Typography variant="h4" color="primary" className="activity-title">
           {activityName}{" "}
           <span className="prefecture-badge">
-            {prefecture?.name || "Loading..."}
+            {prefecture?.name || "Cargando..."}
           </span>
         </Typography>
         <Typography style={{ color: palette.primary.black }}>
-          Categories:{" "}
+          Categorías:{" "}
           {categoryDetails.length
             ? categoryDetails.map((category) => category.category).join(", ")
-            : "No categories"}
+            : "Sin categorías"}
         </Typography>
         <Typography
           style={{ color: palette.primary.black }}
@@ -130,10 +130,25 @@ const ActivityWidget = ({
         <FlexBetween className="wrap-buttons">
           <Button
             variant="contained"
-            className="button-detail"
+            sx={{
+              textTransform: "none",
+              bgcolor: palette.secondary.dark,
+              mr: 2,
+              borderRadius: 20,
+            }}
             onClick={handleViewDetails}
           >
-            View Details
+            Ver Detalles
+          </Button>{" "}
+          <Button
+            variant="contained"
+            className="button-detail"
+            sx={{
+              textTransform: "none",
+            }}
+            onClick={handleViewDetails}
+          >
+            Agregar a Viaje
           </Button>
           {role === "admin" && (
             <>
@@ -162,23 +177,23 @@ const ActivityWidget = ({
         )}
       </IconButton>
       <Typography style={{ color: palette.primary.black }} className="budget">
-        {budget?.name || "Loading..."} {budget?.abbreviation || "Loading..."}
+        {budget?.name || "Cargando..."} {budget?.abbreviation || "Cargando..."}
       </Typography>
       <Dialog open={openDeleteModal} onClose={handleCloseDeleteModal}>
-        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogTitle>Confirmar eliminación</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete this activity? This action cannot be
-            undone.
+            ¿Está seguro de que desea eliminar esta actividad? Esta acción no se
+            puede deshacer.
           </Typography>
         </DialogContent>
 
         <DialogActions>
           <Button onClick={handleCloseDeleteModal} color="primary">
-            Cancel
+            Cancelar
           </Button>
           <Button onClick={handleDeleteActivity} color="secondary">
-            Delete
+            Eliminar
           </Button>
         </DialogActions>
       </Dialog>

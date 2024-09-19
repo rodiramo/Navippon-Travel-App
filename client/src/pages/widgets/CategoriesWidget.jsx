@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Typography, Box, IconButton } from "@mui/material";
+import { Typography, Box, IconButton, Button } from "@mui/material";
 import PropTypes from "prop-types";
 import { fetchCategoryDetails } from "../../services/services";
 import config from "../../config";
@@ -8,6 +8,8 @@ import config from "../../config";
 const CategoriesWidget = () => {
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
+  const [visibleCount, setVisibleCount] = useState(10);
+  const [showAll, setShowAll] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,20 +29,33 @@ const CategoriesWidget = () => {
     navigate(`/activities/filtered-category/${categoryName}`);
   };
 
+  const handleShowMore = () => {
+    setShowAll(true);
+    setVisibleCount(categories.length);
+  };
+
+  const handleShowLess = () => {
+    setShowAll(false);
+    setVisibleCount(10);
+  };
+
   if (error) return <Typography color="error">Error: {error}</Typography>;
 
   return (
     <Box>
-      <Box display="flex" flexWrap="wrap" justifyContent="center">
-        {categories.map((category) => (
+      <Box display="flex" flexWrap="wrap">
+        {categories.slice(0, visibleCount).map((category) => (
           <Box
             key={category._id}
             sx={{
               textAlign: "center",
               display: "flex",
               flexWrap: "wrap",
+              alignContent: "center",
               flexDirection: "column",
               margin: 1,
+              width: { xs: 120, sm: 150 },
+              height: { xs: 120, sm: 150 },
             }}
           >
             <IconButton
@@ -55,6 +70,8 @@ const CategoriesWidget = () => {
                 "&:hover": {
                   backgroundColor: "primary.light",
                 },
+                width: { xs: 80, sm: 100 },
+                height: { xs: 80, sm: 100 },
               }}
             >
               <Box
@@ -62,8 +79,8 @@ const CategoriesWidget = () => {
                 src={`${config.API_URL}/assets/${category.icon}`}
                 alt={category.category}
                 sx={{
-                  width: 50,
-                  height: 50,
+                  width: { xs: 60, sm: 80 },
+                  height: { xs: 60, sm: 80 },
                   padding: "0.4rem",
                 }}
               />
@@ -73,6 +90,32 @@ const CategoriesWidget = () => {
             </Typography>
           </Box>
         ))}
+      </Box>
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        marginTop={2}
+      >
+        {showAll ? (
+          <Button
+            variant="outlined"
+            onClick={handleShowLess}
+            sx={{ borderRadius: 20 }}
+          >
+            Mostrar menos Categorías
+          </Button>
+        ) : (
+          visibleCount < categories.length && (
+            <Button
+              variant="outlined"
+              onClick={handleShowMore}
+              sx={{ borderRadius: 20 }}
+            >
+              Mostrar más Categorías
+            </Button>
+          )
+        )}
       </Box>
     </Box>
   );

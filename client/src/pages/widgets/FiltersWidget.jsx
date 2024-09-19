@@ -1,12 +1,19 @@
 import SearchBar from "../../components/SearchBar.jsx";
 import "../ActivitiesPage/Activities.css";
+import { useTheme, Box } from "@mui/material";
 
 const FiltersWidget = () => {
+  const theme = useTheme();
   return (
-    <div className="filters-widget">
+    <Box
+      className="filters-widget"
+      sx={{
+        bgcolor: theme.palette.primary.white,
+      }}
+    >
       <SearchBar />
       <h2>Filter by:</h2>
-    </div>
+    </Box>
   );
 };
 

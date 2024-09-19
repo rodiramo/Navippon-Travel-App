@@ -43,7 +43,7 @@ const HomePage = () => {
           style={{ background: palette.background.default }}
         ></div>
         {/* How It Works Section */}
-        <Box padding="2rem 6%">
+        <Box padding="2rem 6%" textAlign="center">
           <Typography variant="h4" className="subtitle" gutterBottom>
             ¿Cómo Funciona?
           </Typography>
@@ -52,6 +52,10 @@ const HomePage = () => {
             display="flex"
             flexDirection={isNonMobileScreens ? "row" : "column"}
             gap="1rem"
+            sx={{
+              mt: 2,
+            }}
+            justifyContent="center"
           >
             <Box flexBasis={isNonMobileScreens ? "33%" : "100%"}>
               <img
@@ -59,14 +63,13 @@ const HomePage = () => {
                 alt="Encuentra"
                 style={{
                   width: "250px",
-                  marginRight: "0.5rem",
-                  marginBottom: "1rem",
+                  margin: "1rem auto",
                 }}
               />
-              <Typography variant="h6">
+              <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
                 Filtra según tus preferencias
               </Typography>
-              <Typography>
+              <Typography sx={{ width: "50%", margin: "auto" }}>
                 Descubre la magia de Japón adaptada a tus gustos. Nuestra
                 aplicación te permite filtrar atracciones turísticas por
                 categorías.
@@ -78,12 +81,13 @@ const HomePage = () => {
                 alt="Conectar"
                 style={{
                   width: "250px",
-                  marginRight: "0.5rem",
-                  marginBottom: "1rem",
+                  margin: "1rem auto",
                 }}
               />
-              <Typography variant="h6">Conéctate con Personas</Typography>
-              <Typography>
+              <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
+                Conéctate con Personas
+              </Typography>
+              <Typography sx={{ width: "50%", margin: "auto" }}>
                 Hay muchas personas interesadas en la cultura japonesa y en
                 viajar a Japón, conéctate con ellas y sigue lo que están
                 publicando.
@@ -95,12 +99,13 @@ const HomePage = () => {
                 alt="Planificar"
                 style={{
                   width: "250px",
-                  marginRight: "0.5rem",
-                  marginBottom: "1rem",
+                  margin: "1rem auto",
                 }}
               />
-              <Typography variant="h6">Planifica tu itinerario</Typography>
-              <Typography>
+              <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
+                Planifica tu itinerario
+              </Typography>
+              <Typography sx={{ width: "50%", margin: "auto" }}>
                 Organiza tu itinerario personalizado, guarda tus lugares
                 favoritos y crea tu plan de viaje para disfrutar Japón al
                 máximo.
@@ -110,14 +115,23 @@ const HomePage = () => {
         </Box>
 
         {/* Categories Section */}
-        <Box padding="2rem 6%" textAlign="center">
-          <Typography variant="h4" className="subtitle" gutterBottom>
+        <Box
+          padding="2rem 6%"
+          sx={{ backgroundColor: "white", mt: 5 }} // Set white background color
+        >
+          <Typography
+            variant="h4"
+            className="subtitle"
+            sx={{
+              marginLeft: "2rem",
+            }}
+            gutterBottom
+          >
             Navega por Categoría
           </Typography>
-
           <Box
             display="flex"
-            justifyContent="center"
+            justifyContent="flex-end" // Align to the right
             flexWrap="wrap"
             gap="1rem"
           >
@@ -130,7 +144,7 @@ const HomePage = () => {
           <Box>
             <img src="/assets/home-japan.jpg" alt="Templo de Kioto" />
           </Box>
-          <Box>
+          <Box sx={{ ml: 15, mr: 15 }}>
             <Typography variant="h4" className="subtitle" gutterBottom>
               Haz de tu viaje un gran éxito con Navippon{" "}
             </Typography>
@@ -147,7 +161,11 @@ const HomePage = () => {
           <Typography variant="h4" className="subtitle" gutterBottom>
             Navega Japón por Región
           </Typography>
-          <p>
+          <p
+            style={{
+              marginLeft: "2rem",
+            }}
+          >
             Encuentra tus atractivos y restaurantes favoritos en la región que
             más te llame la atención.
           </p>
