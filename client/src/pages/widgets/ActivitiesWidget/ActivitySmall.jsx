@@ -19,15 +19,14 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import FlexBetween from "../../components/FlexBetween.jsx";
-import WidgetWrapper from "../../components/Wrapper.jsx";
+import FlexBetween from "../../../components/FlexBetween.jsx";
+import WidgetWrapper from "../../../components/Wrapper.jsx";
 import { useSelector } from "react-redux";
-import "../ActivitiesPage/Activity.css";
 import {
   fetchCategoryDetails,
   saveOrUnsaveActivity,
-} from "../../services/services.js";
-import config from "../../config.js";
+} from "../../../services/services.js";
+import config from "../../../config.js";
 
 const ActivitySmall = ({
   activityId,

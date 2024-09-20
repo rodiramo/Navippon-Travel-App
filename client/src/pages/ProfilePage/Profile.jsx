@@ -7,9 +7,9 @@ import FriendListWidget from "../widgets/FriendListWidget.jsx";
 import MyPostWidget from "../widgets/MyPostWidget";
 import PostsWidget from "../widgets/PostsWidget";
 import UserWidget from "../widgets/User.jsx";
-import FavoriteActivities from "../widgets/FavoriteActivities.jsx";
+import FavoriteActivities from "../widgets/ActivitiesWidget/FavoriteActivities.jsx";
 import TripsWidget from "../widgets/TripsWidget.jsx";
-import config from '../../config.js'; 
+import config from "../../config.js";
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);

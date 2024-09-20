@@ -9,7 +9,7 @@ import LoginPage from "./pages/LoginPage/Login.jsx";
 import HomePage from "./pages/HomePage/Home.jsx";
 import ProfilePage from "./pages/ProfilePage/Profile.jsx";
 import ActivityDetails from "./pages/ActivitiesPage/ActivityDetails.jsx";
-import ActivitiesPage from "./pages/ActivitiesPage/ActivitiesPage.jsx";
+import ExplorePage from "./pages/ExplorePage/ExplorePage.jsx";
 import AboutUsPage from "./pages/AboutUsPage/AboutUsPage.jsx";
 import TripView from "./components/TripView.jsx";
 import UserTripsPage from "./pages/TripPage/UserTripPage.jsx";
@@ -35,7 +35,7 @@ function App() {
             <Route path="/home" element={<HomePage />} />
             <Route path="/profile/:userId" element={<ProfilePage />} />
             <Route path="/posts" element={<BlogPage />} />
-            <Route path="/activities" element={<ActivitiesPage />} />
+            <Route path="/activities" element={<ExplorePage />} />
             <Route
               path="/activities/filtered-category/:categoryName"
               element={<FilteredCategoriesPage />}

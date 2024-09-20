@@ -1,23 +1,22 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setActivities } from "../../state/state.js";
+import { setActivities } from "../../../state/state.js";
 import ActivityWidget from "./ActivityWidget.jsx";
-import { Skeleton, Typography, Box, Button, useTheme } from "@mui/material";
+import { Skeleton, Typography, Box } from "@mui/material";
 import {
   fetchActivities,
   saveOrUnsaveActivity,
   deleteActivity,
-} from "../../services/services.js";
-import "../ActivitiesPage/Activities.css";
+} from "../../../services/services.js";
+import "../../ActivitiesPage/Activities.css";
 const ActivitiesWidget = () => {
   const dispatch = useDispatch();
-  const { palette } = useTheme();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const token = useSelector((state) => state.token);
   const activities = useSelector((state) => state.activities);
   const loggedInUserId = useSelector((state) => state.user._id);
-  const [filter, setFilter] = useState("activities");
+
   useEffect(() => {
     const loadActivities = async () => {
       try {
@@ -53,9 +52,6 @@ const ActivitiesWidget = () => {
     } catch (error) {
       console.error("Error editando la actividad:", error.message);
     }
-  };
-  const handleFilterChange = (filterType) => {
-    setFilter(filterType);
   };
   const handleDelete = async (activityId) => {
     try {
@@ -104,30 +100,6 @@ const ActivitiesWidget = () => {
         flexDirection: "column",
       }}
     >
-      <h2 style={{ marginBottom: "1rem" }}>Results:</h2>
-      <Box className="filter-buttons" style={{ marginBottom: "2rem" }}>
-        <Button
-          variant={filter === "activities" ? "contained" : "outlined"}
-          color="primary"
-          onClick={() => handleFilterChange("activities")}
-        >
-          Actividades
-        </Button>
-        <Button
-          variant={filter === "restaurants" ? "contained" : "outlined"}
-          color="primary"
-          onClick={() => handleFilterChange("restaurants")}
-        >
-          Restaurantes
-        </Button>
-        <Button
-          variant={filter === "hotels" ? "contained" : "outlined"}
-          color="primary"
-          onClick={() => handleFilterChange("hotels")}
-        >
-          Hoteles
-        </Button>
-      </Box>
       {activities.length === 0 ? (
         <Typography variant="h6" color="text.secondary">
           No hay Actividades disponibles
@@ -139,7 +111,6 @@ const ActivitiesWidget = () => {
               <ActivityWidget
                 {...activity}
                 activityId={activity._id}
-                filter={filter}
                 onSave={(isSaved) => handleSave(activity._id, isSaved)}
                 onDelete={() => handleDelete(activity._id)}
               />

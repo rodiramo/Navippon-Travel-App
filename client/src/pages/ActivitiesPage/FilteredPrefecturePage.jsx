@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link as RouterLink } from "react-router-dom";
 import { Typography, Box, Grid, Breadcrumbs, Link } from "@mui/material";
-import ActivitySmall from "../widgets/ActivitySmall.jsx";
+import ActivitySmall from "../widgets/ActivitiesWidget/ActivitySmall.jsx";
 import { useSelector } from "react-redux";
 import NavBar from "../../components/NavBar/NavBar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";

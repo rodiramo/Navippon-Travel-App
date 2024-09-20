@@ -9,7 +9,7 @@ import {
   Link,
 } from "@mui/material";
 import { useSelector } from "react-redux";
-import ActivitySmall from "../widgets/ActivitySmall.jsx";
+import ActivitySmall from "../widgets/ActivitiesWidget/ActivitySmall.jsx";
 import NavBar from "../../components/NavBar/NavBar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
 import config from "../../config.js";
