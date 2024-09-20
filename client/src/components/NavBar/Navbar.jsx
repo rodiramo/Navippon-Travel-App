@@ -169,11 +169,11 @@ const NavBar = () => {
                 Blog
               </Button>
             </Link>
-            <Link to="/activities" style={{ textDecoration: "none" }}>
+            <Link to="/contact" style={{ textDecoration: "none" }}>
               <Button
                 variant="text"
                 sx={{
-                  color: isActiveLink("/activities")
+                  color: isActiveLink("/contact")
                     ? theme.palette.primary.main
                     : "white",
                   "&:hover": {
