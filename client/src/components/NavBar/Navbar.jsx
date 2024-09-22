@@ -37,10 +37,11 @@ const NavBar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const theme = useTheme();
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
-  const location = useLocation(); // Hook to get the current location
-  const navigate = useNavigate(); // Hook to navigate programmatically
+  const location = useLocation();
+  const navigate = useNavigate();
   const nav = theme.palette.background.nav;
   const fullName = `${user?.firstName || "Usuario"} ${user?.lastName || ""}`;
+  const isLoggedIn = Boolean(_id);
 
   const handleLogout = () => {
     dispatch(setLogout());
@@ -54,23 +55,30 @@ const NavBar = () => {
     setAnchorEl(null);
   };
 
-  // Utility function to determine if a link is active
   const isActiveLink = (path) => location.pathname === path;
 
   return (
-    <nav style={{ backgroundColor: nav, zIndex: 1000 }}>
+    <nav
+      style={{
+        backgroundColor: nav,
+        zIndex: 1000,
+        position: "fixed",
+        width: "100%",
+      }}
+    >
       <Box
-        className="max-w-screen-xl flex items-center justify-between mx-auto p-4"
+        className="p-4"
         sx={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          width: "100%",
         }}
       >
         {/* Logo Section */}
         <Box sx={{ flexShrink: 0 }}>
           <Link
-            to="/home"
+            to="/"
             style={{
               textDecoration: "none",
               display: "flex",
@@ -93,8 +101,34 @@ const NavBar = () => {
             </Typography>
           </Link>
         </Box>
-        {/* Centered Links */}
-        {isNonMobileScreens ? (
+
+        {/* Mobile View */}
+        {!isNonMobileScreens && (
+          <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+            <IconButton
+              onClick={() => dispatch(setMode())}
+              sx={{ color: "white" }}
+            >
+              {theme.palette.mode === "dark" ? <DarkMode /> : <LightMode />}
+            </IconButton>
+            {isLoggedIn && (
+              <>
+                <IconButton onClick={handleMenuOpen} sx={{ p: 0 }}>
+                  <UserProfilePicture userId={_id} picturePath={picturePath} />
+                </IconButton>
+                <IconButton
+                  onClick={() => setIsMobileMenuOpen(true)}
+                  sx={{ color: "white" }}
+                >
+                  <MenuIcon />
+                </IconButton>
+              </>
+            )}
+          </Box>
+        )}
+
+        {/* Centered Links for Desktop View */}
+        {isNonMobileScreens && (
           <Box
             sx={{
               display: "flex",
@@ -103,11 +137,11 @@ const NavBar = () => {
               gap: "1rem",
             }}
           >
-            <Link to="/home" style={{ textDecoration: "none" }}>
+            <Link to="/" style={{ textDecoration: "none" }}>
               <Button
                 variant="text"
                 sx={{
-                  color: isActiveLink("/home")
+                  color: isActiveLink("/")
                     ? theme.palette.primary.main
                     : "white",
                   "&:hover": {
@@ -123,7 +157,6 @@ const NavBar = () => {
               <Button
                 variant="text"
                 sx={{
-                  fontFamily: theme.typography.fontFamily,
                   color: isActiveLink("/about-us")
                     ? theme.palette.primary.main
                     : "white",
@@ -140,7 +173,6 @@ const NavBar = () => {
               <Button
                 variant="text"
                 sx={{
-                  fontFamily: theme.typography.fontFamily,
                   color: isActiveLink("/activities")
                     ? theme.palette.primary.main
                     : "white",
@@ -186,29 +218,120 @@ const NavBar = () => {
               </Button>
             </Link>
           </Box>
-        ) : (
-          <IconButton
-            onClick={() => setIsMobileMenuOpen(true)}
-            sx={{ color: "white" }}
-          >
-            <MenuIcon />
-          </IconButton>
         )}
-        {/* User Avatar Section */}
-        <Box sx={{ flexShrink: 0 }}>
-          {isNonMobileScreens && (
-            <>
-              <IconButton
-                onClick={() => dispatch(setMode())}
-                sx={{ color: "white" }}
-              >
-                {theme.palette.mode === "dark" ? <DarkMode /> : <LightMode />}
-              </IconButton>
+        {/* User Avatar Section for Desktop */}
+        {isNonMobileScreens && (
+          <Box sx={{ flexShrink: 0 }}>
+            <IconButton
+              onClick={() => dispatch(setMode())}
+              sx={{ color: "white" }}
+            >
+              {theme.palette.mode === "dark" ? <DarkMode /> : <LightMode />}
+            </IconButton>
+            {isLoggedIn && (
               <IconButton onClick={handleMenuOpen} sx={{ p: 0 }}>
                 <UserProfilePicture userId={_id} picturePath={picturePath} />
               </IconButton>
-            </>
-          )}
+            )}
+          </Box>
+        )}
+
+        {/* Login Button on the Right */}
+        {!isLoggedIn && (
+          <Box sx={{ flexShrink: 0, ml: "auto" }}>
+            <Link to="/login" style={{ textDecoration: "none" }}>
+              <Button
+                variant="text"
+                className="button-login"
+                sx={{
+                  color: "white",
+                  backgroundColor: theme.palette.primary.main,
+                  borderRadius: "20rem",
+                  textTransform: "none",
+                }}
+              >
+                Log in
+              </Button>
+            </Link>
+          </Box>
+        )}
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <Box
+            className="fixed top-0 right-0 bottom-0 w-3/4 p-4"
+            sx={{
+              zIndex: 10000,
+              display: "flex",
+              flexDirection: "column",
+              backgroundColor: nav,
+              height: "71vh",
+              justifyContent: "space-between",
+              alignItems: "flex-end",
+              color: theme.palette.primary.main,
+            }}
+          >
+            <IconButton
+              onClick={() => setIsMobileMenuOpen(false)}
+              sx={{ alignSelf: "flex-end", color: theme.palette.primary.main }}
+            >
+              <CloseIcon />
+            </IconButton>
+            <Link to="/" style={{ textDecoration: "none" }}>
+              <Button
+                variant="text"
+                sx={{ color: "white", textTransform: "none" }}
+              >
+                Inicio
+              </Button>
+            </Link>
+            <Link to="/activities" style={{ textDecoration: "none" }}>
+              <Button
+                variant="text"
+                sx={{ color: "white", textTransform: "none" }}
+              >
+                Actividades
+              </Button>
+            </Link>
+            <Link to="/posts" style={{ textDecoration: "none" }}>
+              <Button
+                variant="text"
+                sx={{ color: "white", textTransform: "none" }}
+              >
+                Blog
+              </Button>
+            </Link>
+            <Link to="/about-us" style={{ textDecoration: "none" }}>
+              <Button
+                variant="text"
+                sx={{ color: "white", textTransform: "none" }}
+              >
+                Sobre Nosotros
+              </Button>
+            </Link>
+            {isAdmin && (
+              <Link to="/admin" style={{ textDecoration: "none" }}>
+                <Button
+                  variant="text"
+                  sx={{ color: "white", textTransform: "none" }}
+                >
+                  Panel de Administración
+                </Button>
+              </Link>
+            )}
+            {isLoggedIn && (
+              <Button
+                onClick={handleLogout}
+                sx={{ color: theme.palette.primary.main }}
+              >
+                <LogoutIcon sx={{ marginRight: "1rem" }} />
+                Cerrar Sesión
+              </Button>
+            )}
+          </Box>
+        )}
+
+        {isLoggedIn && (
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
@@ -264,90 +387,9 @@ const NavBar = () => {
               sx={{ display: "flex", alignItems: "center" }}
             >
               <LogoutIcon sx={{ marginRight: "1rem" }} />
-              <Typography>Salir</Typography>
+              <Typography>Cerrar Sesión</Typography>
             </MenuItem>
           </Menu>
-        </Box>
-        {isMobileMenuOpen && (
-          <Box
-            className="fixed top-0 right-0 bottom-0 w-3/4 bg-gray-800 text-white p-4"
-            sx={{
-              zIndex: 10000,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-            }}
-          >
-            <IconButton
-              onClick={() => setIsMobileMenuOpen(false)}
-              sx={{ alignSelf: "flex-end", color: "white" }}
-            >
-              <CloseIcon />
-            </IconButton>
-            <Link to="/home" style={{ textDecoration: "none" }}>
-              <Button
-                variant="text"
-                sx={{
-                  color: "white",
-                  textTransform: "none",
-                }}
-              >
-                Inicio
-              </Button>
-            </Link>
-            <Link to="/activities" style={{ textDecoration: "none" }}>
-              <Button
-                variant="text"
-                sx={{
-                  color: "white",
-                  textTransform: "none",
-                }}
-              >
-                Actividades
-              </Button>
-            </Link>
-            <Link to="/posts" style={{ textDecoration: "none" }}>
-              <Button
-                variant="text"
-                sx={{
-                  color: "white",
-                  textTransform: "none",
-                }}
-              >
-                Blog
-              </Button>
-            </Link>
-            <Link to="/about-us" style={{ textDecoration: "none" }}>
-              <Button
-                variant="text"
-                sx={{
-                  color: "white",
-                  textTransform: "none",
-                }}
-              >
-                Sobre Nosotros
-              </Button>
-            </Link>
-            {isAdmin && (
-              <Link to="/admin" style={{ textDecoration: "none" }}>
-                <Button
-                  variant="text"
-                  sx={{
-                    color: "white",
-                    textTransform: "none",
-                  }}
-                >
-                  Panel de Administración
-                </Button>
-              </Link>
-            )}
-            <Button onClick={() => dispatch(setMode())} sx={{ color: "white" }}>
-              {theme.palette.mode === "dark" ? <DarkMode /> : <LightMode />}
-            </Button>
-            <Button onClick={handleLogout} sx={{ color: "white" }}>
-              Salir
-            </Button>
-          </Box>
         )}
       </Box>
     </nav>

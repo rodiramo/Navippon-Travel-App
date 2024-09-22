@@ -17,19 +17,17 @@ export const createActivity = async (req, res) => {
       website,
       opening_time,
       closing_time,
-      location, // Expecting { type: "Point", coordinates: [lng, lat] }
-      availability, // Expecting { all_year: Boolean, best_season: [String] }
+      location,
+      availability,
       price,
-      range_price, // Expecting { min: Number, max: Number }
-      icon, // Optional, default to "activity.png"
+      range_price,
+      icon,
     } = req.body;
 
-    // Parse the fields that need to be arrays (categories, city, etc.)
-    const categories = JSON.parse(req.body.categories); // Assuming this is passed as a JSON string
-    const city = JSON.parse(req.body.city); // Assuming this is passed as a JSON string
-    const images = req.body.images ? JSON.parse(req.body.images) : []; // Optional images array
+    const categories = JSON.parse(req.body.categories);
+    const city = JSON.parse(req.body.city);
+    const images = req.body.images ? JSON.parse(req.body.images) : [];
 
-    // Check if an activity with the same name already exists
     const existingActivity = await Activity.findOne({ activityName });
     if (existingActivity) {
       return res
@@ -37,7 +35,6 @@ export const createActivity = async (req, res) => {
         .json({ message: "Una actividad con este nombre ya existe." });
     }
 
-    // Create the new activity with all the required fields
     const newActivity = new Activity({
       activityName,
       description,
@@ -57,28 +54,23 @@ export const createActivity = async (req, res) => {
       website,
       location: {
         type: "Point",
-        coordinates: location.coordinates, // Expecting coordinates [longitude, latitude]
+        coordinates: location.coordinates,
       },
       availability: {
         all_year: availability.all_year,
-        best_season: availability.best_season || [], // Default to empty array if not provided
+        best_season: availability.best_season || [],
       },
       icon: icon || "activity.png",
     });
 
-    // Save the new activity to the database
     await newActivity.save();
 
-    // Fetch and return the updated list of activities, populating related fields
     const activities = await Activity.find()
       .populate("prefecture")
       .populate("budget")
       .sort({ createdAt: -1 });
-
-    // Return the updated list of activities
     res.status(201).json({ activities });
   } catch (err) {
-    // Return an error message if something goes wrong
     res.status(409).json({ message: err.message });
   }
 };

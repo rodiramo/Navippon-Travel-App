@@ -105,7 +105,7 @@ const Form = () => {
           token: loggedIn.token,
         })
       );
-      navigate("/home");
+      navigate("/");
     } catch (error) {
       console.error("Login error:", error.message);
       setGeneralError(error.message);

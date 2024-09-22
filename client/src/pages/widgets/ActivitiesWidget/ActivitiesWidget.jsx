@@ -2,20 +2,25 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setActivities } from "../../../state/state.js";
 import ActivityWidget from "./ActivityWidget.jsx";
-import { Skeleton, Typography, Box } from "@mui/material";
+import { Skeleton, Typography, Box, Pagination } from "@mui/material";
 import {
   fetchActivities,
   saveOrUnsaveActivity,
   deleteActivity,
 } from "../../../services/services.js";
 import "../../ActivitiesPage/Activities.css";
+
 const ActivitiesWidget = () => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const activitiesPerPage = 8;
   const token = useSelector((state) => state.token);
   const activities = useSelector((state) => state.activities);
   const loggedInUserId = useSelector((state) => state.user._id);
+
+  const totalPages = Math.ceil(activities.length / activitiesPerPage);
 
   useEffect(() => {
     const loadActivities = async () => {
@@ -31,6 +36,19 @@ const ActivitiesWidget = () => {
 
     loadActivities();
   }, [dispatch, token]);
+
+  // Handle pagination change
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
+
+  // Pagination logic to slice activities for the current page
+  const indexOfLastActivity = currentPage * activitiesPerPage;
+  const indexOfFirstActivity = indexOfLastActivity - activitiesPerPage;
+  const currentActivities = activities.slice(
+    indexOfFirstActivity,
+    indexOfLastActivity
+  );
 
   const handleSave = async (activityId, isSaved) => {
     try {
@@ -53,6 +71,7 @@ const ActivitiesWidget = () => {
       console.error("Error editando la actividad:", error.message);
     }
   };
+
   const handleDelete = async (activityId) => {
     try {
       await deleteActivity(activityId, token);
@@ -98,6 +117,7 @@ const ActivitiesWidget = () => {
         flex: 1,
         display: "flex",
         flexDirection: "column",
+        alignItems: "center",
       }}
     >
       {activities.length === 0 ? (
@@ -105,18 +125,28 @@ const ActivitiesWidget = () => {
           No hay Actividades disponibles
         </Typography>
       ) : (
-        <Box justifyContent="center">
-          {activities.map((activity) => (
-            <Box key={activity._id}>
-              <ActivityWidget
-                {...activity}
-                activityId={activity._id}
-                onSave={(isSaved) => handleSave(activity._id, isSaved)}
-                onDelete={() => handleDelete(activity._id)}
-              />
-            </Box>
-          ))}
-        </Box>
+        <>
+          <Box justifyContent="center">
+            {currentActivities.map((activity) => (
+              <Box key={activity._id}>
+                <ActivityWidget
+                  {...activity}
+                  activityId={activity._id}
+                  onSave={(isSaved) => handleSave(activity._id, isSaved)}
+                  onDelete={() => handleDelete(activity._id)}
+                />
+              </Box>
+            ))}
+          </Box>
+
+          {/* Pagination Controls */}
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            sx={{ marginTop: 2 }}
+          />
+        </>
       )}
     </Box>
   );

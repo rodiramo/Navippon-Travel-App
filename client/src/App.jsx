@@ -21,9 +21,9 @@ import AdminPanel from "./pages/AdminPage/AdminPanel.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import ActivityForm from "./pages/ActivitiesPage/ActivityForm.jsx";
 import NotFound from "./pages/NotFound.jsx";
+
 function App() {
   const mode = useSelector((state) => state.mode);
-
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
 
   return (
@@ -31,9 +31,14 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Routes>
-          <Route path="/" element={<LoginPage />} />
+          {/* Home page accessible to everyone */}
+          <Route path="/" element={<HomePage />} />
+
+          {/* Login page accessible to everyone */}
+          <Route path="/login" element={<LoginPage />} />
+
+          {/* Private routes */}
           <Route element={<PrivateRoute />}>
-            <Route path="/home" element={<HomePage />} />
             <Route path="/profile/:userId" element={<ProfilePage />} />
             <Route path="/posts" element={<BlogPage />} />
             <Route path="/contact" element={<ContactPage />} />
@@ -52,10 +57,16 @@ function App() {
             <Route path="/create-activity" element={<ActivityForm />} />
             <Route path="/edit-activity/:id" element={<ActivityForm />} />
           </Route>
+
+          {/* About Us page accessible to everyone */}
           <Route path="/about-us" element={<AboutUsPage />} />
+
+          {/* Admin route requiring admin role */}
           <Route element={<PrivateRoute requiredRole="admin" />}>
             <Route path="/admin" element={<AdminPanel />} />
-          </Route>{" "}
+          </Route>
+
+          {/* 404 Not Found route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </ThemeProvider>

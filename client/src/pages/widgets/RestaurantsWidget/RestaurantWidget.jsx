@@ -22,13 +22,13 @@ import {
 import FlexBetween from "../../../components/FlexBetween.jsx";
 import WidgetWrapper from "../../../components/Wrapper.jsx";
 import { useSelector } from "react-redux";
-import "../../ActivitiesPage/Activities.css";
 import config from "../../../config.js";
 import { fetchCategoryDetails } from "../../../services/services.js";
+import "../../ActivitiesPage/Activities.css";
 
-const ActivityWidget = ({
-  activityId,
-  activityName,
+const RestaurantWidget = ({
+  restaurantId,
+  name,
   description,
   coverPath,
   categories = [],
@@ -67,21 +67,21 @@ const ActivityWidget = ({
     fetchCategoryData();
   }, [categories]);
 
-  const handleEdit = () => navigate(`/edit-activity/${activityId}`);
+  const handleEdit = () => navigate(`/edit-restaurant/${restaurantId}`);
   const handleOpenDeleteModal = () => setOpenDeleteModal(true);
   const handleCloseDeleteModal = () => setOpenDeleteModal(false);
 
-  const handleDeleteActivity = async () => {
+  const handleDeleteRestaurant = async () => {
     if (onDelete) {
       await onDelete();
-      setSnackbarMessage("¡Actividad eliminada exitosamente!");
+      setSnackbarMessage("¡Restaurant eliminado exitosamente!");
       setSnackbarSeverity("success");
       setSnackbarOpen(true);
       handleCloseDeleteModal();
     }
   };
 
-  const handleSaveActivity = async () => {
+  const handleSaveRestaurant = async () => {
     if (onSave) {
       await onSave(isSaved);
       setIsSaved(!isSaved);
@@ -93,7 +93,7 @@ const ActivityWidget = ({
     }
   };
 
-  const handleViewDetails = () => navigate(`/activities/${activityId}`);
+  const handleViewDetails = () => navigate(`/restaurants/${restaurantId}`);
 
   return (
     <WidgetWrapper
@@ -103,15 +103,15 @@ const ActivityWidget = ({
     >
       <img
         src={`${config.API_URL}/assets/${coverPath}`}
-        alt={activityName}
+        alt={name}
         className="activity-image"
         style={{ color: palette.primary.black }}
       />
       <div className="activity-details">
-        <Typography variant="h4" color="primary" className="activity-title">
-          {activityName}{" "}
-          <span className="prefecture-badge">
-            {prefecture?.name || "Cargando..."}
+        <Typography variant="h4" color="primary" className="restaurant-title">
+          {name}{" "}
+          <span className="location-badge">
+            {prefecture.name || "Cargando..."}
           </span>
         </Typography>
         <Typography style={{ color: palette.primary.black }}>
@@ -168,7 +168,7 @@ const ActivityWidget = ({
           backgroundColor: palette.primary.main,
           color: palette.primary.white,
         }}
-        onClick={handleSaveActivity}
+        onClick={handleSaveRestaurant}
       >
         {isSaved ? (
           <FavoriteOutlined sx={{ color: "#fff" }} />
@@ -176,15 +176,15 @@ const ActivityWidget = ({
           <FavoriteBorderOutlined />
         )}
       </IconButton>
-      <Typography style={{ color: palette.primary.black }} className="budget">
+      <Typography style={{ color: palette.primary.black }} className="price">
         {`${price} $` || "Cargando..."}
       </Typography>
       <Dialog open={openDeleteModal} onClose={handleCloseDeleteModal}>
         <DialogTitle>Confirmar eliminación</DialogTitle>
         <DialogContent>
           <Typography>
-            ¿Está seguro de que desea eliminar esta actividad? Esta acción no se
-            puede deshacer.
+            ¿Está seguro de que desea eliminar este restaurant? Esta acción no
+            se puede deshacer.
           </Typography>
         </DialogContent>
 
@@ -192,7 +192,7 @@ const ActivityWidget = ({
           <Button onClick={handleCloseDeleteModal} color="primary">
             Cancelar
           </Button>
-          <Button onClick={handleDeleteActivity} color="secondary">
+          <Button onClick={handleDeleteRestaurant} color="secondary">
             Eliminar
           </Button>
         </DialogActions>
@@ -223,9 +223,9 @@ const ActivityWidget = ({
   );
 };
 
-ActivityWidget.propTypes = {
-  activityId: PropTypes.string.isRequired,
-  activityName: PropTypes.string.isRequired,
+RestaurantWidget.propTypes = {
+  restaurantId: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   coverPath: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
@@ -234,12 +234,8 @@ ActivityWidget.propTypes = {
     name: PropTypes.string,
   }),
   coordinates: PropTypes.arrayOf(PropTypes.number).isRequired,
-  budget: PropTypes.shape({
-    name: PropTypes.string,
-    abbreviation: PropTypes.string,
-  }),
   onSave: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
 };
 
-export default ActivityWidget;
+export default RestaurantWidget;

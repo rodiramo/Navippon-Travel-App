@@ -1,4 +1,3 @@
-
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -7,6 +6,7 @@ const initialState = {
   token: null,
   posts: [],
   activities: [],
+  hotels: [],
 };
 
 export const authSlice = createSlice({
@@ -98,6 +98,21 @@ export const authSlice = createSlice({
           : activity
       );
     },
+    setHotels: (state, action) => {
+      state.hotels = action.payload.map((hotel) => ({
+        ...hotel,
+      }));
+    },
+    deleteHotel: (state, action) => {
+      state.activities = state.hotels.filter(
+        (hotel) => hotel._id !== action.payload.hotelId
+      );
+    },
+    setRestaurants: (state, action) => {
+      state.restaurants = action.payload.map((restaurant) => ({
+        ...restaurant,
+      }));
+    },
   },
 });
 
@@ -111,6 +126,9 @@ export const {
   removePost,
   setActivities,
   setActivity,
+  setHotels,
+  setRestaurants,
+  deleteHotel,
   removeActivity,
   setFavorites,
   addFavoriteToActivity,

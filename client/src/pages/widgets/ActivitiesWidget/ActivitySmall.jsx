@@ -35,9 +35,9 @@ const ActivitySmall = ({
   isSaved = false,
   onRemoveFromFavorites,
   coverPath,
+  price,
   categories = [],
   prefecture = {},
-  budget = {},
   onDelete,
 }) => {
   const navigate = useNavigate();
@@ -158,7 +158,7 @@ const ActivitySmall = ({
             style={{ color: palette.primary.black }}
             className="budget-profile"
           >
-            {budget.name || "Sin nombre de presupuesto"}
+            {`${price} $` || "Sin nombre de presupuesto"}
           </Typography>
           <FlexBetween className="wrap-buttons">
             <Button
@@ -253,6 +253,7 @@ ActivitySmall.propTypes = {
   budget: PropTypes.shape({
     name: PropTypes.string,
   }),
+  price: PropTypes.string.isRequired,
   isSaved: PropTypes.bool.isRequired,
   onDelete: PropTypes.func.isRequired,
   onRemoveFromFavorites: PropTypes.func.isRequired,

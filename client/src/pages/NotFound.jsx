@@ -18,11 +18,7 @@ const NotFound = () => {
       <Typography variant="h6" color="textSecondary" gutterBottom>
         Page Not Found
       </Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => navigate("/home")}
-      >
+      <Button variant="contained" color="primary" onClick={() => navigate("/")}>
         Go to Home
       </Button>
     </Box>
