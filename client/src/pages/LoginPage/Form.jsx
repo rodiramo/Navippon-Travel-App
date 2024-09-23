@@ -3,8 +3,9 @@ import {
   Box,
   Button,
   TextField,
-  useMediaQuery,
   Typography,
+  Checkbox,
+  FormControlLabel,
   useTheme,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
@@ -50,20 +51,19 @@ const initialValuesRegister = {
 const initialValuesLogin = {
   email: "",
   password: "",
+  rememberMe: false, // Added for the checkbox
 };
 
 const Form = () => {
   const theme = useTheme();
   const [pageType, setPageType] = useState("login");
-  const { palette } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isNonMobile = useMediaQuery("(min-width:600px)");
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
   const [generalError, setGeneralError] = useState(null);
 
-  //register
+  // Register
   const register = async (values, onSubmitProps) => {
     const formData = new FormData();
     for (let value in values) {
@@ -83,7 +83,7 @@ const Form = () => {
     }
   };
 
-  // login
+  // Login
   const login = async (values, onSubmitProps) => {
     try {
       const loggedInResponse = await fetch(`${config.API_URL}/auth/login`, {
@@ -98,7 +98,6 @@ const Form = () => {
 
       const loggedIn = await loggedInResponse.json();
       onSubmitProps.resetForm();
-      console.log("Logged In User:", loggedIn.user);
       dispatch(
         setLogin({
           user: loggedIn.user,
@@ -112,7 +111,7 @@ const Form = () => {
     }
   };
 
-  //submit
+  // Submit
   const handleFormSubmit = async (values, onSubmitProps) => {
     setGeneralError(null);
     if (isLogin) await login(values, onSubmitProps);
@@ -121,7 +120,6 @@ const Form = () => {
 
   return (
     <Formik
-      backgroundColor={theme.palette.primary.white}
       onSubmit={handleFormSubmit}
       initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
       validationSchema={isLogin ? loginSchema : registerSchema}
@@ -136,24 +134,22 @@ const Form = () => {
         setFieldValue,
         resetForm,
       }) => (
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{
-            backgroundColor: "white",
-            padding: "2rem",
-            borderRadius: "8px",
-            boxShadow: `0px 0px 10px ${theme.palette.grey[300]}`,
-            maxWidth: "500px",
-            margin: "auto",
-          }}
-        >
+        <Box component="form" onSubmit={handleSubmit} sx={{ width: "70%" }}>
+          <Typography
+            variant="h4"
+            fontWeight="bold"
+            textAlign="center"
+            sx={{ mb: "2rem", color: theme.palette.primary.main }}
+          >
+            {isLogin ? "Iniciar Sesión" : "Completar Registro"}
+          </Typography>
+
           <Box
             display="grid"
             gap="30px"
             gridTemplateColumns="repeat(4, minmax(0, 1fr))"
             sx={{
-              "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+              "& > div": { gridColumn: "span 4" },
             }}
           >
             {generalError && (
@@ -180,10 +176,6 @@ const Form = () => {
                       background: theme.palette.background.grey,
                       border: "none",
                     },
-                    classes: {
-                      focused: "Mui-focused",
-                      error: "Mui-error",
-                    },
                   }}
                 />
                 <TextField
@@ -201,15 +193,10 @@ const Form = () => {
                       background: theme.palette.background.grey,
                       border: "none",
                     },
-                    classes: {
-                      focused: "Mui-focused",
-                      error: "Mui-error",
-                    },
                   }}
                 />
                 <Box
                   gridColumn="span 4"
-                  border={`none`}
                   borderRadius="10rem"
                   p="1rem"
                   sx={{
@@ -226,7 +213,7 @@ const Form = () => {
                     {({ getRootProps, getInputProps }) => (
                       <Box
                         {...getRootProps()}
-                        border={`2px dashed ${palette.primary.main}`}
+                        border={`2px dashed ${theme.palette.primary.main}`}
                         p="1rem"
                         sx={{
                           borderRadius: "10rem",
@@ -262,10 +249,6 @@ const Form = () => {
                   background: theme.palette.background.grey,
                   border: "none",
                 },
-                classes: {
-                  focused: "Mui-focused",
-                  error: "Mui-error",
-                },
               }}
             />
             <TextField
@@ -293,10 +276,6 @@ const Form = () => {
                     {values.showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 ),
-                classes: {
-                  focused: "Mui-focused",
-                  error: "Mui-error",
-                },
               }}
             />
 
@@ -320,10 +299,6 @@ const Form = () => {
                     background: theme.palette.background.grey,
                     border: "none",
                   },
-                  classes: {
-                    focused: "Mui-focused",
-                    error: "Mui-error",
-                  },
                 }}
               />
             )}
@@ -336,32 +311,84 @@ const Form = () => {
                   p: "1rem",
                   borderRadius: "20rem",
                   textTransform: "none",
-                  backgroundColor: palette.primary.main,
-                  color: palette.background.alt,
-                  "&:hover": { color: palette.primary.main },
+                  backgroundColor: theme.palette.primary.main,
+                  color: theme.palette.background.alt,
+                  "&:hover": { color: theme.palette.primary.main },
                 }}
               >
                 {isLogin ? "Iniciar Sesión" : "Completar Registro"}
               </Button>
+              {isLogin && (
+                <>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      mb: 2,
+                    }}
+                  >
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name="rememberMe"
+                          checked={values.rememberMe}
+                          onChange={handleChange}
+                          color="primary"
+                        />
+                      }
+                      label="Mantenerme logueado"
+                    />
+                    <Typography
+                      onClick={() => {
+                        /* Handle forgot password logic */
+                      }}
+                      sx={{
+                        textDecoration: "underline",
+                        color: theme.palette.primary.main,
+                        "&:hover": {
+                          cursor: "pointer",
+                          color: theme.palette.primary.light,
+                        },
+                      }}
+                    >
+                      ¿Olvidaste tu contraseña?
+                    </Typography>
+                  </Box>
+                  <Button
+                    sx={{
+                      width: "100%",
+                      padding: "0.75rem",
+                      borderRadius: "20rem",
+                      textTransform: "none",
+                      border: `2px solid` + theme.palette.primary.main,
+                      color: theme.palette.primary.black,
+                    }}
+                    onClick={() => {}}
+                  >
+                    Iniciar Sesión con Google
+                  </Button>
+                </>
+              )}
               <Typography
                 onClick={() => {
                   setPageType(isLogin ? "register" : "login");
                   resetForm();
                 }}
                 sx={{
+                  marginTop: "2rem",
                   textDecoration: "underline",
-                  color: palette.primary.main,
+                  color: theme.palette.primary.main,
                   "&:hover": {
                     cursor: "pointer",
-                    color: palette.primary.light,
+                    color: theme.palette.primary.light,
                   },
                   textAlign: "center",
                   width: "100%",
                 }}
               >
                 {isLogin
-                  ? "¿No tienes una cuenta? Regístrate aquí:"
-                  : "¿Ya tienes una cuenta? Inicia sesión aquí:"}
+                  ? "¿No tienes una cuenta? Regístrate."
+                  : "¿Ya tienes una cuenta? Inicia sesión."}
               </Typography>
             </Box>
           </Box>
