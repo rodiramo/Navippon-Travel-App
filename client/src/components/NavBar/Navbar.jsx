@@ -62,7 +62,6 @@ const NavBar = () => {
       style={{
         backgroundColor: nav,
         zIndex: 1000,
-        position: "fixed",
         width: "100%",
       }}
     >
@@ -70,6 +69,9 @@ const NavBar = () => {
         className="p-4"
         sx={{
           display: "flex",
+          backgroundColor: nav,
+          zIndex: 1000,
+          position: "fixed",
           alignItems: "center",
           justifyContent: "space-between",
           width: "100%",
