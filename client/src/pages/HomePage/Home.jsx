@@ -34,7 +34,7 @@ const HomePage = () => {
             sx={{ textAlign: "center", fontWeight: "bold" }}
             gutterBottom
           >
-            Navega Japón a Tu Manera
+            Navega Japón a Tu forma
           </Typography>
           <SearchBar />
         </Box>
