@@ -12,7 +12,9 @@ const NotFound = () => {
       justifyContent="center"
       height="100vh"
     >
-      <Typography variant="h1" color="primary"></Typography>
+      <Typography variant="h1" color="primary">
+        404
+      </Typography>
       <Typography variant="h6" color="textSecondary" gutterBottom>
         Page Not Found
       </Typography>
