@@ -83,7 +83,10 @@ const NavBar = () => {
                 </IconButton>
                 <IconButton
                   onClick={() => setIsMobileMenuOpen(true)}
-                  sx={{ color: "white" }}
+                  sx={{
+                    color: "white",
+                    transition: "transform 0.3s ease",
+                  }}
                 >
                   <MenuIcon />
                 </IconButton>
@@ -131,13 +134,29 @@ const NavBar = () => {
           </Box>
         )}
 
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
+        {/* Mobile Menu with slide effect */}
+        <Box
+          sx={{
+            position: "fixed",
+            top: 0,
+            right: 0,
+            height: "max-content",
+            width: "100%",
+            backgroundColor: nav,
+            transform: isMobileMenuOpen
+              ? "translateY(0)"
+              : "translateY(-100% ) translateX(100%)",
+            transition: "transform 0.3s ease-in-out",
+            zIndex: 1000,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           <MobileMenu
             isOpen={isMobileMenuOpen}
             onClose={() => setIsMobileMenuOpen(false)}
           />
-        )}
+        </Box>
 
         {isLoggedIn && (
           <UserMenu

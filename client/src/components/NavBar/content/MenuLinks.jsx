@@ -16,12 +16,16 @@ const MenuLinks = ({ isActiveLink }) => {
       sx={{
         display: "flex",
         flexGrow: 1,
-        justifyContent: "center",
         gap: "1rem",
+        justifyContent: "flex-start",
       }}
     >
       {links.map(({ path, label }) => (
-        <Link to={path} style={{ textDecoration: "none" }} key={path}>
+        <Link
+          to={path}
+          style={{ textDecoration: "none", justifyContent: "flex-start" }}
+          key={path}
+        >
           <Button
             variant="text"
             sx={{
@@ -29,6 +33,7 @@ const MenuLinks = ({ isActiveLink }) => {
               "&:hover": {
                 color: "primary.main",
               },
+              justifyContent: "flex-start",
               textTransform: "none",
             }}
           >
@@ -39,7 +44,9 @@ const MenuLinks = ({ isActiveLink }) => {
     </Box>
   );
 };
+
 MenuLinks.propTypes = {
-  isActiveLink: PropTypes.string,
+  isActiveLink: PropTypes.func.isRequired,
 };
+
 export default MenuLinks;

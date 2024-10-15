@@ -1,16 +1,20 @@
 import PropTypes from "prop-types";
-import { Menu, MenuItem, Typography } from "@mui/material";
+import { Menu, MenuItem, Typography, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Person, TravelExplore, Favorite, Logout } from "@mui/icons-material";
+import { FaRegUser } from "react-icons/fa";
+import { MdFavoriteBorder, MdOutlineAdminPanelSettings } from "react-icons/md";
+import { BiTrip } from "react-icons/bi";
+import { RiLogoutBoxLine } from "react-icons/ri";
 import { useAuth } from "@hooks/useAuth.js";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 
 const UserMenu = ({ anchorEl, handleClose, handleLogout }) => {
   const { isAdmin } = useAuth();
+  const theme = useTheme(); // Get the theme
   const userState = useSelector((state) => state.user);
   const user = userState || {};
   const { _id } = user;
+
   return (
     <Menu
       anchorEl={anchorEl}
@@ -31,7 +35,9 @@ const UserMenu = ({ anchorEl, handleClose, handleLogout }) => {
         to={`/profile/${_id}`}
         sx={{ display: "flex", alignItems: "center" }}
       >
-        <Person sx={{ marginRight: "1rem" }} />
+        <FaRegUser
+          style={{ marginRight: "1rem", color: theme.palette.primary.main }} // Using style prop for react-icons
+        />
         <Typography>Mi Perfil</Typography>
       </MenuItem>
       <MenuItem
@@ -39,7 +45,9 @@ const UserMenu = ({ anchorEl, handleClose, handleLogout }) => {
         to="/trips"
         sx={{ display: "flex", alignItems: "center" }}
       >
-        <TravelExplore sx={{ marginRight: "1rem" }} />
+        <BiTrip
+          style={{ marginRight: "1rem", color: theme.palette.primary.main }} // Same here
+        />
         <Typography>Mis Viajes</Typography>
       </MenuItem>
       <MenuItem
@@ -47,7 +55,9 @@ const UserMenu = ({ anchorEl, handleClose, handleLogout }) => {
         to="/favorites"
         sx={{ display: "flex", alignItems: "center" }}
       >
-        <Favorite sx={{ marginRight: "1rem" }} />
+        <MdFavoriteBorder
+          style={{ marginRight: "1rem", color: theme.palette.primary.main }} // And here
+        />
         <Typography>Favoritos</Typography>
       </MenuItem>
       {isAdmin && (
@@ -56,7 +66,9 @@ const UserMenu = ({ anchorEl, handleClose, handleLogout }) => {
           to="/admin"
           sx={{ display: "flex", alignItems: "center" }}
         >
-          <AdminPanelSettingsIcon sx={{ marginRight: "1rem" }} />
+          <MdOutlineAdminPanelSettings
+            style={{ marginRight: "1rem", color: theme.palette.primary.main }} // And here
+          />
           <Typography>Panel de Administración</Typography>
         </MenuItem>
       )}
@@ -64,7 +76,9 @@ const UserMenu = ({ anchorEl, handleClose, handleLogout }) => {
         onClick={handleLogout}
         sx={{ display: "flex", alignItems: "center" }}
       >
-        <Logout sx={{ marginRight: "1rem" }} />
+        <RiLogoutBoxLine
+          style={{ marginRight: "1rem", color: theme.palette.primary.main }} // Finally here
+        />
         <Typography>Cerrar Sesión</Typography>
       </MenuItem>
     </Menu>
@@ -72,10 +86,9 @@ const UserMenu = ({ anchorEl, handleClose, handleLogout }) => {
 };
 
 UserMenu.propTypes = {
-  anchorEl: PropTypes.string,
-  handleClose: PropTypes.string,
-  fullName: PropTypes.string,
-  isAdmin: PropTypes.string,
-  handleLogout: PropTypes.string,
+  anchorEl: PropTypes.object.isRequired, // Corrected type to 'object'
+  handleClose: PropTypes.func.isRequired, // Corrected type to 'func'
+  handleLogout: PropTypes.func.isRequired, // Corrected type to 'func'
 };
+
 export default UserMenu;
