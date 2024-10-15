@@ -22,7 +22,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import config from "@config/config.js";
-import "@css/Universal.css";
 import { saveOrUnsaveActivity } from "@services/services.js";
 import FlexBetween from "@components/FlexBetween.jsx";
 
@@ -105,7 +104,7 @@ const ActivitySmall = ({
         position: "relative",
         borderRadius: "16px",
         overflow: "hidden",
-        backgroundColor: palette.primary.white,
+        backgroundColor: "#f8f8f8",
         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
         marginBottom: "20px",
       }}
@@ -115,36 +114,19 @@ const ActivitySmall = ({
         onClick={handleFavoriteToggle}
         sx={{
           position: "absolute",
-          top: "0px",
-          right: "0px",
-          width: "4rem",
-          height: "4rem",
-          borderRadius: "10px 0px 10px 10px",
-          backgroundColor: palette.primary.main,
+          top: "10px",
+          right: "10px",
+          backgroundColor: "white",
           zIndex: 1,
           "&:hover": {
             backgroundColor: "#f0f0f0",
-            color: palette.primary.main,
           },
         }}
       >
         {isSaved ? (
-          <FavoriteIcon
-            sx={{
-              color: palette.primary.white,
-              fontSize: "2rem", // Increased size
-            }}
-          />
+          <FavoriteIcon sx={{ color: palette.primary.main }} />
         ) : (
-          <FavoriteBorderOutlined
-            sx={{
-              color: palette.primary.white,
-              fontSize: "2rem", // Increased size
-              "&:hover": {
-                color: palette.primary.main,
-              },
-            }}
-          />
+          <FavoriteBorderOutlined sx={{ color: palette.primary.main }} />
         )}
       </IconButton>
 
@@ -160,10 +142,7 @@ const ActivitySmall = ({
           }}
         />
       </Box>
-      <div
-        className="shape"
-        style={{ background: palette.primary.white }}
-      ></div>
+
       {/* White Box with Title */}
       <Box
         sx={{
@@ -193,11 +172,10 @@ const ActivitySmall = ({
         {role === "admin" && (
           <FlexBetween>
             <IconButton onClick={handleEdit}>
-              <EditOutlined sx={{ fontSize: "2rem" }} /> {/* Increased size */}
+              <EditOutlined />
             </IconButton>
             <IconButton onClick={handleOpenDeleteModal}>
-              <DeleteOutlined sx={{ fontSize: "2rem" }} />{" "}
-              {/* Increased size */}
+              <DeleteOutlined />
             </IconButton>
           </FlexBetween>
         )}

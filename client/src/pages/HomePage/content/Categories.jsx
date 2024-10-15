@@ -3,7 +3,7 @@ import CategoriesWidget from "../../widgets/CategoriesWidget/CategoriesWidget.js
 
 const Categories = () => {
   return (
-    <Box padding="2rem 6%" sx={{ backgroundColor: "white", mt: 5 }}>
+    <Box padding="2rem 6%" sx={{ mt: 5 }}>
       <Typography
         variant="h4"
         className="subtitle"

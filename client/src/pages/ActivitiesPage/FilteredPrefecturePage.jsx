@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { useParams, Link as RouterLink } from "react-router-dom";
-import { Typography, Box, Grid, Breadcrumbs, Link } from "@mui/material";
+import { useParams } from "react-router-dom";
+import { Typography, Box, Grid } from "@mui/material";
 import ActivitySmall from "../widgets/ActivitiesWidget/ActivitySmall.jsx";
 import { useSelector } from "react-redux";
 import NavBar from "@components/NavBar/NavBar.jsx";
 import Footer from "@components/Footer/Footer.jsx";
 import config from "@config/config.js";
+import BreadcrumbBack from "@components/BreadcrumbBack.jsx";
 
 const FilteredPrefecturePage = () => {
   const [activities, setActivities] = useState([]);
@@ -87,34 +88,30 @@ const FilteredPrefecturePage = () => {
       }}
     >
       <NavBar />
-      <Box sx={{ marginBottom: 2, marginTop: 3, marginLeft: 2 }}>
-        <Breadcrumbs aria-label="breadcrumb">
-          <Link component={RouterLink} to="/home" underline="hover">
-            Home
-          </Link>
-          <Typography color="text.primary">{prefectureName}</Typography>
-        </Breadcrumbs>
-      </Box>
-      <Typography variant="h1" gutterBottom>
-        Activities in {prefectureName}
-      </Typography>
-      {activities.length === 0 ? (
-        <Typography variant="h6" color="text.secondary">
-          No activity for this prefecture.
+      <BreadcrumbBack />
+      <Box sx={{ marginBottom: 2, paddingTop: 15, marginLeft: 2 }}>
+        <Typography variant="h1" gutterBottom sx={{ textAlign: "center" }}>
+          Activities in {prefectureName}
         </Typography>
-      ) : (
-        <Grid container spacing={2}>
-          {activities.map((activity) => (
-            <Grid item key={activity._id} xs={12} sm={6} md={4}>
-              <ActivitySmall
-                {...activity}
-                activityId={activity._id}
-                onDelete={handleDelete}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      )}
+        {activities.length === 0 ? (
+          <Typography variant="h6" color="text.secondary">
+            No activity for this prefecture.
+          </Typography>
+        ) : (
+          <Grid container spacing={2}>
+            {activities.map((activity) => (
+              <Grid item key={activity._id} xs={12} sm={6} md={4}>
+                <ActivitySmall
+                  {...activity}
+                  activityId={activity._id}
+                  onDelete={handleDelete}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        )}
+      </Box>
+
       <Footer />
     </Box>
   );

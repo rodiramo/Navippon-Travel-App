@@ -81,7 +81,7 @@ const UserTripsPage = () => {
   return (
     <Box>
       <NavBar />
-      <Box sx={{ padding: 3, height: "80vh" }}>
+      <Box sx={{ paddingTop: 15, height: "80vh" }}>
         <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
           <Link color="inherit" href="/home">
             Home

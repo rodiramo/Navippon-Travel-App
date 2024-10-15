@@ -9,7 +9,7 @@ import {
   useTheme,
 } from "@mui/material";
 import ActivitySmall from "./ActivitySmall.jsx";
-import { setActivities } from "../../../state/state.js";
+import { setActivities } from "@state/state.js";
 import config from "@config/config.js";
 
 const FavoriteActivities = () => {

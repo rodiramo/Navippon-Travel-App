@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Box, useMediaQuery, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
-import NavBar from "../../components/NavBar/NavBar.jsx";
-import Footer from "../../components/Footer/Footer.jsx";
+import NavBar from "@components/NavBar/NavBar.jsx";
+import Footer from "@components/Footer/Footer.jsx";
 import PostsWidget from "../widgets/PostsWidget.jsx";
 import MyPostWidget from "../widgets/MyPostWidget.jsx";
 import config from "@config/config.js";
@@ -34,7 +34,7 @@ const BlogPage = () => {
       <NavBar />{" "}
       <Typography
         variant="h1"
-        sx={{ textAlign: "center", fontWeight: "bold", marginTop: 2 }}
+        sx={{ textAlign: "center", fontWeight: "bold", paddingTop: 15 }}
         gutterBottom
       >
         The Community Posts

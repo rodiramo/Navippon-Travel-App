@@ -54,7 +54,7 @@ const MobileMenu = ({ onClose }) => {
             textTransform: "none",
           }}
         >
-          Actividades
+          Explorar
         </Button>
       </Link>
       <Link to="/posts" style={{ textDecoration: "none" }}>

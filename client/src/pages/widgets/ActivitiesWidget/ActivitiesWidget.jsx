@@ -37,12 +37,10 @@ const ActivitiesWidget = () => {
     loadActivities();
   }, [dispatch, token]);
 
-  // Handle pagination change
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   };
 
-  // Pagination logic to slice activities for the current page
   const indexOfLastActivity = currentPage * activitiesPerPage;
   const indexOfFirstActivity = indexOfLastActivity - activitiesPerPage;
   const currentActivities = activities.slice(

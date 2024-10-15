@@ -1,17 +1,11 @@
 import { useEffect, useState } from "react";
-import { useParams, Link as RouterLink } from "react-router-dom";
-import {
-  Typography,
-  Box,
-  Grid,
-  CircularProgress,
-  Breadcrumbs,
-  Link,
-} from "@mui/material";
+import { useParams } from "react-router-dom";
+import { Typography, Box, Grid, CircularProgress } from "@mui/material";
+import BreadcrumbBack from "@components/BreadcrumbBack.jsx";
 import { useSelector } from "react-redux";
 import ActivitySmall from "../widgets/ActivitiesWidget/ActivitySmall.jsx";
-import NavBar from "../../components/NavBar/NavBar.jsx";
-import Footer from "../../components/Footer/Footer.jsx";
+import NavBar from "@components/NavBar/NavBar.jsx";
+import Footer from "@components/Footer/Footer.jsx";
 import config from "@config/config.js";
 
 const FilteredCategoriesPage = () => {
@@ -85,14 +79,7 @@ const FilteredCategoriesPage = () => {
     >
       <NavBar />
       <Box>
-        <Box sx={{ marginBottom: 2, marginTop: 3, marginLeft: 2 }}>
-          <Breadcrumbs aria-label="breadcrumb">
-            <Link component={RouterLink} to="/home" underline="hover">
-              Home
-            </Link>
-            <Typography color="text.primary">{categoryName}</Typography>
-          </Breadcrumbs>
-        </Box>
+        <BreadcrumbBack />
         <Box
           sx={{
             flex: 1,
@@ -101,6 +88,7 @@ const FilteredCategoriesPage = () => {
             alignItems: "center",
             textAlign: "center",
             padding: 2,
+            paddingTop: 15,
           }}
         >
           <Typography variant="h1" gutterBottom>

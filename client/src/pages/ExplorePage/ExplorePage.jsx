@@ -25,7 +25,10 @@ const ExplorePage = () => {
   return (
     <Box>
       <NavBar />
-      <Box className="header" sx={{ textAlign: "center", mb: 4 }}>
+      <Box
+        className="header"
+        sx={{ textAlign: "center", mb: 4, paddingTop: 20 }}
+      >
         <h1>Explora todas nuestras Actividades, Hoteles y Restaurantes</h1>
         <p>
           Puedes filtrar para encontrar lo que necesitas, fácil, rápido e ideal

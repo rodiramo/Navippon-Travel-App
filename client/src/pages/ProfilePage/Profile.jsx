@@ -34,10 +34,10 @@ const ProfilePage = () => {
 
   return (
     <Box>
-      <NavBar />{" "}
+      <NavBar />
       <Typography
         variant="h1"
-        sx={{ textAlign: "center", fontWeight: "bold", marginTop: 2 }}
+        sx={{ textAlign: "center", fontWeight: "bold", paddingTop: 15 }}
         gutterBottom
       >
         My Profile

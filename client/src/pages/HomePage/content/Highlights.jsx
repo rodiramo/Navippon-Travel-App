@@ -1,6 +1,7 @@
-import { Box, Typography } from "@mui/material";
-
+import { Box, Typography, Button, useTheme } from "@mui/material";
+import "@css/Universal.css";
 const Highlights = () => {
+  const theme = useTheme();
   return (
     <Box
       className="section-flex"
@@ -29,6 +30,15 @@ const Highlights = () => {
           recuerdos que durarán toda la vida. Deja que Navippon sea tu guía
           confiable en el viaje de tus sueños.
         </p>
+        <Button
+          className="button"
+          sx={{
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.primary.white,
+          }}
+        >
+          Explora Destinos
+        </Button>
       </Box>
     </Box>
   );

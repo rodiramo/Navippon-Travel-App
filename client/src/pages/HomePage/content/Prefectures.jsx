@@ -3,8 +3,13 @@ import PrefecturesWidget from "../../widgets/PrefecturesWidget.jsx";
 
 const Prefectures = () => {
   return (
-    <Box padding="2rem 6%">
-      <Typography variant="h4" className="subtitle" gutterBottom>
+    <Box>
+      <Typography
+        variant="h4"
+        className="subtitle"
+        gutterBottom
+        sx={{ marginLeft: "2rem" }}
+      >
         Navega Japón por Región
       </Typography>
       <p style={{ marginLeft: "2rem" }}>
