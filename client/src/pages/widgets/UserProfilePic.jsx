@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import UserImage from "../../components/UserImage.jsx";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import config from "../../config.js";
+import config from "@config/config.js";
 
 const UserProfilePicture = ({ userId }) => {
   const [user, setUser] = useState(null);

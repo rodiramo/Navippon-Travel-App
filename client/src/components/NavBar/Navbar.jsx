@@ -22,7 +22,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { setMode, setLogout } from "../../state/state.js";
+import { setMode, setLogout } from "@state/state.js";
 import UserProfilePicture from "../../pages/widgets/UserProfilePic.jsx";
 import useAuth from "../../hooks/useAuth.js";
 import logo from "/assets/navippon-logo-white.png";

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { useSelector } from "react-redux";
-import config from "../config.js";
+import config from "@config/config.js";
 import Footer from "./Footer/Footer.jsx";
 import NavBar from "./NavBar/NavBar.jsx";
 import DaysList from "./DaysList.jsx";

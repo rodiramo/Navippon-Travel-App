@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setHotels } from "../../../state/state.js";
+import { setHotels } from "@state/state.js";
 import HotelWidget from "./HotelWidget.jsx";
 import { Skeleton, Typography, Box, Pagination } from "@mui/material";
 import {
   fetchHotels,
   saveOrUnsaveHotel,
   deleteHotel,
-} from "../../../services/services.js";
+} from "@services/services.js";
 
 const HotelsWidget = () => {
   const dispatch = useDispatch();

@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
-import NavBar from "../../components/NavBar/NavBar";
-import Footer from "../../components/Footer/Footer";
+import NavBar from "@components/NavBar/NavBar";
+import Footer from "@components/Footer/Footer";
 import { useEffect, useState } from "react";
 import {
   IconButton,
@@ -15,8 +15,8 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
-import "./AdminPanel.css";
-import config from "../../config.js";
+import "@css/AdminPanel/AdminPanel.css";
+import config from "@config/config.js";
 
 const AdminPanel = () => {
   const role = useSelector((state) => state.user.role);

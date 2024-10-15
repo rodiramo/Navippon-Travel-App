@@ -19,8 +19,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Dropzone from "react-dropzone";
-import config from '../../config.js';
-
+import config from "@config/config.js";
 
 const User = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null);
@@ -149,7 +148,6 @@ const User = ({ userId, picturePath }) => {
 
       <Divider />
 
-    
       {/* EDIT USER MODAL */}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>

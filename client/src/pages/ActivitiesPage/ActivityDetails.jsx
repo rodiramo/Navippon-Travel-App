@@ -15,10 +15,10 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import NavBar from "../../components/NavBar/NavBar.jsx";
-import Footer from "../../components/Footer/Footer.jsx";
-import "./ActivityDetail.css";
-import config from "../../config.js";
+import NavBar from "@components/NavBar/NavBar.jsx";
+import Footer from "@components/Footer/Footer.jsx";
+import "@css/Items/ActivityDetail.css";
+import config from "@config/config.js";
 
 const ActivityDetails = () => {
   const { palette } = useTheme();

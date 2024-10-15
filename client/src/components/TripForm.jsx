@@ -11,7 +11,7 @@ import {
   FormControl,
 } from "@mui/material";
 import { useSelector } from "react-redux";
-import config from "../config.js";
+import config from "@config/config.js";
 
 const TripForm = ({ onTripCreated }) => {
   const [title, setTitle] = useState("");

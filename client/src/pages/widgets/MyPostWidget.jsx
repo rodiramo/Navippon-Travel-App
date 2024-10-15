@@ -13,7 +13,7 @@ import {
   Button,
   IconButton,
 } from "@mui/material";
-import config from '../../config.js';
+import config from "@config/config.js";
 import FlexBetween from "../../components/FlexBetween.jsx";
 import Dropzone from "react-dropzone";
 import UserImage from "../../components/UserImage.jsx";

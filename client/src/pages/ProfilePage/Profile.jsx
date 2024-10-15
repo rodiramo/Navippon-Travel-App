@@ -2,14 +2,14 @@ import { Box, useMediaQuery, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import NavBar from "../../components/NavBar/NavBar.jsx";
+import NavBar from "@components/NavBar/NavBar.jsx";
 import FriendListWidget from "../widgets/FriendListWidget.jsx";
 import MyPostWidget from "../widgets/MyPostWidget";
 import PostsWidget from "../widgets/PostsWidget";
 import UserWidget from "../widgets/User.jsx";
 import FavoriteActivities from "../widgets/ActivitiesWidget/FavoriteActivities.jsx";
 import TripsWidget from "../widgets/TripsWidget.jsx";
-import config from "../../config.js";
+import config from "@config/config.js";
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);

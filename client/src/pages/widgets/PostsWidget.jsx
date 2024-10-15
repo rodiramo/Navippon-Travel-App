@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "../../state/state.js";
 import PostWidget from "./PostWidget.jsx";
-import config from '../../config.js';
+import config from "@config/config.js";
 
 const PostsWidget = ({ userId, isProfile = false }) => {
   const dispatch = useDispatch();

@@ -7,8 +7,8 @@ import {
   fetchActivities,
   saveOrUnsaveActivity,
   deleteActivity,
-} from "../../../services/services.js";
-import "../../ActivitiesPage/Activities.css";
+} from "@services/services.js";
+import "@css/Items/ItemsPage.css";
 
 const ActivitiesWidget = () => {
   const dispatch = useDispatch();

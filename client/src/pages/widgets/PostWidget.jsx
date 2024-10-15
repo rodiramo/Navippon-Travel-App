@@ -18,7 +18,7 @@ import {
   DialogTitle,
   Button,
 } from "@mui/material";
-import config from "../../config.js";
+import config from "@config/config.js";
 import FlexBetween from "../../components/FlexBetween.jsx";
 import Friend from "../../components/Friend.jsx";
 import WidgetWrapper from "../../components/Wrapper.jsx";

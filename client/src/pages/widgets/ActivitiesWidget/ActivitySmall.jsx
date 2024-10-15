@@ -26,7 +26,7 @@ import {
   fetchCategoryDetails,
   saveOrUnsaveActivity,
 } from "../../../services/services.js";
-import config from "../../../config.js";
+import config from "@config/config.js";
 
 const ActivitySmall = ({
   activityId,

@@ -12,7 +12,7 @@ import { useSelector } from "react-redux";
 import ActivitySmall from "../widgets/ActivitiesWidget/ActivitySmall.jsx";
 import NavBar from "../../components/NavBar/NavBar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
-import config from "../../config.js";
+import config from "@config/config.js";
 
 const FilteredCategoriesPage = () => {
   const [activities, setActivities] = useState([]);

@@ -3,9 +3,9 @@ import { useParams, Link as RouterLink } from "react-router-dom";
 import { Typography, Box, Grid, Breadcrumbs, Link } from "@mui/material";
 import ActivitySmall from "../widgets/ActivitiesWidget/ActivitySmall.jsx";
 import { useSelector } from "react-redux";
-import NavBar from "../../components/NavBar/NavBar.jsx";
-import Footer from "../../components/Footer/Footer.jsx";
-import config from "../../config.js";
+import NavBar from "@components/NavBar/NavBar.jsx";
+import Footer from "@components/Footer/Footer.jsx";
+import config from "@config/config.js";
 
 const FilteredPrefecturePage = () => {
   const [activities, setActivities] = useState([]);

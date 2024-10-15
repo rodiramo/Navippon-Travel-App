@@ -21,10 +21,8 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import Dropzone from "react-dropzone";
 import NavBar from "../../components/NavBar/NavBar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
-import "./ActivityForm.css";
-import config from '../../config.js'; 
-
-
+import "@css/Items/ActivityForm.css";
+import config from "@config/config.js";
 
 const activitySchema = yup.object().shape({
   activityName: yup.string().required("Activity Name is required"),

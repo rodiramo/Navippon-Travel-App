@@ -22,9 +22,9 @@ import {
 import FlexBetween from "../../../components/FlexBetween.jsx";
 import WidgetWrapper from "../../../components/Wrapper.jsx";
 import { useSelector } from "react-redux";
-import config from "../../../config.js";
+import config from "@config/config.js";
 import { fetchCategoryDetails } from "../../../services/services.js";
-import "../../ActivitiesPage/Activities.css";
+import "@css/Items/ItemsPage.css";
 
 const RestaurantWidget = ({
   restaurantId,

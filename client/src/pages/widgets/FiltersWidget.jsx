@@ -1,5 +1,5 @@
 import SearchBar from "../../components/SearchBar.jsx";
-import "../ActivitiesPage/Activities.css";
+import "@css/Items/ItemsPage.css";
 import { useTheme, Box } from "@mui/material";
 
 const FiltersWidget = () => {

@@ -9,7 +9,7 @@ import {
   Avatar,
 } from "@mui/material";
 import { DeleteOutline } from "@mui/icons-material";
-import config from "../config.js";
+import config from "@config/config.js";
 import { format } from "date-fns";
 
 const CommentsSection = ({

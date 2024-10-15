@@ -16,9 +16,9 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { fetchTrips, deleteTrip } from "../../services/services.js";
-import NavBar from "../../components/NavBar/NavBar.jsx";
-import Footer from "../../components/Footer/Footer.jsx";
+import { fetchTrips, deleteTrip } from "@services/services.js";
+import NavBar from "@components/NavBar/NavBar.jsx";
+import Footer from "@components/Footer/Footer.jsx";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 const UserTripsPage = () => {

@@ -14,8 +14,7 @@ import { setFriends } from "../state/state.js";
 import FlexBetween from "./FlexBetween";
 import UserImage from "./UserImage";
 import { useState } from "react";
-import config from '../config.js';
-
+import config from "@config/config.js";
 
 const Friend = ({ friendId, name, userPicturePath }) => {
   const dispatch = useDispatch();

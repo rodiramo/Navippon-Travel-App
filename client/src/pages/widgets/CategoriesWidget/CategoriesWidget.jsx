@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Typography, Box, IconButton, Button } from "@mui/material";
 import PropTypes from "prop-types";
-import { fetchCategoryDetails } from "../../services/services";
-import config from "../../config";
+import { fetchCategoryDetails } from "@services/services";
+import config from "@config/config.js";
 
 const CategoriesWidget = () => {
   const [categories, setCategories] = useState([]);

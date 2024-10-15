@@ -19,12 +19,12 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import FlexBetween from "../../../components/FlexBetween.jsx";
-import WidgetWrapper from "../../../components/Wrapper.jsx";
+import FlexBetween from "@components/FlexBetween.jsx";
+import WidgetWrapper from "@components/Wrapper.jsx";
 import { useSelector } from "react-redux";
-import "../../ActivitiesPage/Activities.css";
-import config from "../../../config.js";
-import { fetchCategoryDetails } from "../../../services/services.js";
+import "@css/Items/ItemsPage.css";
+import config from "@config/config.js";
+import { fetchCategoryDetails } from "@services/services.js";
 
 const ActivityWidget = ({
   activityId,

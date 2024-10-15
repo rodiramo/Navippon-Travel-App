@@ -5,8 +5,7 @@ import NavBar from "../../components/NavBar/NavBar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
 import PostsWidget from "../widgets/PostsWidget.jsx";
 import MyPostWidget from "../widgets/MyPostWidget.jsx";
-import config from '../../config.js';
-
+import config from "@config/config.js";
 
 const BlogPage = () => {
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
