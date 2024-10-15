@@ -19,6 +19,7 @@ export default defineConfig({
       "@css": path.resolve(__dirname, "src/css"),
       "@config": path.resolve(__dirname, "src/config"),
       "@pages": path.resolve(__dirname, "src/pages"),
+      "@widgets": path.resolve(__dirname, "src/pages/widgets"),
       "@state": path.resolve(__dirname, "src/state"),
       "@assets": path.resolve(__dirname, "src/assets"),
       "@hooks": path.resolve(__dirname, "src/hooks"),

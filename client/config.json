@@ -8,6 +8,7 @@
       "@services/*": ["services/*"],
       "@utils/*": ["utils/*"],
       "@state/*": ["state/*"],
+      "@widgets/*": ["widgets/*"],
       "@config/*": ["config/*"],
       "@hooks/*": ["hooks/*"],
       "@css/*": ["css/*"]

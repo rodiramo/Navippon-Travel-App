@@ -17,7 +17,7 @@ const MenuLinks = ({ isActiveLink }) => {
         display: "flex",
         flexGrow: 1,
         gap: "1rem",
-        justifyContent: "flex-start",
+        justifyContent: "center",
       }}
     >
       {links.map(({ path, label }) => (

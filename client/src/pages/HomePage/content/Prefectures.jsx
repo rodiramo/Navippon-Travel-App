@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import PrefecturesWidget from "../../widgets/PrefecturesWidget.jsx";
+import PrefecturesWidget from "@widgets/PrefecturesWidget.jsx";
 
 const Prefectures = () => {
   return (

@@ -7,7 +7,7 @@ import { createTheme } from "@mui/material/styles";
 import { themeSettings } from "./theme.js";
 import LoginPage from "./pages/LoginPage/Login.jsx";
 import HomePage from "./pages/HomePage/Home.jsx";
-import ProfilePage from "./pages/ProfilePage/Profile.jsx";
+import ProfilePage from "./pages/ProfilePage/ProfilePage.jsx";
 import ActivityDetails from "./pages/ActivitiesPage/ActivityDetails.jsx";
 import ExplorePage from "./pages/ExplorePage/ExplorePage.jsx";
 import AboutUsPage from "./pages/AboutUsPage/AboutUsPage.jsx";

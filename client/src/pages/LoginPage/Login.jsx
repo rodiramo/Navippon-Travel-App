@@ -1,5 +1,5 @@
 import { Box, useTheme, useMediaQuery } from "@mui/material";
-import Form from "./Form";
+import Form from "./Form.jsx";
 import logo from "/assets/navippon-logo-white.png";
 import { Link } from "react-router-dom"; // Import Link
 

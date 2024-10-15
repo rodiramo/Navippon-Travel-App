@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setActivities } from "../../../state/state.js";
+import { setActivities } from "@state/state.js";
 import ActivityWidget from "./ActivityWidget.jsx";
 import { Skeleton, Typography, Box, Pagination } from "@mui/material";
 import {

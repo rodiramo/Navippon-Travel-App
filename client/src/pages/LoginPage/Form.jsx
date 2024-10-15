@@ -16,7 +16,7 @@ import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Dropzone from "react-dropzone";
-import { setLogin } from "../../state/state.js";
+import { setLogin } from "@state/state.js";
 import FlexBetween from "@components/FlexBetween.jsx";
 import config from "@config/config.js";
 

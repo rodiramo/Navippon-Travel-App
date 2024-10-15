@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import CategoriesWidget from "../../widgets/CategoriesWidget/CategoriesWidget.jsx";
+import CategoriesWidget from "@widgets/CategoriesWidget/CategoriesWidget.jsx";
 
 const Categories = () => {
   return (

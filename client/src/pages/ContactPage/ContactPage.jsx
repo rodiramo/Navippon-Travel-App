@@ -6,8 +6,8 @@ import {
   useTheme,
   Grid,
 } from "@mui/material";
-import NavBar from "../../components/NavBar/NavBar.jsx";
-import Footer from "../../components/Footer/Footer.jsx";
+import NavBar from "@components/NavBar/NavBar.jsx";
+import Footer from "@components/Footer/Footer.jsx";
 import { Mail, Phone, LocationOn } from "@mui/icons-material";
 
 const ContactPage = () => {
