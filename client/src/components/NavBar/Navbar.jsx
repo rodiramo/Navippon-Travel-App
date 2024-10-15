@@ -10,7 +10,7 @@ import { Menu as MenuIcon, LightMode, DarkMode } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { setMode, setLogout } from "@state/state.js";
-import UserProfilePicture from "@pages/widgets/UserProfilePic.jsx";
+import UserProfilePicture from "@pages/widgets/UserWidget/UserProfilePic.jsx";
 import useAuth from "@hooks/useAuth.js";
 import Logo from "./content/Logo.jsx";
 import MenuLinks from "./content/MenuLinks.jsx";

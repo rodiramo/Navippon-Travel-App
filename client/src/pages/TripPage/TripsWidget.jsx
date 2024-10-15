@@ -13,8 +13,8 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import TripForm from "../../components/TripForm.jsx";
-import { fetchTrips, deleteTrip } from "../../services/services.js";
+import TripForm from "./TripForm.jsx";
+import { fetchTrips, deleteTrip } from "@services/services.js";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 

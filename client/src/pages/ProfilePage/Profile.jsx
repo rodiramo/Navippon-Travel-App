@@ -6,9 +6,9 @@ import NavBar from "@components/NavBar/NavBar.jsx";
 import FriendListWidget from "../widgets/FriendListWidget.jsx";
 import MyPostWidget from "../widgets/MyPostWidget";
 import PostsWidget from "../widgets/PostsWidget";
-import UserWidget from "../widgets/User.jsx";
+import UserWidget from "../widgets/UserWidget/User.jsx";
 import FavoriteActivities from "../widgets/ActivitiesWidget/FavoriteActivities.jsx";
-import TripsWidget from "../widgets/TripsWidget.jsx";
+import TripsWidget from "../TripPage/TripsWidget.jsx";
 import config from "@config/config.js";
 
 const ProfilePage = () => {

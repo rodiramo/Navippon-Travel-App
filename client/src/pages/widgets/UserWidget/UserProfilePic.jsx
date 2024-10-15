@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { Box } from "@mui/material";
-import UserImage from "../../components/UserImage.jsx";
+import UserImage from "@components/UserImage.jsx";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import config from "@config/config.js";

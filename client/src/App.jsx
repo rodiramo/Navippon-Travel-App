@@ -11,7 +11,7 @@ import ProfilePage from "./pages/ProfilePage/Profile.jsx";
 import ActivityDetails from "./pages/ActivitiesPage/ActivityDetails.jsx";
 import ExplorePage from "./pages/ExplorePage/ExplorePage.jsx";
 import AboutUsPage from "./pages/AboutUsPage/AboutUsPage.jsx";
-import TripView from "./components/TripView.jsx";
+import TripView from "./pages/TripPage/TripView.jsx";
 import UserTripsPage from "./pages/TripPage/UserTripPage.jsx";
 import BlogPage from "./pages/BlogPage/BlogPage.jsx";
 import ContactPage from "./pages/ContactPage/ContactPage.jsx";

@@ -954,11 +954,11 @@ export const categories = [
     icon: "events.png",
   },
   {
-    category: "Jardín",
-    icon: "garden.png",
+    category: "Playa",
+    icon: "beach.png",
   },
   {
-    category: "Playa",
+    category: "Festival",
     icon: "beach.png",
   },
   {
@@ -984,10 +984,6 @@ export const categories = [
   {
     category: "Vida Nocturna",
     icon: "night_life.png",
-  },
-  {
-    category: "Fiesta",
-    icon: "party.png",
   },
   {
     category: "Restaurantes",

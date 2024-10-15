@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import "./SearchBar.css";
+import "@css/SearchBar.css";
 
 const SearchBar = () => {
   return (

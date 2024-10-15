@@ -1,4 +1,4 @@
-import SearchBar from "../../components/SearchBar.jsx";
+import SearchBar from "./SearchBar.jsx";
 import "@css/Items/ItemsPage.css";
 import { useTheme, Box } from "@mui/material";
 

@@ -2,12 +2,12 @@ import { useState } from "react";
 import { Box, Tabs, Tab, Button } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import NavBar from "../../components/NavBar/NavBar.jsx";
-import Footer from "../../components/Footer/Footer.jsx";
-import FiltersWidget from "../widgets/FiltersWidget.jsx";
+import NavBar from "@components/NavBar/NavBar.jsx";
+import Footer from "@components/Footer/Footer.jsx";
+import FiltersWidget from "./content/FiltersWidget.jsx";
 import ActivitiesWidget from "../widgets/ActivitiesWidget/ActivitiesWidget.jsx";
-import HotelsWidget from "../widgets/HotelsWidget/HotelsWidget.jsx"; // Placeholder for HotelsWidget
-import RestaurantsWidget from "../widgets/RestaurantsWidget/RestaurantsWidget.jsx"; // Placeholder for RestaurantsWidget
+import HotelsWidget from "../widgets/HotelsWidget/HotelsWidget.jsx";
+import RestaurantsWidget from "../widgets/RestaurantsWidget/RestaurantsWidget.jsx";
 
 const ExplorePage = () => {
   const [tabValue, setTabValue] = useState(0);
