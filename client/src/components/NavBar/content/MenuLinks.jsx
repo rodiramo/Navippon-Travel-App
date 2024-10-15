@@ -1,0 +1,45 @@
+import { Box, Button } from "@mui/material";
+import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+
+const MenuLinks = ({ isActiveLink }) => {
+  const links = [
+    { path: "/", label: "Inicio" },
+    { path: "/about-us", label: "Nosotros" },
+    { path: "/activities", label: "Explora" },
+    { path: "/posts", label: "Blog" },
+    { path: "/contact", label: "Contacto" },
+  ];
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexGrow: 1,
+        justifyContent: "center",
+        gap: "1rem",
+      }}
+    >
+      {links.map(({ path, label }) => (
+        <Link to={path} style={{ textDecoration: "none" }} key={path}>
+          <Button
+            variant="text"
+            sx={{
+              color: isActiveLink(path) ? "primary.main" : "white",
+              "&:hover": {
+                color: "primary.main",
+              },
+              textTransform: "none",
+            }}
+          >
+            {label}
+          </Button>
+        </Link>
+      ))}
+    </Box>
+  );
+};
+MenuLinks.propTypes = {
+  isActiveLink: PropTypes.string,
+};
+export default MenuLinks;

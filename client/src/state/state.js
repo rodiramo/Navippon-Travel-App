@@ -2,7 +2,14 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   mode: "light",
-  user: { _id: null, friends: [], role: "", favorites: [] },
+  user: {
+    _id: null,
+    friends: [],
+    role: "",
+    favorites: [],
+    fullName: "",
+    picturePath: "",
+  },
   token: null,
   posts: [],
   activities: [],
@@ -17,8 +24,16 @@ export const authSlice = createSlice({
       state.mode = state.mode === "light" ? "dark" : "light";
     },
     setLogin: (state, action) => {
-      state.user = action.payload.user;
-      state.token = action.payload.token;
+      const { user, token } = action.payload;
+      state.user = {
+        _id: user._id,
+        friends: user.friends,
+        role: user.role,
+        favorites: user.favorites,
+        fullName: user.fullName,
+        picturePath: user.picturePath,
+      };
+      state.token = token;
     },
     setLogout: (state) => {
       state.user = { _id: null, friends: [], role: "", favorites: [] };

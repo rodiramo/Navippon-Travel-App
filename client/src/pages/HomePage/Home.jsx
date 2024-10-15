@@ -2,11 +2,11 @@ import NavBar from "@components/NavBar/NavBar.jsx";
 import Footer from "@components/Footer/Footer.jsx";
 import { Box, useTheme } from "@mui/material";
 /* sections */
-import Hero from "./Sections/Hero.jsx";
-import HowItWorks from "./Sections/HowItWorks.jsx";
-import Categories from "./Sections/Categories.jsx";
-import Highlights from "./Sections/Highlights.jsx";
-import Prefectures from "./Sections/Prefectures.jsx";
+import Hero from "./content/Hero.jsx";
+import HowItWorks from "./content/HowItWorks.jsx";
+import Categories from "./content/Categories.jsx";
+import Highlights from "./content/Highlights.jsx";
+import Prefectures from "./content/Prefectures.jsx";
 import "@css/HomePage/Home.css";
 
 const HomePage = () => {
