@@ -18,6 +18,7 @@ import NavBar from "@components/NavBar/NavBar.jsx";
 import Footer from "@components/Footer/Footer.jsx";
 import "@css/Items/ActivityDetail.css";
 import config from "@config/config.js";
+import CommentsContainer from '../../components/comments/CommentsContainer';
 
 const ActivityDetails = () => {
   const { palette } = useTheme();
@@ -248,9 +249,18 @@ const ActivityDetails = () => {
                 <Typography>No hay reseñas disponibles.</Typography>
               </Box>
             )}
+                    <div className='mb-4 p-4'>
+                      <h3 className="text-3xl">Comentarios</h3>
+        <CommentsContainer className="mt-10" loggineUserId="a" />
+      </div>
           </Box>
         </Box>
+
       </Box>
+
+
+
+
       <Footer />
     </Box>
   );
