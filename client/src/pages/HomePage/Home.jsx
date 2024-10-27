@@ -8,13 +8,15 @@ import Categories from "./content/Categories.jsx";
 import Highlights from "./content/Highlights.jsx";
 import Prefectures from "./content/Prefectures.jsx";
 import "@css/HomePage/Home.css";
+import { Category } from "@mui/icons-material";
+import CategoryCarousel from "./content/CategoryCarrusel.jsx";
 
 const HomePage = () => {
   const { palette } = useTheme();
   return (
-    <Box>
+    <Box className="flex flex-col min-h-screen">
       <NavBar />
-      <Box>
+      <Box className="flex-grow">
         <Hero />
         <div
           className="bg-shape"
@@ -25,6 +27,7 @@ const HomePage = () => {
         {/* Categories Section */}
         <Categories />
         {/* Info Section */}
+        <CategoryCarousel />
         <Highlights />
         {/* Regions Section */}
         <Prefectures />

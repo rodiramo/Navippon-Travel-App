@@ -9,8 +9,24 @@ import ActivitiesWidget from "../widgets/ActivitiesWidget/ActivitiesWidget.jsx";
 import HotelsWidget from "../widgets/HotelsWidget/HotelsWidget.jsx";
 import RestaurantsWidget from "../widgets/RestaurantsWidget/RestaurantsWidget.jsx";
 
+// Función para buscar en la base de datos
+const fetchResultsFromAPI = async (query) => {
+  try {
+    const response = await fetch(`/api/search?query=${query}`);
+    if (!response.ok) {
+      throw new Error('Error en la búsqueda');
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching search results:', error);
+    return [];
+  }
+};
+
 const ExplorePage = () => {
   const [tabValue, setTabValue] = useState(0);
+  const [searchResults, setSearchResults] = useState([]);
   const role = useSelector((state) => state.user.role);
   const navigate = useNavigate();
 
@@ -20,6 +36,11 @@ const ExplorePage = () => {
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
+  };
+
+  const handleSearch = async (query) => {
+    const results = await fetchResultsFromAPI(query);
+    setSearchResults(results);
   };
 
   return (
@@ -47,7 +68,7 @@ const ExplorePage = () => {
         )}
       </Box>
       <Box className="content">
-        <FiltersWidget />
+        <FiltersWidget onSearch={handleSearch} />
 
         {/* Tabs for selecting Activities, Hotels, or Restaurants */}
         <Box sx={{ width: "100%", bgcolor: "background.paper", mb: 4 }}>
@@ -64,9 +85,9 @@ const ExplorePage = () => {
           </Tabs>
 
           <Box>
-            {tabValue === 0 && <ActivitiesWidget />}
-            {tabValue === 1 && <HotelsWidget />}{" "}
-            {tabValue === 2 && <RestaurantsWidget />}{" "}
+            {tabValue === 0 && <ActivitiesWidget searchResults={searchResults.filter(item => item.type === "activity")} />}
+            {tabValue === 1 && <HotelsWidget searchResults={searchResults.filter(item => item.type === "hotel")} />}
+            {tabValue === 2 && <RestaurantsWidget searchResults={searchResults.filter(item => item.type === "restaurant")} />}
           </Box>
         </Box>
       </Box>
