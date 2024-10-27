@@ -1,109 +1,86 @@
-import { Box, Typography, useTheme, Link as MuiLink } from "@mui/material";
-import BottomNavigation from "@mui/material/BottomNavigation";
+import { IoHomeOutline, IoMailOutline, IoLogoWhatsapp } from "react-icons/io5";
+import { FaInstagram } from "react-icons/fa";
+import { SlSocialFacebook, SlSocialYoutube } from "react-icons/sl";
+import { FaXTwitter } from "react-icons/fa6";
+import { TbBrandTiktok } from "react-icons/tb";
+import { PiTelegramLogo } from "react-icons/pi";
 
 const Footer = () => {
-  const theme = useTheme();
-  const nav = theme.palette.background.nav;
-  const main = theme.palette.primary.main;
-
   return (
-    <Box
-      sx={{
-        width: "100%",
-        backgroundColor: nav,
-        bottom: 0,
-        zIndex: 1000,
-        paddingLeft: { xs: "2rem", sm: "3rem", md: "5rem" },
-        paddingRight: { xs: "2rem", sm: "3rem", md: "5rem" },
-        paddingTop: "7rem",
-        paddingBottom: "7rem",
-        textAlign: "center",
-        color: "white",
-      }}
-    >
-      <BottomNavigation
-        sx={{
-          justifyContent: { xs: "center", md: "space-around" },
-          flexDirection: { xs: "column", md: "row" },
-          backgroundColor: nav,
-          boxShadow: "none",
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            mb: { xs: 2, md: 0 },
-          }}
-        >
-          <MuiLink
-            href="/"
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-              textDecoration: "none",
-              color: "inherit",
-            }}
-          >
-            <img
-              src="/assets/navippon-logo-white.png"
-              alt="Navippon Logo"
-              style={{ width: "50px" }}
-            />
-            <Typography
-              variant="h6"
-              sx={{ fontWeight: "bolder", marginTop: 1 }}
-            >
-              Navippon
-            </Typography>
-          </MuiLink>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            mb: { xs: 2, md: 0 },
-          }}
-        >
-          <Typography variant="body1" sx={{ color: main }}>
-            Company
-          </Typography>
-          <MuiLink
-            href="/about-us"
-            sx={{ textDecoration: "none", color: "inherit" }}
-          >
-            <Typography variant="body2">About Us</Typography>
-          </MuiLink>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            mb: { xs: 2, md: 0 },
-          }}
-        >
-          <Typography variant="body1" sx={{ color: main }}>
-            More
-          </Typography>
-          <MuiLink
-            href="/activities"
-            sx={{ textDecoration: "none", color: "inherit" }}
-          >
-            <Typography variant="body2">Activities</Typography>
-          </MuiLink>
-          <MuiLink
-            href="/blog"
-            sx={{ textDecoration: "none", color: "inherit" }}
-          >
-            <Typography variant="body2">Blog</Typography>
-          </MuiLink>
-        </Box>
-      </BottomNavigation>
-    </Box>
+    <div className="bg-[#0A0330] text-white py-8 rounded-t-full">
+      <div className="container flex-column mx-auto grid grid-cols-1 md:grid-cols-4 gap-4 mt-3 text-center md:text-left">
+        {/* Primera Columna */}
+        <div className="flex justify-center md:ml-20"></div>
+
+        {/* Segunda Columna */}
+        <div className="text-center  md:text-left md:ml-20">
+          <h5 className="font-bold mb-2">Mapa del sitio</h5>
+          <ul>
+            <li>
+              <a href="#">Inicio</a>
+            </li>
+            <li>
+              <a href="#">Explora</a>
+            </li>
+            <li>
+              <a href="#">Nosotros</a>
+            </li>
+            <li>
+              <a href="#">FAQ</a>
+            </li>
+            <li>
+              <a href="#">Ingreso</a>
+            </li>
+            <li>
+              <a href="#">Registro</a>
+            </li>
+          </ul>
+        </div>
+
+        {/* Tercera Columna */}
+        <div className="text-center md:text-left">
+          <h5 className="font-bold mb-2">Contacto</h5>
+          <ul>
+            <li className="flex justify-center md:justify-start items-center mb-2">
+              <IoHomeOutline className="mr-2" /> Dirección de la empresa 123
+            </li>
+            <li className="flex justify-center md:justify-start items-center mb-2">
+              <IoMailOutline className="mr-2" /> infonavippon@navippon.com
+            </li>
+            <li className="flex justify-center md:justify-start items-center mb-2">
+              <IoLogoWhatsapp className="mr-2" /> +34-1234-4567
+            </li>
+          </ul>
+        </div>
+
+        {/* Cuarta Columna */}
+        <div className="text-center md:text-left">
+          <h5 className="font-bold mb-2">Redes Sociales</h5>
+          <div className="flex justify-center md:justify-start space-x-4 mb-2">
+            <a href="#">
+              <FaInstagram className="text-2xl md:text-4xl" />
+            </a>
+            <a href="#">
+              <SlSocialFacebook className="text-2xl md:text-3xl" />
+            </a>
+            <a href="#">
+              <FaXTwitter className="text-2xl md:text-3xl" />
+            </a>
+          </div>
+          <div className="flex justify-center md:justify-start space-x-4">
+            <a href="#">
+              <TbBrandTiktok className="text-2xl md:text-3xl" />
+            </a>
+            <a href="#">
+              <SlSocialYoutube className="text-2xl md:text-3xl" />
+            </a>
+            <a href="#">
+              <PiTelegramLogo className="text-2xl md:text-3xl" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

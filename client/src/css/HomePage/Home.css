@@ -1,11 +1,6 @@
 .bg-shape {
   display: block;
-  height: 50px;
-  width: 100%;
-  border-radius: 200rem 200rem 0rem 0rem;
-  margin: -3rem auto;
-  margin-bottom: 1rem;
-  z-index: 1000;
+  border-radius: 100rem 100rem 0rem 0rem;
 }
 .section-flex {
   margin-top: 4rem;

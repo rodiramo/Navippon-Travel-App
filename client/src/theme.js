@@ -31,10 +31,10 @@ export const colorTokens = {
   lightBlue: {
     50: "#EAF4F7",
     100: "#CBE3EB",
-    200: "#ABCFDF",
+    200: "#CDD9E1",
     300: "#8BBBD3",
     400: "#6CA7C7",
-    500: "#96C6D9", // Light blue color Navippon
+    500: "#96C6D9",
     600: "#5893AF",
     700: "#407797",
     800: "#305D7F",
@@ -46,7 +46,7 @@ export const colorTokens = {
     200: "#8195B5",
     300: "#4F6D98",
     400: "#2A4E83",
-    500: "#102651", // Dark blue color Navippon
+    500: "#102651",
     600: "#0E2147",
     700: "#0C1C3D",
     800: "#0A1733",
@@ -54,7 +54,7 @@ export const colorTokens = {
   },
 };
 
-// mui theme settings
+// MUI theme settings
 export const themeSettings = (mode) => {
   return {
     palette: {
@@ -83,6 +83,7 @@ export const themeSettings = (mode) => {
             background: {
               default: colorTokens.darkBlue[900],
               alt: colorTokens.darkBlue[800],
+              grey: colorTokens.grey[800], // Added grey token for background
               nav: colorTokens.darkBlue[800],
             },
           }
@@ -97,6 +98,7 @@ export const themeSettings = (mode) => {
             secondary: {
               dark: colorTokens.lightBlue[700],
               main: colorTokens.lightBlue[500],
+              bg: colorTokens.lightBlue[200],
               light: colorTokens.lightBlue[100],
             },
             neutral: {
@@ -109,7 +111,7 @@ export const themeSettings = (mode) => {
             background: {
               default: colorTokens.grey[10],
               alt: colorTokens.grey[10],
-              grey: colorTokens.grey[200],
+              grey: colorTokens.grey[200], // Added grey token for light mode
               nav: colorTokens.darkBlue[800],
             },
           }),
