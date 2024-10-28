@@ -12,9 +12,9 @@ import "@css/HomePage/Home.css";
 
 const HomePage = () => {
   return (
-    <div className="homepage-container">
+    <div>
       <NavBar />
-      <div className="homepage-content">
+      <div>
         <Hero />
         <BgShape />
         {/* How It Works Section */}

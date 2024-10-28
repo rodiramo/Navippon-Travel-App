@@ -4,11 +4,12 @@ import { SlSocialFacebook, SlSocialYoutube } from "react-icons/sl";
 import { FaXTwitter } from "react-icons/fa6";
 import { TbBrandTiktok } from "react-icons/tb";
 import { PiTelegramLogo } from "react-icons/pi";
+import "@css/Footer.css";
 
 const Footer = () => {
   return (
     <div className="bg-[#0A0330] text-white py-8 rounded-t-full">
-      <div className="container flex-column mx-auto grid grid-cols-1 md:grid-cols-4 gap-4 mt-3 text-center md:text-left">
+      <div className=" mx-auto grid grid-cols-1 md:grid-cols-4 gap-4 mt-3 text-center md:text-left">
         {/* Primera Columna */}
         <div className="flex justify-center md:ml-20"></div>
 
