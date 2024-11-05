@@ -1,0 +1,142 @@
+[
+  {
+    "icon": "MdOutlineForest",
+    "category": "Naturaleza"
+  },
+  {
+    "icon": "MdOutlineBeachAccess",
+    "category": "Playa"
+  },
+  {
+    "icon": "TbBuildingMonument",
+    "category": "Monumento"
+  },
+  {
+    "icon": "MdOutlineRamenDining",
+    "category": "Gastronomía"
+  },
+  {
+    "icon": "LiaCocktailSolid",
+    "category": "Noche"
+  },
+  {
+    "icon": "GiGreekTemple",
+    "category": "Museo"
+  },
+  {
+    "icon": "MdOutlineCoffee",
+    "category": "Cafés"
+  },
+  {
+    "icon": "MdOutlineShoppingBag",
+    "category": "Shopping"
+  },
+  {
+    "icon": "FaRegStar",
+    "category": "Ocio"
+  },
+  {
+    "icon": "GiPartyPopper",
+    "category": "Festival"
+  },
+  {
+    "icon": "BsRobot",
+    "category": "Tecnología"
+  },
+  {
+    "icon": "LiaGamepadSolid",
+    "category": "Juegos"
+  },
+  {
+    "icon": "VscOctoface",
+    "category": "Anime"
+  },
+  {
+    "icon": "LuFerrisWheel",
+    "category": "Parques temáticos"
+  },
+  {
+    "icon": "GiSamuraiHelmet",
+    "category": "Samurai"
+  },
+  {
+    "icon": "MdOutlineTempleBuddhist",
+    "category": "Templo Budista"
+  },
+  {
+    "icon": "PiBirdBold",
+    "category": "Reserva de Aves"
+  },
+  {
+    "icon": "MdOutlineCastle",
+    "category": "Castillos"
+  },
+  {
+    "icon": "PiCross",
+    "category": "Templo Cristiano"
+  },
+  {
+    "icon": "TbTorii",
+    "category": "Templo Sintoísta"
+  },
+  {
+    "icon": "MdOutlineTempleHindu",
+    "category": "Templo Hindu"
+  },
+  {
+    "icon": "PiHandEyeLight",
+    "category": "Templo Jainita"
+  },
+  {
+    "icon": "FaRegMoon",
+    "category": "Templo islámico"
+  },
+  {
+    "icon": "PiStarOfDavid",
+    "category": "Templo judío"
+  },
+  {
+    "icon": "GiYinYang",
+    "category": "Templo Taoísta"
+  },
+  {
+    "icon": "GiAncientRuins",
+    "category": "Ruinas"
+  },
+  {
+    "icon": "MdOutlineHotTub",
+    "category": "Onsen"
+  },
+  {
+    "icon": "GiGrapes",
+    "category": "Viñedos"
+  },
+  {
+    "icon": "PiPawPrint",
+    "category": "Vida Silvestre"
+  },
+  {
+    "icon": "PiEyeBold",
+    "category": "Punto de interés"
+  },
+  {
+    "icon": "MdOutlineSurfing",
+    "category": "Surf"
+  },
+  {
+    "icon": "MdKayaking",
+    "category": "Kayak"
+  },
+  {
+    "icon": "FaPersonSkiing",
+    "category": "Esquí"
+  },
+  {
+    "icon": "GiProtectionGlasses",
+    "category": "Buceo"
+  },
+  {
+    "icon": "MdHiking",
+    "category": "Senderismo"
+  }
+]

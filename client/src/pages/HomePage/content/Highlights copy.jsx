@@ -8,7 +8,7 @@ const Highlights = () => {
     <div
       className="p-0 m-0 mb-3 mt-3"
       style={{
-        backgroundColor: theme.palette.secondary.bg,
+        backgroundColor: theme.palette.background.grey,
       }}
     >
       <div className="w-full flex flex-col md:flex-row items-center p-0 m-0">

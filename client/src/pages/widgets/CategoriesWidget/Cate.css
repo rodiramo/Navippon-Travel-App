@@ -1,0 +1,45 @@
+.category-carousel {
+  max-height: 300px; /* Optional: Adjust as needed */
+  overflow: hidden; /* Hide overflow */
+  display: flex;
+  flex-direction: column; /* Arrange items in a column */
+  align-items: center; /* Center items horizontally */
+}
+
+.slick-slide {
+  display: flex;
+  justify-content: center; /* Center content within each slide */
+}
+
+.icon-container {
+  width: 80px; /* Width of the icon container */
+  height: 80px; /* Height of the icon container */
+  display: flex;
+  justify-content: center; /* Center icon horizontally */
+  align-items: center; /* Center icon vertically */
+}
+
+/* Cate.css */
+
+/* Ensure dots are displayed in a row */
+.slick-dots {
+  display: flex !important; /* Use flexbox to align dots horizontally */
+  justify-content: center; /* Center align dots horizontally */
+  margin-top: 10px; /* Adjust space between dots and carousel */
+}
+
+.slick-dots li {
+  margin: 0 5px; /* Add spacing between dots */
+}
+
+.slick-dots li button {
+  width: 10px; /* Set a fixed width for each dot */
+  height: 10px; /* Set a fixed height for each dot */
+  border-radius: 50%; /* Make dots circular */
+  background: #ccc; /* Default background color for dots */
+  border: none; /* Remove default button border */
+}
+
+.slick-dots li.slick-active button {
+  background: #fa5564; /* Active dot color */
+}

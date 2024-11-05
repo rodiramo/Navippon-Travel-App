@@ -21,6 +21,7 @@ import SmartToyOutlinedIcon from "@mui/icons-material/SmartToyOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import SnowmobileOutlinedIcon from "@mui/icons-material/SnowmobileOutlined";
 import RamenDiningOutlinedIcon from "@mui/icons-material/RamenDiningOutlined";
+
 const iconMap = {
   Anime: PsychologyOutlinedIcon,
   Templos: TempleBuddhistOutlinedIcon,

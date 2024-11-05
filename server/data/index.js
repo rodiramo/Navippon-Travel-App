@@ -911,90 +911,90 @@ export const restaurants = [
 export const categories = [
   {
     category: "Templos",
-    icon: "temples.png",
+    icon: "TempleBuddhistOutlinedIcon",
   },
   {
     category: "Naturaleza",
-    icon: "nature.png",
+    icon: "EmojiNatureOutlinedIcon",
   },
   {
     category: "Anime",
-    icon: "anime.png",
+    icon: "PsychologyOutlinedIcon",
   },
   {
     category: "Relajante",
-    icon: "relaxing.png",
+    icon: "SpaOutlinedIcon",
   },
   {
     category: "Diversión",
-    icon: "fun.png",
+    icon: "CelebrationOutlinedIcon",
   },
   {
     category: "Histórico",
-    icon: "historical.png",
+    icon: "HistoryEduOutlinedIcon",
   },
   {
     category: "Familia",
-    icon: "family.png",
+    icon: "FamilyRestroomIcon",
   },
   {
     category: "Turismo",
-    icon: "sightseeing.png",
+    icon: "TourOutlinedIcon",
   },
   {
     category: "Niños",
-    icon: "kids.png",
+    icon: "ChildCareOutlinedIcon",
   },
   {
     category: "Conciertos",
-    icon: "concerts.png",
+    icon: "PianoOutlinedIcon",
   },
   {
     category: "Eventos",
-    icon: "events.png",
+    icon: "ConfirmationNumberOutlinedIcon",
   },
   {
     category: "Playa",
-    icon: "beach.png",
+    icon: "BeachAccessIcon",
   },
   {
     category: "Festival",
-    icon: "beach.png",
+    icon: "FestivalOutlinedIcon",
   },
   {
     category: "Compras",
-    icon: "shopping.png",
+    icon: "ShoppingBagOutlinedIcon",
   },
   {
     category: "Tecnología",
-    icon: "technology.png",
+    icon: "SmartToyOutlinedIcon",
   },
   {
     category: "Actividades Acuáticas",
-    icon: "water_activities.png",
+    icon: "SailingOutlinedIcon",
   },
   {
     category: "Deportes",
-    icon: "sport.png",
+    icon: "SportsSoccerIcon",
   },
   {
     category: "Museos",
-    icon: "museums.png",
+    icon: "MuseumIcon",
   },
   {
     category: "Vida Nocturna",
-    icon: "night_life.png",
+    icon: "DarkModeOutlinedIcon",
   },
   {
     category: "Restaurantes",
-    icon: "restaurants.png",
+    icon: "RestaurantIcon",
   },
   {
     category: "Gastronomía",
-    icon: "culinary.png",
+    icon: "RamenDiningOutlinedIcon",
   },
   {
     category: "Aventura",
-    icon: "adventure.png",
+    icon: "SnowmobileOutlinedIcon",
   },
 ];
