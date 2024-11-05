@@ -2,7 +2,7 @@ import SearchBar from "./SearchBar.jsx";
 import "@css/Items/ItemsPage.css";
 import { useTheme, Box } from "@mui/material";
 
-const FiltersWidget = () => {
+const FiltersWidget = ({ onSearch }) => {
   const theme = useTheme();
   return (
     <Box
@@ -11,7 +11,7 @@ const FiltersWidget = () => {
         bgcolor: theme.palette.primary.white,
       }}
     >
-      <SearchBar />
+      <SearchBar onSearch={onSearch} />
       <h2>Filter by:</h2>
     </Box>
   );

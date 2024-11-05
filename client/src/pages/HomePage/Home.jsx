@@ -9,12 +9,16 @@ import Prefectures from "./content/Prefectures.jsx";
 import BgShape from "@components/BgShape.jsx";
 
 import "@css/HomePage/Home.css";
+import { Category } from "@mui/icons-material";
+import CategoryCarousel from "./content/CategoryCarrusel.jsx";
 
 const HomePage = () => {
   return (
-    <div>
+
+    <Box className="flex flex-col min-h-screen">
       <NavBar />
-      <div>
+      <Box className="flex-grow">
+
         <Hero />
         <BgShape />
         {/* How It Works Section */}
@@ -22,6 +26,7 @@ const HomePage = () => {
         {/* Categories Section */}
         <Categories />
         {/* Info Section */}
+        <CategoryCarousel />
         <Highlights />
         {/* Regions Section */}
         <Prefectures />

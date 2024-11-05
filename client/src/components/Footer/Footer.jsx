@@ -1,9 +1,12 @@
+
+
 import { IoHomeOutline, IoMailOutline, IoLogoWhatsapp } from "react-icons/io5";
 import { FaInstagram } from "react-icons/fa";
 import { SlSocialFacebook, SlSocialYoutube } from "react-icons/sl";
 import { FaXTwitter } from "react-icons/fa6";
 import { TbBrandTiktok } from "react-icons/tb";
 import { PiTelegramLogo } from "react-icons/pi";
+
 
 
 const Footer = () => {
