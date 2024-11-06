@@ -128,7 +128,7 @@ const NavBar = () => {
                   textTransform: "none",
                 }}
               >
-                Log in
+                Ingresar
               </Button>
             </Link>
           </Box>

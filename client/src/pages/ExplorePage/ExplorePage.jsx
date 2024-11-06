@@ -13,12 +13,12 @@ const fetchResultsFromAPI = async (query) => {
   try {
     const response = await fetch(`/api/search?query=${query}`);
     if (!response.ok) {
-      throw new Error('Error en la búsqueda');
+      throw new Error("Error en la búsqueda");
     }
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching search results:', error);
+    console.error("Error fetching search results:", error);
     return [];
   }
 };
@@ -27,12 +27,6 @@ const ExplorePage = () => {
   const [tabValue, setTabValue] = useState(0);
 
   const [searchResults, setSearchResults] = useState([]);
-  const role = useSelector((state) => state.user.role);
-  const navigate = useNavigate();
-
-  const handleCreateActivity = () => {
-    navigate("/create-activity");
-  };
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -65,9 +59,27 @@ const ExplorePage = () => {
           </Tabs>
 
           <Box>
-            {tabValue === 0 && <ActivitiesWidget searchResults={searchResults.filter(item => item.type === "activity")} />}
-            {tabValue === 1 && <HotelsWidget searchResults={searchResults.filter(item => item.type === "hotel")} />}
-            {tabValue === 2 && <RestaurantsWidget searchResults={searchResults.filter(item => item.type === "restaurant")} />}
+            {tabValue === 0 && (
+              <ActivitiesWidget
+                searchResults={searchResults.filter(
+                  (item) => item.type === "activity"
+                )}
+              />
+            )}
+            {tabValue === 1 && (
+              <HotelsWidget
+                searchResults={searchResults.filter(
+                  (item) => item.type === "hotel"
+                )}
+              />
+            )}
+            {tabValue === 2 && (
+              <RestaurantsWidget
+                searchResults={searchResults.filter(
+                  (item) => item.type === "restaurant"
+                )}
+              />
+            )}
           </Box>
         </Box>
       </Box>
