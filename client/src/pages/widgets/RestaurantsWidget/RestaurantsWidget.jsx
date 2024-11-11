@@ -6,7 +6,6 @@ import { Skeleton, Typography, Box, Pagination } from "@mui/material";
 import {
   fetchRestaurants,
   saveOrUnsaveRestaurant,
-  deleteRestaurant,
 } from "../../../services/services.js";
 
 const RestaurantsWidget = () => {
@@ -74,19 +73,6 @@ const RestaurantsWidget = () => {
     }
   };
 
-  const handleDelete = async (restaurantId) => {
-    try {
-      await deleteRestaurant(restaurantId, token);
-      dispatch(
-        setRestaurants(
-          restaurants.filter((restaurant) => restaurant._id !== restaurantId)
-        )
-      );
-    } catch (error) {
-      console.error("Error deleting the restaurant: ", error.message);
-    }
-  };
-
   if (loading) {
     return (
       <Box
@@ -134,7 +120,6 @@ const RestaurantsWidget = () => {
                 <RestaurantWidget
                   {...restaurant}
                   onSave={() => handleSave(restaurant._id, restaurant.isSaved)}
-                  onDelete={() => handleDelete(restaurant._id)}
                 />
               </Box>
             ))}

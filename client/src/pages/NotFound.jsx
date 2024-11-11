@@ -16,10 +16,10 @@ const NotFound = () => {
         404
       </Typography>
       <Typography variant="h6" color="textSecondary" gutterBottom>
-        Page Not Found
+        Página No Encontrada
       </Typography>
       <Button variant="contained" color="primary" onClick={() => navigate("/")}>
-        Go to Home
+        Volver al Inicio
       </Button>
     </Box>
   );

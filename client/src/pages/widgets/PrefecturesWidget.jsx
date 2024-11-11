@@ -26,7 +26,7 @@ const PrefecturesWidget = () => {
   }, []);
 
   const handleClick = (prefectureId) => {
-    navigate(`/activities/filtered-prefecture/${prefectureId}`);
+    navigate(`/experiences/filtered-prefecture/${prefectureId}`);
   };
 
   if (error) return <Typography color="error">Error: {error}</Typography>;
@@ -71,7 +71,7 @@ const PrefecturesWidget = () => {
             />
             <ListItemText
               primary={prefecture.name}
-              secondary={`Activities: ${prefecture.activityCount}`}
+              secondary={`Experiences: ${prefecture.experienceCount}`}
               sx={{ textAlign: "center" }}
             />
           </ListItem>

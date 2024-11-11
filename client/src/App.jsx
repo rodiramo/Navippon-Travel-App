@@ -16,7 +16,7 @@ import UserTripsPage from "./pages/TripPage/UserTripPage.jsx";
 import BlogPage from "./pages/BlogPage/BlogPage.jsx";
 import ContactPage from "./pages/ContactPage/ContactPage.jsx";
 import FilteredCategoriesPage from "./pages/ActivitiesPage/FilteredCategoriesPage.jsx";
-import FilteredPrefecturePage from "./pages/ActivitiesPage/FilteredPrefecturePage.jsx";
+import FilteredPrefecturePage from "./pages/ExperiencesPage/FilteredPrefecturePage.jsx";
 import AdminPanel from "./pages/AdminPage/AdminPanel.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import ActivityForm from "./pages/ActivitiesPage/ActivityForm.jsx";
@@ -48,7 +48,7 @@ function App() {
               element={<FilteredCategoriesPage />}
             />
             <Route
-              path="/activities/filtered-prefecture/:prefectureId"
+              path="/experiences/filtered-prefecture/:prefectureId"
               element={<FilteredPrefecturePage />}
             />
             <Route path="/trips" element={<UserTripsPage />} />

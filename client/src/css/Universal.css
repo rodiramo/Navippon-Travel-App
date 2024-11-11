@@ -2,7 +2,14 @@
   margin-top: 1rem !important;
   text-transform: none !important;
 }
-
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "SifonnPro", sans-serif;
+}
 .shape {
   height: 2rem;
   padding-top: -8rem;

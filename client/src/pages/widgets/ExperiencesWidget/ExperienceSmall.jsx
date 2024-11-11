@@ -22,13 +22,14 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import config from "@config/config.js";
-import { saveOrUnsaveActivity } from "@services/services.js";
+import "@css/Universal.css";
+import { saveOrUnsaveExperience } from "@services/services.js"; // Updated function
 import FlexBetween from "@components/FlexBetween.jsx";
 
-const ActivitySmall = ({
-  activityId,
-  activityName,
-  coverPath,
+const ExperienceSmall = ({
+  experienceId, // Changed from activityId
+  name, // Changed from activityName
+  image,
   price,
   isSaved,
   onDelete,
@@ -45,7 +46,7 @@ const ActivitySmall = ({
   const token = useSelector((state) => state.token);
 
   const handleEdit = () => {
-    navigate(`/edit-activity/${activityId}`);
+    navigate(`/edit-experience/${experienceId}`); // Updated URL path
   };
 
   const handleOpenDeleteModal = () => setOpenDeleteModal(true);
@@ -54,16 +55,16 @@ const ActivitySmall = ({
   const handleDelete = async () => {
     try {
       if (onDelete) {
-        await onDelete(activityId);
+        await onDelete(experienceId); // Changed from activityId
       }
 
-      setSnackbarMessage("¡Actividad eliminada con éxito!");
+      setSnackbarMessage("¡Experiencia eliminada con éxito!");
       setSnackbarSeverity("success");
       setSnackbarOpen(true);
     } catch (error) {
-      console.error("Failed to delete activity:", error.message);
+      console.error("Failed to delete experience:", error.message);
       setSnackbarMessage(
-        "Error al eliminar la actividad. Por favor, inténtelo de nuevo."
+        "Error al eliminar la experiencia. Por favor, inténtelo de nuevo."
       );
       setSnackbarSeverity("error");
     } finally {
@@ -71,26 +72,31 @@ const ActivitySmall = ({
     }
   };
 
-  const handleViewDetails = () => navigate(`/activities/${activityId}`);
+  const handleViewDetails = () => navigate(`/experiences/${experienceId}`); // Updated URL path
 
   const handleFavoriteToggle = async () => {
     try {
-      await saveOrUnsaveActivity(loggedInUserId, activityId, isSaved, token);
+      await saveOrUnsaveExperience(
+        loggedInUserId,
+        experienceId,
+        isSaved,
+        token
+      ); // Updated function name
 
       if (isSaved && onRemoveFromFavorites) {
-        onRemoveFromFavorites(activityId);
+        onRemoveFromFavorites(experienceId); // Changed from activityId
       }
 
       setSnackbarMessage(
         isSaved
-          ? "¡Actividad eliminada de tus favoritos!"
-          : "¡Actividad añadida a tus favoritos!"
+          ? "¡Experiencia eliminada de tus favoritos!"
+          : "¡Experiencia añadida a tus favoritos!"
       );
       setSnackbarSeverity(isSaved ? "info" : "success");
     } catch (error) {
-      console.error("Error updating favorite activities:", error.message);
+      console.error("Error updating favorite experiences:", error.message);
       setSnackbarMessage(
-        "Error al actualizar la actividad. Por favor, inténtelo de nuevo."
+        "Error al actualizar la experiencia. Por favor, inténtelo de nuevo."
       );
       setSnackbarSeverity("error");
     } finally {
@@ -104,7 +110,7 @@ const ActivitySmall = ({
         position: "relative",
         borderRadius: "16px",
         overflow: "hidden",
-        backgroundColor: "#f8f8f8",
+        backgroundColor: palette.primary.white,
         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
         marginBottom: "20px",
       }}
@@ -114,27 +120,44 @@ const ActivitySmall = ({
         onClick={handleFavoriteToggle}
         sx={{
           position: "absolute",
-          top: "10px",
-          right: "10px",
-          backgroundColor: "white",
+          top: "0px",
+          right: "0px",
+          width: "4rem",
+          height: "4rem",
+          borderRadius: "10px 0px 10px 10px",
+          backgroundColor: palette.primary.main,
           zIndex: 1,
           "&:hover": {
             backgroundColor: "#f0f0f0",
+            color: palette.primary.main,
           },
         }}
       >
         {isSaved ? (
-          <FavoriteIcon sx={{ color: palette.primary.main }} />
+          <FavoriteIcon
+            sx={{
+              color: palette.primary.white,
+              fontSize: "2rem", // Increased size
+            }}
+          />
         ) : (
-          <FavoriteBorderOutlined sx={{ color: palette.primary.main }} />
+          <FavoriteBorderOutlined
+            sx={{
+              color: palette.primary.white,
+              fontSize: "2rem", // Increased size
+              "&:hover": {
+                color: palette.primary.main,
+              },
+            }}
+          />
         )}
       </IconButton>
 
       {/* Image */}
       <Box sx={{ width: "100%", height: "200px", overflow: "hidden" }}>
         <img
-          src={`${config.API_URL}/assets/${coverPath}`}
-          alt={activityName}
+          src={`${config.API_URL}/assets/${image}`}
+          alt={name} // Changed from activityName
           style={{
             width: "100%",
             height: "100%",
@@ -142,7 +165,10 @@ const ActivitySmall = ({
           }}
         />
       </Box>
-
+      <div
+        className="shape"
+        style={{ background: palette.primary.white }}
+      ></div>
       {/* White Box with Title */}
       <Box
         sx={{
@@ -155,7 +181,7 @@ const ActivitySmall = ({
           variant="h6"
           sx={{ fontWeight: "bold", color: palette.primary.main }}
         >
-          {activityName}
+          {name} {/* Changed from activityName */}
         </Typography>
 
         <Typography sx={{ marginTop: "8px", color: palette.text.secondary }}>
@@ -172,10 +198,11 @@ const ActivitySmall = ({
         {role === "admin" && (
           <FlexBetween>
             <IconButton onClick={handleEdit}>
-              <EditOutlined />
+              <EditOutlined sx={{ fontSize: "2rem" }} /> {/* Increased size */}
             </IconButton>
             <IconButton onClick={handleOpenDeleteModal}>
-              <DeleteOutlined />
+              <DeleteOutlined sx={{ fontSize: "2rem" }} />{" "}
+              {/* Increased size */}
             </IconButton>
           </FlexBetween>
         )}
@@ -186,8 +213,8 @@ const ActivitySmall = ({
         <DialogTitle>Confirmar Eliminación</DialogTitle>
         <DialogContent>
           <Typography>
-            ¿Estás seguro de que deseas eliminar esta actividad? Esta acción no
-            se puede deshacer.
+            ¿Estás seguro de que deseas eliminar esta experiencia? Esta acción
+            no se puede deshacer.
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -226,14 +253,14 @@ const ActivitySmall = ({
   );
 };
 
-ActivitySmall.propTypes = {
-  activityId: PropTypes.string.isRequired,
-  activityName: PropTypes.string.isRequired,
-  coverPath: PropTypes.string.isRequired,
+ExperienceSmall.propTypes = {
+  experienceId: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
   price: PropTypes.string.isRequired,
   isSaved: PropTypes.bool.isRequired,
   onDelete: PropTypes.func.isRequired,
   onRemoveFromFavorites: PropTypes.func.isRequired,
 };
 
-export default ActivitySmall;
+export default ExperienceSmall;

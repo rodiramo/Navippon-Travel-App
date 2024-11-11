@@ -13,6 +13,7 @@ const initialState = {
   token: null,
   posts: [],
   activities: [],
+  experiences: [],
   hotels: [],
 };
 
@@ -87,6 +88,25 @@ export const authSlice = createSlice({
         (activity) => activity._id !== action.payload.activityId
       );
     },
+    setExperiences: (state, action) => {
+      state.experiences = action.payload.map((experience) => ({
+        ...experience,
+        favoritedBy: experience.favoritedBy || [],
+      }));
+    },
+    setExperience: (state, action) => {
+      const updatedExperience = action.payload.experience;
+      state.experiences = state.activities.map((experience) =>
+        experience._id === updatedExperience._id
+          ? updatedExperience
+          : experience
+      );
+    },
+    removeExperience: (state, action) => {
+      state.experiences = state.experiences.filter(
+        (experience) => experience._id !== action.payload.experienceId
+      );
+    },
     setFavorites: (state, action) => {
       if (state.user) {
         state.user.favorites = action.payload;
@@ -119,7 +139,7 @@ export const authSlice = createSlice({
       }));
     },
     deleteHotel: (state, action) => {
-      state.activities = state.hotels.filter(
+      state.hotels = state.hotels.filter(
         (hotel) => hotel._id !== action.payload.hotelId
       );
     },
@@ -127,6 +147,11 @@ export const authSlice = createSlice({
       state.restaurants = action.payload.map((restaurant) => ({
         ...restaurant,
       }));
+    },
+    deleteRestaurant: (state, action) => {
+      state.restaurants = state.restaurant.filter(
+        (restaurant) => restaurant._id !== action.payload.restaurantId
+      );
     },
   },
 });
@@ -142,7 +167,11 @@ export const {
   setActivities,
   setActivity,
   setHotels,
+  setExperiences,
+  setExperience,
+  removeExperience,
   setRestaurants,
+  deleteRestaurant,
   deleteHotel,
   removeActivity,
   setFavorites,

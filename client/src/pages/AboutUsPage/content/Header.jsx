@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 
 const AboutHeader = () => {
   return (
-    <Box sx={{ position: "relative", height: "400px" }}>
+    <Box sx={{ position: "relative", height: "60vh" }}>
       <Box
         sx={{
           background:

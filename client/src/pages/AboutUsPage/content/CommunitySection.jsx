@@ -1,4 +1,3 @@
-import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
 const CommunitySection = () => {
@@ -6,38 +5,50 @@ const CommunitySection = () => {
   const lightBlue = theme.palette.secondary.light;
 
   return (
-    <Box
-      sx={{
+    <div
+      style={{
         backgroundColor: lightBlue,
         borderRadius: "8px",
         display: "flex",
-        flexDirection: { xs: "column", md: "row" },
+        flexDirection: "row",
+        fontSize: "1rem",
+        height: "45vh",
         alignItems: "center",
-        mb: "2rem",
+        marginBottom: "2rem",
       }}
     >
-      <Box sx={{ flex: 1, textAlign: "center", mb: { xs: "2rem", md: 0 } }}>
+      <div style={{ flex: 1, textAlign: "center" }}>
         <img
-          src="/assets/our-community.jpg"
+          src="/assets/community.jpg"
           alt="Nuestra Comunidad"
           style={{
-            width: "100%",
+            width: "95%",
             height: "auto",
-            maxWidth: "400px",
+            maxWidth: "100%",
             borderRadius: "0rem 20rem 20rem 0rem",
           }}
         />
-      </Box>
-      <Box sx={{ flex: 1, textAlign: "left" }}>
-        <Typography variant="h5" sx={{ mb: "1rem", fontWeight: "bold" }}>
+      </div>
+      <div style={{ flex: 1, textAlign: "left" }}>
+        <h2
+          style={{
+            marginBottom: "1rem",
+            fontWeight: "bold",
+            fontSize: "1.5rem",
+          }}
+        >
           Nuestra Comunidad
-        </Typography>
-        <Typography variant="body1">
-          Nuestra comunidad es fundamental para nosotros. Esperamos verla crecer
-          y florecer con nuevos miembros apasionados por Japón.
-        </Typography>
-      </Box>
-    </Box>
+        </h2>
+        <p style={{ width: "80%" }}>
+          Nuestra comunidad es fundamental para nosotros. Estamos deseando verla
+          <span style={{ fontWeight: "bold" }}> crecer y florecer </span>con
+          nuevos miembros apasionados por{" "}
+          <span style={{ fontWeight: "bold" }}>Japón</span>. Que se animen a
+          discusiones, compartir aventuras y conectar con amantes de la cultura
+          japonesa de <span style={{ fontWeight: "bold" }}>todo el mundo.</span>
+        </p>
+      </div>
+    </div>
   );
 };
 

@@ -1,40 +1,16 @@
-import { useState } from "react";
-import { Box, Tabs, Tab } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import NavBar from "@components/NavBar/NavBar.jsx";
 import Footer from "@components/Footer/Footer.jsx";
 import FiltersWidget from "./content/FiltersWidget.jsx";
 import Header from "./content/Header.jsx";
-import ActivitiesWidget from "../widgets/ActivitiesWidget/ActivitiesWidget.jsx";
-import HotelsWidget from "../widgets/HotelsWidget/HotelsWidget.jsx";
-import RestaurantsWidget from "../widgets/RestaurantsWidget/RestaurantsWidget.jsx";
-
-// Función para buscar en la base de datos
-const fetchResultsFromAPI = async (query) => {
-  try {
-    const response = await fetch(`/api/search?query=${query}`);
-    if (!response.ok) {
-      throw new Error("Error en la búsqueda");
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching search results:", error);
-    return [];
-  }
-};
+import ExperiencesWidget from "../widgets/ExperiencesWidget/ExperiencesWidget.jsx";
+import { useState } from "react";
 
 const ExplorePage = () => {
-  const [tabValue, setTabValue] = useState(0);
+  const [experience, setExperience] = useState("todo");
 
-  const [searchResults, setSearchResults] = useState([]);
-
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
-  };
-
-  const handleSearch = async (query) => {
-    const results = await fetchResultsFromAPI(query);
-    setSearchResults(results);
+  const handleButtonClick = (experience) => {
+    setExperience(experience);
   };
 
   return (
@@ -42,43 +18,62 @@ const ExplorePage = () => {
       <NavBar />
       <Header />
       <Box className="content">
-        <FiltersWidget onSearch={handleSearch} />
+        <FiltersWidget />
 
-        {/* Tabs for selecting Activities, Hotels, or Restaurants */}
-        <Box sx={{ width: "100%", bgcolor: "background.paper", mb: 4 }}>
-          <Tabs
-            value={tabValue}
-            onChange={handleTabChange}
-            variant="fullWidth"
-            indicatorColor="primary"
-            textColor="primary"
+        <Box sx={{ mb: 4 }}>
+          <Button
+            variant={experience === "todo" ? "contained" : "outlined"}
+            onClick={() => handleButtonClick("todo")}
+            sx={{ mr: 2 }}
           >
-            <Tab label="Actividades" />
-            <Tab label="Hoteles" />
-            <Tab label="Restaurantes" />
-          </Tabs>
+            Todo el contenido
+          </Button>
+          <Button
+            variant={experience === "atractivos" ? "contained" : "outlined"}
+            onClick={() => handleButtonClick("atractivos")}
+            sx={{ mr: 2 }}
+          >
+            Atractivos
+          </Button>
+          <Button
+            variant={experience === "hoteles" ? "contained" : "outlined"}
+            onClick={() => handleButtonClick("hoteles")}
+            sx={{ mr: 2 }}
+          >
+            Hoteles
+          </Button>
+          <Button
+            variant={experience === "restaurantes" ? "contained" : "outlined"}
+            onClick={() => handleButtonClick("restaurantes")}
+          >
+            Restaurantes
+          </Button>
+          {/* Content Based on Selected Category */}
+          <Box sx={{ my: 4 }}>
+            {experience === "todo" && (
+              <>
+                <ExperiencesWidget experience="Atractivo" />
+                <ExperiencesWidget experience="Hotel" />
+                <ExperiencesWidget experience="Restaurante" />
+              </>
+            )}
 
-          <Box>
-            {tabValue === 0 && (
-              <ActivitiesWidget
-                searchResults={searchResults.filter(
-                  (item) => item.type === "activity"
-                )}
-              />
+            {experience === "atractivos" && (
+              <>
+                <ExperiencesWidget experience="Atractivo" />
+              </>
             )}
-            {tabValue === 1 && (
-              <HotelsWidget
-                searchResults={searchResults.filter(
-                  (item) => item.type === "hotel"
-                )}
-              />
+
+            {experience === "hoteles" && (
+              <>
+                <ExperiencesWidget experience="Hotel" />
+              </>
             )}
-            {tabValue === 2 && (
-              <RestaurantsWidget
-                searchResults={searchResults.filter(
-                  (item) => item.type === "restaurant"
-                )}
-              />
+
+            {experience === "restaurantes" && (
+              <>
+                <ExperiencesWidget experience="Restaurante" />
+              </>
             )}
           </Box>
         </Box>

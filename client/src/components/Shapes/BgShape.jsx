@@ -10,10 +10,10 @@ const BgShape = () => {
       style={{
         background: palette.background.default,
         position: "relative",
-        zIndex: 0,
-        height: "70px",
+        zIndex: 1,
+        height: "50px",
         width: "100%",
-        marginTop: "-70px",
+        marginTop: "-50px",
       }}
     ></div>
   );

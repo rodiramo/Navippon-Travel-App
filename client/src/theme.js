@@ -17,6 +17,7 @@ export const colorTokens = {
   primary: {
     0: "#FFFFFF",
     10: "#FFE4E7",
+    20: "#FFE0E9",
     50: "#FFB3C1", // Lightest
     100: "#FF9CAA",
     200: "#FF85A3",
@@ -31,7 +32,7 @@ export const colorTokens = {
   lightBlue: {
     50: "#EAF4F7",
     100: "#CBE3EB",
-    200: "#CDD9E1",
+    200: "##CDD9E1",
     300: "#8BBBD3",
     400: "#6CA7C7",
     500: "#96C6D9",
@@ -91,7 +92,7 @@ export const themeSettings = (mode) => {
             primary: {
               dark: colorTokens.primary[700],
               main: colorTokens.primary[500],
-              light: colorTokens.primary[50],
+              light: colorTokens.primary[20],
               white: colorTokens.primary[0],
               black: colorTokens.grey[1000],
             },
@@ -109,7 +110,7 @@ export const themeSettings = (mode) => {
               light: colorTokens.grey[50],
             },
             background: {
-              default: colorTokens.grey[10],
+              default: colorTokens.grey[0],
               alt: colorTokens.grey[10],
               grey: colorTokens.grey[200], // Added grey token for light mode
               nav: colorTokens.darkBlue[800],

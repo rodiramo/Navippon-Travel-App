@@ -1,23 +1,23 @@
 import Prefecture from "../models/Prefecture.js";
-import Activity from "../models/Activity.js";
+import Experience from "../models/Experience.js";
 
 export const getPrefectures = async (req, res) => {
   try {
     const prefectures = await Prefecture.find();
 
-    const prefectureActivityCounts = {};
+    const prefectureExperienceCounts = {};
 
-    const activities = await Activity.aggregate([
+    const experiences = await Experience.aggregate([
       { $group: { _id: "$prefecture", count: { $sum: 1 } } },
     ]);
 
-    activities.forEach(({ _id, count }) => {
-      prefectureActivityCounts[_id] = count;
+    experiences.forEach(({ _id, count }) => {
+      prefectureExperienceCounts[_id] = count;
     });
 
     const prefecturesWithCounts = prefectures.map((prefecture) => ({
       ...prefecture.toObject(),
-      activityCount: prefectureActivityCounts[prefecture._id] || 0,
+      experienceCount: prefectureExperienceCounts[prefecture._id] || 0,
     }));
 
     res.status(200).json(prefecturesWithCounts);

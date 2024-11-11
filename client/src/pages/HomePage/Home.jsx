@@ -6,7 +6,7 @@ import HowItWorks from "./content/HowItWorks.jsx";
 import Categories from "./content/Categories.jsx";
 import Highlights from "./content/Highlights.jsx";
 import Prefectures from "./content/Prefectures.jsx";
-import BgShape from "@components/BgShape.jsx";
+import BgShape from "@components/Shapes/BgShape.jsx";
 
 import "@css/HomePage/Home.css";
 import CategoryCarousel from "./content/CategoryCarrusel.jsx";

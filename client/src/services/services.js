@@ -1,42 +1,37 @@
 import config from "@config/config.js";
 
 /* hotels */
-export const fetchHotels = async (token) => {
-  const response = await fetch(`${config.API_URL}/hotels`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const fetchExperiences = async (token) => {
+  try {
+    const response = await fetch(`${config.API_URL}/experiences`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Error al obtener Hoteles.");
+    console.log("Response status:", response.status);
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.log("Error data:", errorData);
+      throw new Error(errorData.message || "Error al obtener Experiencias.");
+    }
+
+    const data = await response.json();
+    console.log("Fetched experiences data:", data);
+    return data;
+  } catch (error) {
+    console.error("Fetch experiences error:", error);
+    throw error;
   }
-
-  return await response.json();
 };
 
-export const deleteHotel = async (hotelId, token) => {
-  const response = await fetch(`${config.API_URL}/hotels/${hotelId}`, {
-    method: "DELETE",
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || "Failed to delete hotel");
-  }
-
-  return await response.json();
-};
-
-export const saveOrUnsaveHotel = async (
+export const saveOrUnsaveExperience = async (
   loggedInUserId,
-  hotelId,
+  experienceId,
   isSaved,
   token
 ) => {
   const method = isSaved ? "DELETE" : "PATCH";
   const response = await fetch(
-    `${config.API_URL}/users/${loggedInUserId}/favorites/${hotelId}`,
+    `${config.API_URL}/users/${loggedInUserId}/favorites/experiences/${experienceId}`,
     {
       method: method,
       headers: {
@@ -48,29 +43,15 @@ export const saveOrUnsaveHotel = async (
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(errorText || "Failed to update favorite hotel.");
+    throw new Error(errorText || "Failed to update favorite experiences");
   }
 
   return await response.json();
 };
 
-/* restaurants */
-export const fetchRestaurants = async (token) => {
-  const response = await fetch(`${config.API_URL}/restaurants`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Error al obtener Restaurantes.");
-  }
-
-  return await response.json();
-};
-
-export const deleteRestaurant = async (restaurantId, token) => {
+export const deleteExperience = async (experienceId, token) => {
   const response = await fetch(
-    `${config.API_URL}/restaurants/${restaurantId}`,
+    `${config.API_URL}/experiences/${experienceId}`,
     {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
@@ -79,37 +60,12 @@ export const deleteRestaurant = async (restaurantId, token) => {
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(errorText || "Failed to delete restaurant.");
+    throw new Error(errorText || "Failed to delete experience");
   }
 
   return await response.json();
 };
 
-export const saveOrUnsaveRestaurant = async (
-  loggedInUserId,
-  restaurantId,
-  isSaved,
-  token
-) => {
-  const method = isSaved ? "DELETE" : "PATCH";
-  const response = await fetch(
-    `${config.API_URL}/users/${loggedInUserId}/favorites/${restaurantId}`,
-    {
-      method: method,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || "Failed to update favorite restaurant.");
-  }
-
-  return await response.json();
-};
 /* activities */
 export const fetchActivities = async (token) => {
   const response = await fetch(`${config.API_URL}/activities`, {
