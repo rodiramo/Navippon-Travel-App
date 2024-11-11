@@ -9,14 +9,15 @@ const WhyJapanSection = () => {
       style={{
         display: "flex",
         fontSize: "1rem",
+        height: "45vh",
         backgroundColor: primaryLight,
-        flexDirection: "row",
         alignItems: "center",
         marginBottom: "2rem",
         padding: "2rem",
         borderRadius: "20rem 0rem 0rem 20rem",
       }}
     >
+      {/* Video Section */}
       <div className="w-full md:w-1/2 flex justify-center p-4">
         <iframe
           width="560"
@@ -27,8 +28,10 @@ const WhyJapanSection = () => {
           allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         ></iframe>
-      </div>{" "}
-      <div className="w-full md:w-1/2 flex flex-col  md:items-start p-20">
+      </div>
+
+      {/* Text Section */}
+      <div className="w-full md:w-1/2 flex flex-col md:items-start p-4 md:p-12">
         <h2 className="text-2xl font-bold mb-4">¿Por qué Japón?</h2>
         <p>
           Viajar a Japón es una experiencia única que te sumerge en una cultura

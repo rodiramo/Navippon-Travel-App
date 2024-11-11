@@ -28,6 +28,7 @@ const PrinciplesSection = () => {
             marginRight: "1rem",
             fontWeight: "bold",
             fontSize: "1.5rem",
+            marginTop: "1rem",
           }}
         >
           Nuestros Principios

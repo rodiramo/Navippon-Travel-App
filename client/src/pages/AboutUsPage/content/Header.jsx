@@ -1,6 +1,11 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
+import CustomShape from "@components/Shapes/CustomShape";
 
 const AboutHeader = () => {
+  const theme = useTheme();
+
+  const customColor = theme.palette.secondary.light;
+
   return (
     <Box sx={{ position: "relative", height: "60vh" }}>
       <Box
@@ -13,6 +18,7 @@ const AboutHeader = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          flexDirection: "column",
           color: "#fff",
           position: "relative",
           zIndex: 1,
@@ -24,6 +30,9 @@ const AboutHeader = () => {
         >
           Sobre Nosotros
         </Typography>
+        <div style={{ width: "20%", marginTop: "1rem", opacity: "0.7" }}>
+          <CustomShape color={customColor} />
+        </div>
       </Box>
     </Box>
   );
