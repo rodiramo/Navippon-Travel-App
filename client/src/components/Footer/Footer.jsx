@@ -1,5 +1,3 @@
-
-
 import { IoHomeOutline, IoMailOutline, IoLogoWhatsapp } from "react-icons/io5";
 import { FaInstagram } from "react-icons/fa";
 import { SlSocialFacebook, SlSocialYoutube } from "react-icons/sl";
@@ -7,14 +5,20 @@ import { FaXTwitter } from "react-icons/fa6";
 import { TbBrandTiktok } from "react-icons/tb";
 import { PiTelegramLogo } from "react-icons/pi";
 
-
-
 const Footer = () => {
   return (
-    <div className="bg-[#0A0330] text-white py-8 rounded-t-full">
+    <div
+      className="bg-[#0A0330] text-white py-8 "
+      style={{ borderRadius: "6rem 6rem 0rem 0rem" }}
+    >
       <div className=" mx-auto grid grid-cols-1 md:grid-cols-4 gap-4 mt-3 text-center md:text-left">
         {/* Primera Columna */}
-        <div className="flex justify-center md:ml-20"></div>
+        <div className="flex justify-center md:ml-20">
+          <img
+            src="/assets/navippon-logo-white.png"
+            alt="Logo Navippon en Blanco"
+          />
+        </div>
 
         {/* Segunda Columna */}
         <div className="text-center  md:text-left md:ml-20">

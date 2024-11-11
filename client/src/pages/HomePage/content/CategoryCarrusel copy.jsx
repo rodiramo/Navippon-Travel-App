@@ -41,6 +41,9 @@ const CategoryCarousel = () => {
     speed: 500,
     slidesToShow: 10,
     slidesToScroll: 10,
+    autoplay: true,
+    autoplaySpeed: 2500,
+    pauseOnHover: true,
     responsive: [
       {
         breakpoint: 1024,
@@ -74,8 +77,8 @@ const CategoryCarousel = () => {
           return (
             <div
               key={index}
-              className="p-4"
-              onClick={() => handleCategoryClick(category.category)} // Handle click here
+              className="p-4 cursor-pointer"
+              onClick={() => handleCategoryClick(category.category)}
             >
               <div className="flex flex-col items-center text-center">
                 <div
@@ -83,7 +86,7 @@ const CategoryCarousel = () => {
                   style={{ width: "80px", height: "80px" }}
                 >
                   {IconComponent ? (
-                    <IconComponent color="#fa5564" size="2em" /> // Directly use the icon component
+                    <IconComponent color="#fa5564" size="2em" />
                   ) : (
                     <span>No Icon</span>
                   )}

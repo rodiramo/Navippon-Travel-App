@@ -3,7 +3,16 @@ import PrefecturesWidget from "@widgets/PrefecturesWidget.jsx";
 
 const Prefectures = () => {
   return (
-    <Box>
+    <Box
+      sx={{
+        height: "20vh",
+        marginTop: "4rem",
+        display: "flex",
+        marginBottom: "4rem",
+        flexDirection: "column",
+        justifyContent: "space-around",
+      }}
+    >
       <Typography
         variant="h4"
         className="subtitle"

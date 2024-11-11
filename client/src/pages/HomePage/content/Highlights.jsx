@@ -8,16 +8,23 @@ const Highlights = () => {
     <div
       className="p-0 m-0 mb-3 mt-3"
       style={{
+        padding: "2rem 0rem 2rem 0rem",
         backgroundColor: theme.palette.secondary.bg,
       }}
     >
       <div className="w-full flex flex-col md:flex-row items-center p-0 m-0">
         {/* Image Section */}
-        <div className="md:w-1/2 mb-0 md:mb-0 md:ml-0 flex-shrink-0 p-0 m-0">
+        <div
+          className="md:w-1/2 mb-0 md:mb-0 md:ml-0 flex-shrink-0 p-0 m-0"
+          style={{
+            overflow: "hidden",
+          }} // Apply border radius to the container
+        >
           <img
-            src="/assets/home-japan.jpg"
+            src="/assets/home.jpg"
             alt="templo de kyoto"
             className="w-full h-full object-cover m-0"
+            style={{ borderRadius: "0rem 200rem 200rem 0rem" }} // Apply border radius directly to the image
           />
         </div>
 
@@ -26,10 +33,7 @@ const Highlights = () => {
           className="md:w-1/2 text-black p-8"
           style={{ color: theme.palette.neutral.dark }}
         >
-          <h2
-            className="text-3xl mb-4"
-            style={{ color: theme.palette.primary.main }}
-          >
+          <h2 className="text-3xl mb-4">
             Haz de tu viaje un gran éxito con Navippon
           </h2>
           <p className="mb-6">

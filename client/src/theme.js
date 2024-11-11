@@ -32,7 +32,7 @@ export const colorTokens = {
   lightBlue: {
     50: "#EAF4F7",
     100: "#CBE3EB",
-    200: "##CDD9E1",
+    200: "#CDD9E1",
     300: "#8BBBD3",
     400: "#6CA7C7",
     500: "#96C6D9",

@@ -8,7 +8,7 @@ import Prefectures from "./content/Prefectures.jsx";
 import BgShape from "@components/Shapes/BgShape.jsx";
 
 import "@css/HomePage/Home.css";
-import CategoryCarousel from "./content/CategoryCarrusel.jsx";
+import CategoryList from "./content/CategoryList.jsx";
 
 const HomePage = () => {
   return (
@@ -20,7 +20,7 @@ const HomePage = () => {
         {/* How It Works Section */}
         <HowItWorks />
         {/* Info Section */}
-        <CategoryCarousel />
+        <CategoryList />
         <Highlights />
         {/* Regions Section */}
         <Prefectures />
