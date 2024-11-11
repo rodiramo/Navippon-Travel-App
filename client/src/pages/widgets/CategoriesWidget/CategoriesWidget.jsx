@@ -4,7 +4,6 @@ import { Box, Typography } from "@mui/material";
 import { fetchCategoryDetails } from "@services/services";
 import CategoryCarousel from "./components/CategoryCarousel"; // Adjust the path as necessary
 
-import "./Cate.css";
 const CategoriesWidget = () => {
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
@@ -24,13 +23,13 @@ const CategoriesWidget = () => {
   }, []);
 
   const handleCategoryClick = (categoryName) => {
-    navigate(`/activities/filtered-category/${categoryName}`);
+    navigate(`/experiences/filtered-category/${categoryName}`);
   };
 
   if (error) return <Typography color="error">Error: {error}</Typography>;
 
   return (
-    <Box>
+    <Box sx={{ height: "40h" }}>
       <CategoryCarousel
         categories={categories}
         handleCategoryClick={handleCategoryClick}

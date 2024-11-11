@@ -1,16 +1,16 @@
 import Category from "../models/Category.js";
-import Activity from "../models/Experience.js";
+import Experience from "../models/Experience.js";
 
 export const getCategories = async (req, res) => {
   try {
     const categories = await Category.find();
 
-    const activityCounts = await Activity.aggregate([
+    const experienceCounts = await Experience.aggregate([
       { $unwind: "$categories" },
       { $group: { _id: "$categories", count: { $sum: 1 } } },
     ]);
 
-    const categoryCountMap = activityCounts.reduce((acc, item) => {
+    const categoryCountMap = experienceCounts.reduce((acc, item) => {
       acc[item._id] = item.count;
       return acc;
     }, {});

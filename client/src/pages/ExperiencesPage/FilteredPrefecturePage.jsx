@@ -27,7 +27,9 @@ const FilteredPrefecturePage = () => {
 
         if (!experiencesResponse.ok) {
           const errorData = await experiencesResponse.json();
-          throw new Error(errorData.error || "Failed to fetch experiences");
+          throw new Error(
+            errorData.error || "Error al obtener las experiencias"
+          );
         }
 
         const experiencesText = await experiencesResponse.text();
@@ -42,13 +44,13 @@ const FilteredPrefecturePage = () => {
 
         if (!prefectureResponse.ok) {
           const errorData = await prefectureResponse.json();
-          throw new Error(errorData.error || "Failed to fetch prefecture");
+          throw new Error(errorData.error || "Error al obtener la prefectura");
         }
 
         const prefectureData = await prefectureResponse.json();
         setPrefectureName(prefectureData.name);
       } catch (error) {
-        console.error("Error fetching data:", error.message);
+        console.error("Error al obtener los datos:", error.message);
         setError(error.message);
       }
     };
@@ -68,7 +70,9 @@ const FilteredPrefecturePage = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to delete experience");
+        throw new Error(
+          errorData.message || "Error al eliminar la experiencia"
+        );
       }
 
       setExperiences((prevActivities) =>
@@ -93,11 +97,11 @@ const FilteredPrefecturePage = () => {
       <BreadcrumbBack />
       <Box sx={{ marginBottom: 2, paddingTop: 15, marginLeft: 2 }}>
         <Typography variant="h1" gutterBottom sx={{ textAlign: "center" }}>
-          Activities in {prefectureName}
+          Actividades en {prefectureName}
         </Typography>
         {experiences.length === 0 ? (
           <Typography variant="h6" color="text.secondary">
-            No experience for this prefecture.
+            No hay experiencias para esta prefectura.
           </Typography>
         ) : (
           <Grid container spacing={2}>

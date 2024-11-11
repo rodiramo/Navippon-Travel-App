@@ -3,7 +3,6 @@ import Footer from "@components/Footer/Footer.jsx";
 /* sections */
 import Hero from "./content/Hero.jsx";
 import HowItWorks from "./content/HowItWorks.jsx";
-import Categories from "./content/Categories.jsx";
 import Highlights from "./content/Highlights.jsx";
 import Prefectures from "./content/Prefectures.jsx";
 import BgShape from "@components/Shapes/BgShape.jsx";
@@ -20,8 +19,6 @@ const HomePage = () => {
         <BgShape />
         {/* How It Works Section */}
         <HowItWorks />
-        {/* Categories Section */}
-        <Categories />
         {/* Info Section */}
         <CategoryCarousel />
         <Highlights />

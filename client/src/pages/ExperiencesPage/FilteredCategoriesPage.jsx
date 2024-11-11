@@ -3,24 +3,24 @@ import { useParams } from "react-router-dom";
 import { Typography, Box, Grid, CircularProgress } from "@mui/material";
 import BreadcrumbBack from "@components/BreadcrumbBack.jsx";
 import { useSelector } from "react-redux";
-import ActivitySmall from "../widgets/ActivitiesWidget/ActivitySmall.jsx";
+import ExperienceSmall from "../widgets/ExperiencesWidget/ExperienceSmall.jsx";
 import NavBar from "@components/NavBar/NavBar.jsx";
 import Footer from "@components/Footer/Footer.jsx";
 import config from "@config/config.js";
 
 const FilteredCategoriesPage = () => {
-  const [activities, setActivities] = useState([]);
+  const [experiences, setExperiences] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const { categoryName } = useParams();
   const token = useSelector((state) => state.token);
 
   useEffect(() => {
-    const fetchActivities = async () => {
+    const fetchFilteredExperiences = async () => {
       setLoading(true);
       try {
         const response = await fetch(
-          `${config.API_URL}/activities/filtered-category/${categoryName}`,
+          `${config.API_URL}/experiences/filtered-category/${categoryName}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -28,11 +28,13 @@ const FilteredCategoriesPage = () => {
 
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.message || "Failed to fetch activities");
+          throw new Error(
+            errorData.message || "Error al obtener las experiencias"
+          );
         }
 
         const data = await response.json();
-        setActivities(data);
+        setExperiences(data);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -40,13 +42,13 @@ const FilteredCategoriesPage = () => {
       }
     };
 
-    fetchActivities();
+    fetchFilteredExperiences();
   }, [categoryName, token]);
 
-  const handleDelete = async (activityId) => {
+  const handleDelete = async (experienceId) => {
     try {
       const response = await fetch(
-        `${config.API_URL}/activities/${activityId}`,
+        `${config.API_URL}/experiences/${experienceId}`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
@@ -55,11 +57,13 @@ const FilteredCategoriesPage = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to delete activity");
+        throw new Error(
+          errorData.message || "Error al eliminar la experiencia"
+        );
       }
 
-      setActivities((prevActivities) =>
-        prevActivities.filter((activity) => activity._id !== activityId)
+      setExperiences((prevExperiences) =>
+        prevExperiences.filter((experience) => experience._id !== experienceId)
       );
     } catch (error) {
       setError(error.message);
@@ -92,19 +96,19 @@ const FilteredCategoriesPage = () => {
           }}
         >
           <Typography variant="h1" gutterBottom>
-            Activities in {categoryName}
+            Experiencias en {categoryName}
           </Typography>
-          {activities.length === 0 ? (
+          {experiences.length === 0 ? (
             <Typography variant="h6" color="text.secondary">
-              No activity for this category.
+              No hay experiencias para esta categoría.
             </Typography>
           ) : (
             <Grid container spacing={2} justifyContent="center">
-              {activities.map((activity) => (
-                <Grid item key={activity._id} xs={12} sm={6} md={4}>
-                  <ActivitySmall
-                    {...activity}
-                    activityId={activity._id}
+              {experiences.map((experience) => (
+                <Grid item key={experience._id} xs={12} sm={6} md={4}>
+                  <ExperienceSmall
+                    {...experience}
+                    experienceId={experience._id}
                     onDelete={handleDelete}
                   />
                 </Grid>

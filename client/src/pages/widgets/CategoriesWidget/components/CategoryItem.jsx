@@ -79,7 +79,7 @@ const iconMapping = {
 };
 
 const CategoryItem = ({
-  category: { _id, icon, category: categoryName, count },
+  category: { _id, icon, category: categoryName, experienceCount },
   handleCategoryClick,
 }) => {
   // Get the icon component from the mapping
@@ -103,7 +103,7 @@ const CategoryItem = ({
           )}
         </IconButton>
         <Typography variant="body2" className="text-[#8F9BB3]">
-          {categoryName} ({count || 0})
+          {categoryName} ({experienceCount || 0})
         </Typography>
       </div>
     </div>
@@ -115,7 +115,7 @@ CategoryItem.propTypes = {
     _id: PropTypes.string.isRequired,
     category: PropTypes.string.isRequired, // Expecting the name of the category
     icon: PropTypes.string.isRequired, // Expecting the icon name as a string
-    count: PropTypes.number,
+    experienceCount: PropTypes.number,
   }).isRequired,
   handleCategoryClick: PropTypes.func.isRequired,
 };
