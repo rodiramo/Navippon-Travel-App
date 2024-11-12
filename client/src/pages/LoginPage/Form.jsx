@@ -51,7 +51,7 @@ const initialValuesRegister = {
 const initialValuesLogin = {
   email: "",
   password: "",
-  rememberMe: false, // Added for the checkbox
+  rememberMe: false,
 };
 
 const Form = () => {

@@ -5,6 +5,7 @@ import { useTheme, Box } from "@mui/material";
 
 const FiltersWidget = ({ onSearch }) => {
   const theme = useTheme();
+
   return (
     <Box
       className="filters-widget"
@@ -18,7 +19,6 @@ const FiltersWidget = ({ onSearch }) => {
   );
 };
 
-// Prop validation
 FiltersWidget.propTypes = {
   onSearch: PropTypes.func.isRequired,
 };

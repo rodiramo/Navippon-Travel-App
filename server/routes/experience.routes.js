@@ -15,7 +15,7 @@ const router = express.Router();
 
 router.post("/", verifyToken, createExperience);
 router.get("/", verifyToken, getExperiences);
-router.get("/tabs", verifyToken, getExperiencesSearch);
+router.get("/search", verifyToken, getExperiencesSearch);
 router.get("/:id", verifyToken, getExperience);
 router.patch("/:id", verifyToken, editExperience);
 router.delete("/:id", verifyToken, deleteExperience);

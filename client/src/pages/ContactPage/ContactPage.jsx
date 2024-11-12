@@ -15,17 +15,17 @@ const ContactPage = () => {
 
   return (
     <Box
+      id="body"
       sx={{
         backgroundColor: theme.palette.background.default,
       }}
     >
       <NavBar />
 
-      {/* Banner Section with Gradient Overlay */}
       <Box
         sx={{
           height: "40vh",
-          backgroundImage: `url('/assets/contact-banner.jpg')`, // Change the path to your image
+          backgroundImage: `url('/assets/contact-banner.jpg')`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           position: "relative",
@@ -52,7 +52,6 @@ const ContactPage = () => {
         </Typography>
       </Box>
 
-      {/* Two Columns for Form and Contact Info */}
       <Grid
         container
         spacing={4}

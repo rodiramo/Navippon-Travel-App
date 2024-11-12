@@ -176,6 +176,7 @@ export const experiences = [
     budget: budgets[1]._id,
     description: "Aprende a hacer Okonomiyaki, un plato tradicional japonés.",
     categories: "Gastronomía",
+    subcategory: "Tour Gastronómico", // new field
     hotelType: "Hoteles de Lujo",
     hotelService: ["Wi-fi", "Piscina"],
     tripType: "Familiar",
@@ -213,6 +214,7 @@ export const experiences = [
     budget: budgets[2]._id,
     description: "Un hotel de lujo con todas las comodidades.",
     categories: "Naturaleza",
+    subcategory: "Montañas", // new field
     hotelType: "Hoteles de Lujo",
     hotelService: ["Wi-fi", "Desayuno incluido", "Piscina", "Gimnasio"],
     tripType: "De negocios",
@@ -250,6 +252,7 @@ export const experiences = [
     budget: budgets[1]._id,
     description: "Disfruta de sushi de alta calidad en un ambiente moderno.",
     categories: "Gastronomía",
+    subcategory: "Sushi",
     hotelType: "No aplica",
     hotelService: [],
     tripType: "Romántico",
@@ -262,143 +265,132 @@ export const experiences = [
 
 export const categories = [
   {
-    icon: "MdOutlineForest",
-    category: "Naturaleza",
-  },
-  {
-    icon: "MdOutlineBeachAccess",
-    category: "Playa",
-  },
-  {
-    icon: "TbBuildingMonument",
-    category: "Monumento",
-  },
-  {
-    icon: "MdOutlineRamenDining",
-    category: "Gastronomía",
-  },
-  {
-    icon: "LiaCocktailSolid",
-    category: "Noche",
-  },
-  {
-    icon: "GiGreekTemple",
-    category: "Museo",
-  },
-  {
-    icon: "MdOutlineCoffee",
-    category: "Cafés",
-  },
-  {
-    icon: "MdOutlineShoppingBag",
-    category: "Shopping",
-  },
-  {
-    icon: "FaRegStar",
-    category: "Ocio",
-  },
-  {
-    icon: "GiPartyPopper",
-    category: "Festival",
-  },
-  {
-    icon: "BsRobot",
-    category: "Tecnología",
-  },
-  {
-    icon: "LiaGamepadSolid",
-    category: "Juegos",
-  },
-  {
-    icon: "VscOctoface",
-    category: "Anime",
-  },
-  {
-    icon: "LuFerrisWheel",
-    category: "Parques temáticos",
-  },
-  {
-    icon: "GiSamuraiHelmet",
-    category: "Samurai",
-  },
-  {
-    icon: "MdOutlineTempleBuddhist",
-    category: "Templo Budista",
-  },
-  {
-    icon: "PiBirdBold",
-    category: "Reserva de Aves",
-  },
-  {
-    icon: "MdOutlineCastle",
-    category: "Castillos",
-  },
-  {
-    icon: "PiCross",
-    category: "Templo Cristiano",
-  },
-  {
+    category: "Templos",
     icon: "TbTorii",
-    category: "Templo Sintoísta",
+    subcategories: [
+      { name: "Templo Budista", icon: "MdTempleBuddhist" },
+      { name: "Templo Shinto", icon: "MdTempleHindu" },
+      { name: "Templo Hindu", icon: "MdTempleHindu" },
+      { name: "Iglesia Cristiana", icon: "MdChurch" },
+      { name: "Mezquita", icon: "MdMosque" },
+      { name: "Sinagoga", icon: "MdChurch" },
+    ],
   },
   {
-    icon: "MdOutlineTempleHindu",
-    category: "Templo Hindu",
+    category: "Monumentos",
+    icon: "MdOutlineCastle",
+    subcategories: [
+      { name: "Castillo", icon: "MdOutlineCastle" },
+      { name: "Ruinas", icon: "MdOutlinePalace" },
+      { name: "Palacio", icon: "MdOutlinePalace" },
+      { name: "Estatua", icon: "MdOutlinePark" },
+      { name: "Monumento Histórico", icon: "MdOutlineMuseum" },
+    ],
   },
   {
-    icon: "PiHandEyeLight",
-    category: "Templo Jainita",
+    category: "Naturaleza",
+    icon: "MdOutlineForest",
+    subcategories: [
+      { name: "Montañas", icon: "MdNaturePeople" },
+      { name: "Playas", icon: "MdOutlineBeachAccess" },
+      { name: "Lagos", icon: "MdOutlineForest" },
+      { name: "Parques Nacionales", icon: "MdOutlineForest" },
+      { name: "Jardines", icon: "MdOutlinePark" },
+    ],
   },
   {
-    icon: "FaRegMoon",
-    category: "Templo islámico",
+    category: "Gastronomía",
+    icon: "PiBowlFoodBold",
+    subcategories: [
+      { name: "Restaurante", icon: "MdRestaurant" },
+      { name: "Mercado de Alimentos", icon: "MdOutlineShoppingBasket" },
+      { name: "Tour Gastronómico", icon: "MdRestaurant" },
+      { name: "Taller de Cocina", icon: "MdOutlineScience" },
+    ],
   },
   {
-    icon: "PiStarOfDavid",
-    category: "Templo judío",
+    category: "Museos",
+    icon: "TbBuildingBank",
+    subcategories: [
+      { name: "Museo de Arte", icon: "MdOutlineMuseum" },
+      { name: "Museo Histórico", icon: "MdOutlineMuseum" },
+      { name: "Museo de Ciencias", icon: "MdOutlineScience" },
+      { name: "Galería", icon: "MdOutlineMuseum" },
+      { name: "Exposición", icon: "MdOutlineMuseum" },
+    ],
   },
   {
-    icon: "GiYinYang",
-    category: "Templo Taoísta",
+    category: "Compras",
+    icon: "LuShoppingBasket",
+    subcategories: [
+      { name: "Centro Comercial", icon: "MdShoppingBag" },
+      { name: "Mercado", icon: "MdOutlineShoppingBasket" },
+      { name: "Tiendas de Artesanía", icon: "MdShoppingBag" },
+      { name: "Zonas Comerciales", icon: "MdShoppingBag" },
+      { name: "Souvenirs", icon: "MdOutlineShoppingBasket" },
+    ],
   },
   {
-    icon: "GiAncientRuins",
-    category: "Ruinas",
+    category: "Ocio y Entretenimiento",
+    icon: "BiCameraMovie",
+    subcategories: [
+      { name: "Parques de Diversiones", icon: "MdOutlinePark" },
+      { name: "Teatros", icon: "MdOutlineTheaterComedy" },
+      { name: "Conciertos", icon: "MdOutlineTheaterComedy" },
+      { name: "Cines", icon: "MdOutlineTheaterComedy" },
+      { name: "Espectáculos en Vivo", icon: "MdOutlineTheaterComedy" },
+    ],
   },
   {
-    icon: "MdOutlineHotTub",
-    category: "Onsen",
+    category: "Deportes y Aventura",
+    icon: "MdOutlineSportsVolleyball",
+    subcategories: [
+      { name: "Senderismo", icon: "MdOutlineHiking" },
+      { name: "Esquí", icon: "MdOutlineSportsSoccer" },
+      { name: "Deportes Acuáticos", icon: "MdOutlineBeachAccess" },
+      { name: "Escalada", icon: "MdOutlineHiking" },
+      { name: "Ciclismo", icon: "MdOutlineDirectionsBike" },
+    ],
   },
   {
-    icon: "GiGrapes",
-    category: "Viñedos",
+    category: "Spa y Relax",
+    icon: "MdOutlineSpa",
+    subcategories: [
+      { name: "Onsen", icon: "MdOutlineSpa" },
+      { name: "Baños Termales", icon: "MdOutlineSpa" },
+      { name: "Spas", icon: "MdOutlineSpa" },
+      { name: "Resorts", icon: "MdOutlineSpa" },
+      { name: "Masajes", icon: "MdOutlineSpa" },
+    ],
   },
   {
-    icon: "PiPawPrint",
-    category: "Vida Silvestre",
+    category: "Vida Nocturna",
+    icon: "MdOutlineLocalBar",
+    subcategories: [
+      { name: "Bares", icon: "MdOutlineLocalBar" },
+      { name: "Clubs", icon: "MdOutlineLocalBar" },
+      { name: "Espectáculos Nocturnos", icon: "MdOutlineTheaterComedy" },
+      { name: "Zona de Bares", icon: "MdOutlineLocalBar" },
+    ],
   },
   {
-    icon: "PiEyeBold",
-    category: "Punto de interés",
+    category: "Eventos y Festividades",
+    icon: "MdOutlineEvent",
+    subcategories: [
+      { name: "Festivales", icon: "MdOutlineFestival" },
+      { name: "Celebraciones Culturales", icon: "MdOutlineEvent" },
+      { name: "Ferias", icon: "MdOutlineEvent" },
+      { name: "Conmemoraciones", icon: "MdOutlineEvent" },
+    ],
   },
   {
-    icon: "MdOutlineSurfing",
-    category: "Surf",
-  },
-  {
-    icon: "MdKayaking",
-    category: "Kayak",
-  },
-  {
-    icon: "FaPersonSkiing",
-    category: "Esquí",
-  },
-  {
-    icon: "GiProtectionGlasses",
-    category: "Buceo",
-  },
-  {
-    icon: "MdHiking",
-    category: "Senderismo",
+    category: "Educación y Cultura",
+    icon: "MdOutlineSchool",
+    subcategories: [
+      { name: "Bibliotecas", icon: "MdLocalLibrary" },
+      { name: "Centros Culturales", icon: "MdOutlineSchool" },
+      { name: "Universidades", icon: "MdOutlineSchool" },
+      { name: "Instituciones Educativas", icon: "MdOutlineSchool" },
+    ],
   },
 ];

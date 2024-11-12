@@ -58,7 +58,7 @@ const TripView = () => {
   if (!trip) return <Typography>No trip data available</Typography>;
 
   return (
-    <Box>
+    <Box id="body">
       <NavBar />
       <Box
         mt={2}

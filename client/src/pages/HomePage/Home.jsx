@@ -12,17 +12,14 @@ import CategoryList from "./content/CategoryList.jsx";
 
 const HomePage = () => {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen" id="body">
       <NavBar />
       <div className="flex-grow">
         <Hero />
         <BgShape />
-        {/* How It Works Section */}
         <HowItWorks />
-        {/* Info Section */}
         <CategoryList />
         <Highlights />
-        {/* Regions Section */}
         <Prefectures />
       </div>
       <Footer />

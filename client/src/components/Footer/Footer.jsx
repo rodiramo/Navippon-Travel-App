@@ -9,7 +9,7 @@ const Footer = () => {
   return (
     <div
       className="bg-[#0A0330] text-white py-8 "
-      style={{ borderRadius: "6rem 6rem 0rem 0rem" }}
+      style={{ borderRadius: "6rem 6rem 0rem 0rem", marginTop: "auto" }}
     >
       <div className=" mx-auto grid grid-cols-1 md:grid-cols-4 gap-4 mt-3 text-center md:text-left">
         {/* Primera Columna */}

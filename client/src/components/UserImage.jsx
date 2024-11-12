@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { Box } from "@mui/material";
+import config from "@config/config.js";
 
 const UserImage = ({ image, name, size = "60px" }) => {
   return (
@@ -9,7 +10,7 @@ const UserImage = ({ image, name, size = "60px" }) => {
         width={size}
         height={size}
         alt={name}
-        src={`http://localhost:3333/assets/${image}`}
+        src={`${config.API_URL}/assets/${image}`}
       />
     </Box>
   );

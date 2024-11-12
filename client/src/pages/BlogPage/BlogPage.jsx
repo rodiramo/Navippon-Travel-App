@@ -30,7 +30,7 @@ const BlogPage = () => {
   }, [userId, token]);
 
   return (
-    <Box>
+    <Box id="body">
       <NavBar />{" "}
       <Typography
         variant="h1"

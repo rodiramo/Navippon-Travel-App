@@ -86,13 +86,7 @@ const FilteredPrefecturePage = () => {
   if (error) return <Typography color="error">Error: {error}</Typography>;
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-      }}
-    >
+    <Box id="body">
       <NavBar />
       <BreadcrumbBack />
       <Box sx={{ marginBottom: 2, paddingTop: 15, marginLeft: 2 }}>

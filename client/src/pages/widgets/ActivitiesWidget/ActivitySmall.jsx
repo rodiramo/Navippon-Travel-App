@@ -23,7 +23,6 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import config from "@config/config.js";
 import "@css/Universal.css";
-import { saveOrUnsaveActivity } from "@services/services.js";
 import FlexBetween from "@components/FlexBetween.jsx";
 
 const ActivitySmall = ({
@@ -41,9 +40,8 @@ const ActivitySmall = ({
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const loggedInUserId = useSelector((state) => state.user._id);
+
   const role = useSelector((state) => state.user.role);
-  const token = useSelector((state) => state.token);
 
   const handleEdit = () => {
     navigate(`/edit-activity/${activityId}`);
@@ -76,8 +74,6 @@ const ActivitySmall = ({
 
   const handleFavoriteToggle = async () => {
     try {
-      await saveOrUnsaveActivity(loggedInUserId, activityId, isSaved, token);
-
       if (isSaved && onRemoveFromFavorites) {
         onRemoveFromFavorites(activityId);
       }

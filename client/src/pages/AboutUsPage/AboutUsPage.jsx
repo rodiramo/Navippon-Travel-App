@@ -9,7 +9,7 @@ import WhyJapanSection from "./content/WhyJapanSection.jsx";
 import BgShape from "@components/Shapes/BgShape.jsx";
 const AboutPage = () => {
   return (
-    <Box>
+    <Box id="body">
       <NavBar />
       <Header />
       <BgShape />

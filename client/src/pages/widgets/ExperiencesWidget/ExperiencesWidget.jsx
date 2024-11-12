@@ -1,41 +1,32 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import PropTypes from "prop-types"; // Import PropTypes for validation
-import { setExperiences } from "@state/state.js";
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import { Box, Typography, Pagination, Skeleton } from "@mui/material";
 import ExperienceWidget from "./ExperienceWidget.jsx";
-import { Skeleton, Typography, Box, Pagination } from "@mui/material";
-import { fetchExperiences } from "@services/services.js";
 
-const ExperiencesWidget = ({ experience }) => {
-  const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const ExperiencesWidget = ({ experience, experiences }) => {
+  const [loading, setLoading] = useState(true); // Set loading to true initially
   const [currentPage, setCurrentPage] = useState(1);
   const experiencesPerPage = 8;
-  const token = useSelector((state) => state.token);
-  const allExperiences = useSelector((state) => state.experiences);
 
-  const filteredExperiences = allExperiences.filter(
-    (exp) => exp.type === experience
+  // Filter by name (case-insensitive)
+  const filteredByName = experiences.filter((exp) =>
+    exp.name.toLowerCase().includes(experience.toLowerCase())
   );
+
+  // Filter by type
+  const filteredByType = experiences.filter((exp) => exp.type === experience);
+
+  // Combine both filters - if both are applied, they will intersect
+  const filteredExperiences = filteredByName.filter((exp) =>
+    filteredByType.some((filteredExp) => filteredExp._id === exp._id)
+  );
+
+  console.log("Filtered experiences by name and type:", filteredExperiences);
+
+  // Calculate total pages
   const totalPages = Math.ceil(filteredExperiences.length / experiencesPerPage);
 
-  useEffect(() => {
-    const loadExperiences = async () => {
-      setLoading(true);
-      try {
-        const data = await fetchExperiences(token);
-        dispatch(setExperiences(data));
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadExperiences();
-  }, [dispatch, token]);
-
+  // Handle pagination
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   };
@@ -46,6 +37,12 @@ const ExperiencesWidget = ({ experience }) => {
     indexOfFirstExperience,
     indexOfLastExperience
   );
+
+  useEffect(() => {
+    if (experiences.length > 0) {
+      setLoading(false);
+    }
+  }, [experiences]);
 
   if (loading) {
     return (
@@ -67,10 +64,6 @@ const ExperiencesWidget = ({ experience }) => {
         />
       </Box>
     );
-  }
-
-  if (error) {
-    return <Typography color="error">Error: {error}</Typography>;
   }
 
   return (
@@ -122,7 +115,8 @@ const ExperiencesWidget = ({ experience }) => {
 
 // Prop validation
 ExperiencesWidget.propTypes = {
-  experience: PropTypes.string.isRequired,
+  experience: PropTypes.string.isRequired, // Experience type (e.g., "Atractivo", "Hotel", "Restaurante")
+  experiences: PropTypes.array.isRequired, // Array of experiences to be filtered
 };
 
 export default ExperiencesWidget;

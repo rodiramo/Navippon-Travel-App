@@ -19,13 +19,13 @@ import {
   Button,
 } from "@mui/material";
 import config from "@config/config.js";
-import FlexBetween from "../../components/FlexBetween.jsx";
-import Friend from "../../components/Friend.jsx";
-import WidgetWrapper from "../../components/Wrapper.jsx";
+import FlexBetween from "@components/FlexBetween.jsx";
+import Friend from "@components/Friend.jsx";
+import WidgetWrapper from "@components/Wrapper.jsx";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPost, removePost } from "../../state/state.js";
-import CommentsSection from "../../components/CommentSection.jsx";
+import { setPost, removePost } from "@state/state.js";
+import CommentsSection from "@components/CommentSection.jsx";
 
 const PostWidget = ({
   postId,

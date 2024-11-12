@@ -196,7 +196,7 @@ const ExperienceForm = () => {
   }
 
   return (
-    <>
+    <div id="body">
       <NavBar />
       <Box sx={{ padding: spacing(3) }}>
         <Box className="breadcrumbs-container">
@@ -418,7 +418,7 @@ const ExperienceForm = () => {
         </Formik>
       </Box>
       <Footer />
-    </>
+    </div>
   );
 };
 

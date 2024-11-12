@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Typography, Box, List, ListItem, ListItemText } from "@mui/material";
-import config from '../../config'; 
+import config from "@config/config.js";
 
-const PrefecturesWidget = () => {
+const BudgetsWidget = () => {
   const [budgets, setBudget] = useState([]);
   const [error, setError] = useState(null);
 
@@ -33,7 +33,7 @@ const PrefecturesWidget = () => {
       <List>
         {budgets.map((budget) => (
           <ListItem key={budget._id}>
-           <ListItemText primary={budget.name} />
+            <ListItemText primary={budget.name} />
             <ListItemText primary={budget.abbreviation} />
           </ListItem>
         ))}
@@ -42,4 +42,4 @@ const PrefecturesWidget = () => {
   );
 };
 
-export default PrefecturesWidget;
+export default BudgetsWidget;

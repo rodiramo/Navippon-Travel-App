@@ -14,13 +14,13 @@ import {
   IconButton,
 } from "@mui/material";
 import config from "@config/config.js";
-import FlexBetween from "../../components/FlexBetween.jsx";
+import FlexBetween from "@components/FlexBetween.jsx";
 import Dropzone from "react-dropzone";
-import UserImage from "../../components/UserImage.jsx";
-import WidgetWrapper from "../../components/Wrapper.jsx";
+import UserImage from "@components/UserImage.jsx";
+import WidgetWrapper from "@components/Wrapper.jsx";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPosts } from "../../state/state.js";
+import { setPosts } from "@state/state.js";
 
 const MyPostWidget = ({ picturePath }) => {
   const dispatch = useDispatch();

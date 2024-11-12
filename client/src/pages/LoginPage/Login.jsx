@@ -1,7 +1,7 @@
 import { Box, useTheme, useMediaQuery } from "@mui/material";
 import Form from "./Form.jsx";
 import logo from "/assets/navippon-logo-white.png";
-import { Link } from "react-router-dom"; // Import Link
+import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   const theme = useTheme();
@@ -13,7 +13,6 @@ const LoginPage = () => {
       height="100vh"
       backgroundColor={theme.palette.primary.white}
     >
-      {/* Image Section */}
       {isNonMobileScreens && (
         <Box
           flexBasis="40%"

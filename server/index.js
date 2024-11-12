@@ -107,14 +107,13 @@ app.use((err, req, res, next) => {
 
 /** Mongoose Setup */
 const PORT = process.env.PORT || 3333;
-mongoose.set("debug", true); // Enable Mongoose debug mode
+mongoose.set("debug", true);
 
 mongoose
   .connect(process.env.MONGO_URL)
   .then(async () => {
     app.listen(PORT, () => console.log(`Server is running on Port ${PORT}`));
 
-    // Insert initial data if collections are empty
     try {
       const budgetCount = await Budget.countDocuments();
       if (budgetCount === 0) {

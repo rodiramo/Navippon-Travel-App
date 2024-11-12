@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Typography, Box, ListItem, ListItemText } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import Slider from "react-slick"; // Importing the carousel
+import Slider from "react-slick";
 import config from "@config/config.js";
+import { fetchPrefectures } from "@services/services";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -12,20 +13,16 @@ const PrefecturesWidget = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchPrefectures = async () => {
+    const getPrefectures = async () => {
       try {
-        const response = await fetch(`${config.API_URL}/prefectures`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch prefectures");
-        }
-        const data = await response.json();
+        const data = await fetchPrefectures();
         setPrefectures(data);
       } catch (error) {
         setError(error.message);
       }
     };
 
-    fetchPrefectures();
+    getPrefectures();
   }, []);
 
   const handleClick = (prefectureId) => {
@@ -106,9 +103,9 @@ const PrefecturesWidget = () => {
               sx={{
                 textAlign: "center",
                 marginTop: 1,
-                display: "block", // Ensures text block-level behavior for proper centering
-                marginLeft: "auto", // Centers the text block horizontally
-                marginRight: "auto", // Centers the text block horizontally
+                display: "block",
+                marginLeft: "auto",
+                marginRight: "auto",
               }}
             />
           </ListItem>

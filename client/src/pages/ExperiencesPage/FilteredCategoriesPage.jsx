@@ -74,13 +74,7 @@ const FilteredCategoriesPage = () => {
   if (error) return <Typography color="error">Error: {error}</Typography>;
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-      }}
-    >
+    <Box id="body">
       <NavBar />
       <Box>
         <BreadcrumbBack />

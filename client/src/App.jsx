@@ -8,7 +8,7 @@ import { themeSettings } from "./theme.js";
 import LoginPage from "./pages/LoginPage/Login.jsx";
 import HomePage from "./pages/HomePage/Home.jsx";
 import ProfilePage from "./pages/ProfilePage/ProfilePage.jsx";
-import ActivityDetails from "./pages/ActivitiesPage/ActivityDetails.jsx";
+import ExperienceDetails from "./pages/ExperiencesPage/ExperienceDetails.jsx";
 import ExplorePage from "./pages/ExplorePage/ExplorePage.jsx";
 import AboutUsPage from "./pages/AboutUsPage/AboutUsPage.jsx";
 import TripView from "./pages/TripPage/TripView.jsx";
@@ -17,9 +17,9 @@ import BlogPage from "./pages/BlogPage/BlogPage.jsx";
 import ContactPage from "./pages/ContactPage/ContactPage.jsx";
 import FilteredCategoriesPage from "./pages/ExperiencesPage/FilteredCategoriesPage.jsx";
 import FilteredPrefecturePage from "./pages/ExperiencesPage/FilteredPrefecturePage.jsx";
-import AdminPanel from "./pages/AdminPage/AdminPanel.jsx";
+import AdminPanel from "./pages/AdminPage/AdminLayout.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
-import ActivityForm from "./pages/ActivitiesPage/ActivityForm.jsx";
+import ExperienceForm from "./pages/ExperiencesPage/ExperienceForm.jsx";
 import NotFound from "./pages/NotFound.jsx";
 
 function App() {
@@ -31,17 +31,16 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Routes>
-          {/* Home page accessible to everyone */}
+          {/*Accessible to everyone */}
           <Route path="/" element={<HomePage />} />
-
-          {/* Login page accessible to everyone */}
+          <Route path="/about-us" element={<AboutUsPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/contact" element={<ContactPage />} />
 
           {/* Private routes */}
           <Route element={<PrivateRoute />}>
             <Route path="/profile/:userId" element={<ProfilePage />} />
             <Route path="/posts" element={<BlogPage />} />
-            <Route path="/contact" element={<ContactPage />} />
             <Route path="/activities" element={<ExplorePage />} />
             <Route
               path="/experiences/filtered-category/:categoryName"
@@ -53,13 +52,10 @@ function App() {
             />
             <Route path="/trips" element={<UserTripsPage />} />
             <Route path="/trips/:tripId" element={<TripView />} />
-            <Route path="/activities/:id" element={<ActivityDetails />} />
-            <Route path="/create-activity" element={<ActivityForm />} />
-            <Route path="/edit-activity/:id" element={<ActivityForm />} />
+            <Route path="/experiences/:id" element={<ExperienceDetails />} />
+            <Route path="/create-experience" element={<ExperienceForm />} />
+            <Route path="/edit-experience/:id" element={<ExperienceForm />} />
           </Route>
-
-          {/* About Us page accessible to everyone */}
-          <Route path="/about-us" element={<AboutUsPage />} />
 
           {/* Admin route requiring admin role */}
           <Route element={<PrivateRoute requiredRole="admin" />}>

@@ -1,6 +1,6 @@
 import config from "@config/config.js";
 
-/* hotels */
+/* experiences */
 export const fetchExperiences = async (token) => {
   try {
     const response = await fetch(`${config.API_URL}/experiences`, {
@@ -66,73 +66,24 @@ export const deleteExperience = async (experienceId, token) => {
   return await response.json();
 };
 
-/* activities */
-export const fetchActivities = async (token) => {
-  const response = await fetch(`${config.API_URL}/activities`, {
+/* fetch prefectures */
+export const fetchPrefectures = async () => {
+  const response = await fetch(`${config.API_URL}/prefectures`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch prefectures");
+  }
+  return await response.json();
+};
+
+/* users  */
+export const fetchUserPicture = async (token, postUserId) => {
+  const response = await fetch(`${config.API_URL}/users/${postUserId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Failed to fetch activities");
+    throw new Error("Failed to fetch user data");
   }
-
-  return await response.json();
-};
-
-export const saveOrUnsaveActivity = async (
-  loggedInUserId,
-  activityId,
-  isSaved,
-  token
-) => {
-  const method = isSaved ? "DELETE" : "PATCH";
-  const response = await fetch(
-    `${config.API_URL}/users/${loggedInUserId}/favorites/${activityId}`,
-    {
-      method: method,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || "Failed to update favorite activities");
-  }
-
-  return await response.json();
-};
-
-export const deleteActivity = async (activityId, token) => {
-  const response = await fetch(`${config.API_URL}/activities/${activityId}`, {
-    method: "DELETE",
-    headers: { Authorization: `Bearer ${token}` },
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || "Failed to delete activity");
-  }
-
-  return await response.json();
-};
-
-export const fetchUpdatedActivity = async (activityId, token) => {
-  const response = await fetch(`${config.API_URL}/activities/${activityId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(errorText || "Failed to fetch updated activity");
-  }
-
-  return await response.json();
 };
 
 /* fetch categories */

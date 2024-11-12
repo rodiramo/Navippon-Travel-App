@@ -4,11 +4,6 @@ import { useNavigate } from "react-router-dom";
 import * as MdIcons from "react-icons/md";
 import * as PiIcons from "react-icons/pi";
 import * as TbIcons from "react-icons/tb";
-import * as FaIcons from "react-icons/fa6";
-import * as GiIcons from "react-icons/gi";
-import * as LiaIcons from "react-icons/lia";
-import * as BsIcons from "react-icons/bs";
-import * as VscIcons from "react-icons/vsc";
 import * as LuIcons from "react-icons/lu";
 import { fetchCategoryDetails } from "@services/services";
 import "slick-carousel/slick/slick.css";
@@ -74,6 +69,7 @@ const CategoryCarousel = () => {
       <Slider {...settings}>
         {categories.map((category, index) => {
           const IconComponent = iconMapping[category.icon];
+          console.log(`Rendering icon for: ${category.icon}`); // Debugging line
           return (
             <div
               key={index}
@@ -106,41 +102,36 @@ const CategoryCarousel = () => {
 
 // Icon mapping for dynamic icon rendering
 const iconMapping = {
+  MdTempleBuddhist: MdIcons.MdTempleBuddhist,
+  MdTempleHindu: MdIcons.MdTempleHindu,
+  MdChurch: MdIcons.MdChurch,
+  MdMosque: MdIcons.MdMosque,
+  MdOutlineCastle: MdIcons.MdOutlineCastle,
+  MdOutlinePalace: MdIcons.MdOutlinePalace,
+  MdOutlinePark: MdIcons.MdOutlinePark,
+  MdOutlineMuseum: MdIcons.MdOutlineMuseum,
   MdOutlineForest: MdIcons.MdOutlineForest,
   MdOutlineBeachAccess: MdIcons.MdOutlineBeachAccess,
-  TbBuildingMonument: TbIcons.TbBuildingMonument,
-  MdOutlineRamenDining: MdIcons.MdOutlineRamenDining,
-  LiaCocktailSolid: LiaIcons.LiaCocktailSolid,
-  GiGreekTemple: GiIcons.GiGreekTemple,
-  MdOutlineCoffee: MdIcons.MdOutlineCoffee,
-  MdOutlineShoppingBag: MdIcons.MdOutlineShoppingBag,
-  FaRegStar: FaIcons.FaRegStar,
-  GiPartyPopper: GiIcons.GiPartyPopper,
-  BsRobot: BsIcons.BsRobot,
-  LiaGamepadSolid: LiaIcons.LiaGamepadSolid,
-  VscOctoface: VscIcons.VscOctoface,
-  LuFerrisWheel: LuIcons.LuFerrisWheel,
-  GiSamuraiHelmet: GiIcons.GiSamuraiHelmet,
-  MdOutlineTempleBuddhist: MdIcons.MdOutlineTempleBuddhist,
-  PiBirdBold: PiIcons.PiBirdBold,
-  MdOutlineCastle: MdIcons.MdOutlineCastle,
-  PiCross: PiIcons.PiCross,
+  MdNaturePeople: MdIcons.MdNaturePeople,
+  MdRestaurant: MdIcons.MdRestaurant,
+  MdOutlineShoppingBasket: MdIcons.MdOutlineShoppingBasket,
+  MdOutlineScience: MdIcons.MdOutlineScience,
+  MdOutlineTheaterComedy: MdIcons.MdOutlineTheaterComedy,
+  MdOutlineSportsSoccer: MdIcons.MdOutlineSportsSoccer,
+  MdOutlineHiking: MdIcons.MdOutlineHiking,
+  MdOutlineDirectionsBike: MdIcons.MdOutlineDirectionsBike,
+  MdOutlineSpa: MdIcons.MdOutlineSpa,
+  MdOutlineLocalBar: MdIcons.MdOutlineLocalBar,
+  MdOutlineEvent: MdIcons.MdOutlineEvent,
+  MdOutlineFestival: MdIcons.MdOutlineFestival,
+  MdOutlineSchool: MdIcons.MdOutlineSchool,
+  MdLocalLibrary: MdIcons.MdLocalLibrary,
   TbTorii: TbIcons.TbTorii,
-  MdOutlineTempleHindu: MdIcons.MdOutlineTempleHindu,
-  PiHandEyeLight: PiIcons.PiHandEyeLight,
-  FaRegMoon: FaIcons.FaRegMoon,
-  PiStarOfDavid: PiIcons.PiStarOfDavid,
-  GiYinYang: GiIcons.GiYinYang,
-  GiAncientRuins: GiIcons.GiAncientRuins,
-  MdOutlineHotTub: MdIcons.MdOutlineHotTub,
-  GiGrapes: GiIcons.GiGrapes,
-  PiPawPrint: PiIcons.PiPawPrint,
-  PiEyeBold: PiIcons.PiEyeBold,
-  MdOutlineSurfing: MdIcons.MdOutlineSurfing,
-  MdKayaking: MdIcons.MdKayaking,
-  FaPersonSkiing: FaIcons.FaPersonSkiing,
-  GiProtectionGlasses: GiIcons.GiProtectionGlasses,
-  MdHiking: MdIcons.MdHiking,
+  PiBowlFoodBold: PiIcons.PiBowlFoodBold,
+  TbBuildingBank: TbIcons.TbBuildingBank,
+  LuShoppingBasket: LuIcons.LuShoppingBasket,
+
+  MdOutlineSportsVolleyball: MdIcons.MdOutlineSportsVolleyball,
 };
 
 export default CategoryCarousel;
