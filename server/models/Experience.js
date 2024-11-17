@@ -16,7 +16,6 @@ const ExperienceSchema = new mongoose.Schema({
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true,
   },
   rating: {
     type: Number,
@@ -29,11 +28,9 @@ const ExperienceSchema = new mongoose.Schema({
   },
   city: {
     type: String,
-    required: true,
   },
   address: {
     type: String,
-    required: true,
   },
   mapEmbedUrl: String,
   locationDes: String,
@@ -44,7 +41,6 @@ const ExperienceSchema = new mongoose.Schema({
     },
     coordinates: {
       type: [Number],
-      required: true,
     },
   },
   phone: String,
@@ -86,6 +82,10 @@ const ExperienceSchema = new mongoose.Schema({
       ref: "Review",
     },
   ],
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Experience = mongoose.model("Experience", ExperienceSchema);

@@ -19,7 +19,7 @@ import FilteredCategoriesPage from "./pages/ExperiencesPage/FilteredCategoriesPa
 import FilteredPrefecturePage from "./pages/ExperiencesPage/FilteredPrefecturePage.jsx";
 import AdminPanel from "./pages/AdminPage/AdminLayout.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
-import ExperienceForm from "./pages/ExperiencesPage/ExperienceForm.jsx";
+import ExperienceForm from "./pages/AdminPage/content/screens/experiences/Form.jsx";
 import NotFound from "./pages/NotFound.jsx";
 
 function App() {
@@ -41,7 +41,7 @@ function App() {
           <Route element={<PrivateRoute />}>
             <Route path="/profile/:userId" element={<ProfilePage />} />
             <Route path="/posts" element={<BlogPage />} />
-            <Route path="/activities" element={<ExplorePage />} />
+            <Route path="/experiences" element={<ExplorePage />} />
             <Route
               path="/experiences/filtered-category/:categoryName"
               element={<FilteredCategoriesPage />}

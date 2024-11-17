@@ -45,7 +45,7 @@ const MobileMenu = ({ onClose }) => {
           Inicio
         </Button>
       </Link>
-      <Link to="/activities" style={{ textDecoration: "none" }}>
+      <Link to="/experiences" style={{ textDecoration: "none" }}>
         <Button
           variant="text"
           sx={{

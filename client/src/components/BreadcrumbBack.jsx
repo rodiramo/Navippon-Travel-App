@@ -15,7 +15,7 @@ const BreadcrumbBack = ({ color }) => {
         position: "fixed",
         top: "7rem",
         left: 16,
-        zIndex: 1000,
+        zIndex: 10,
         backgroundColor: palette.primary.main,
         borderRadius: 30,
         padding: "8px",

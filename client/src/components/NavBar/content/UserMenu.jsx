@@ -10,7 +10,7 @@ import { useAuth } from "@hooks/useAuth.js";
 
 const UserMenu = ({ anchorEl, handleClose, handleLogout }) => {
   const { isAdmin } = useAuth();
-  const theme = useTheme(); // Get the theme
+  const theme = useTheme();
   const userState = useSelector((state) => state.user);
   const user = userState || {};
   const { _id } = user;

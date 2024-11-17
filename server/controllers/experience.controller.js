@@ -13,13 +13,14 @@ export const createExperience = async (req, res) => {
       image,
       budget,
       contact,
+      type,
       website,
       opening_time,
       closing_time,
       location,
-      availability,
+      availability = { all_year: false, best_season: [] },
       price,
-      range_price,
+      range_price = { min: false, max: false },
       categories,
       subcategory,
       hotelType,
@@ -45,28 +46,39 @@ export const createExperience = async (req, res) => {
         .json({ message: "An experience with this name already exists." });
     }
 
+    let locationData = {};
+    if (location && location.coordinates) {
+      locationData = {
+        type: "Point",
+        coordinates: location.coordinates,
+      };
+    } else {
+      locationData = {
+        type: "Point",
+        coordinates: null,
+      };
+    }
+
     const newExperience = new Experience({
       name,
       description,
       prefecture,
+      type,
       image,
       budget,
       contact,
       website,
       opening_time,
       closing_time,
-      location: {
-        type: "Point",
-        coordinates: location.coordinates,
-      },
+      location: locationData,
       availability: {
-        all_year: availability.all_year,
+        all_year: availability.all_year || false,
         best_season: availability.best_season || [],
       },
       price,
       range_price: {
-        min: range_price.min,
-        max: range_price.max,
+        min: range_price.min || false,
+        max: range_price.max || false,
       },
       categories: JSON.parse(categories),
       subcategory,
@@ -92,6 +104,7 @@ export const createExperience = async (req, res) => {
       .populate("prefecture")
       .populate("budget")
       .sort({ createdAt: -1 });
+
     res.status(201).json({ experiences });
   } catch (err) {
     console.error("Error creating experience:", err);
@@ -142,6 +155,7 @@ export const editExperience = async (req, res) => {
       name,
       description,
       prefecture,
+      type,
       image,
       budget,
       contact,
@@ -170,19 +184,18 @@ export const editExperience = async (req, res) => {
       days,
     } = req.body;
 
-    // Find the existing experience
     const activity = await Experience.findById(id);
     if (!activity) {
       return res.status(404).json({ message: "Experience not found" });
     }
 
-    // Prepare updated data
     const updatedData = {
       name,
       description,
       prefecture,
       budget,
       contact,
+      type,
       website,
       opening_time,
       closing_time,

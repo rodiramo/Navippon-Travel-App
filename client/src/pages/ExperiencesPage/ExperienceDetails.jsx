@@ -26,6 +26,7 @@ const ExperienceDetails = () => {
   const [tabValue, setTabValue] = useState(0);
   const [experience, setExperience] = useState(null);
   const [categoryDetails, setCategoryDetails] = useState([]);
+  const [error, setError] = useState(null); // State to track errors
   const token = useSelector((state) => state.token);
 
   useEffect(() => {
@@ -46,9 +47,11 @@ const ExperienceDetails = () => {
         fetchCategoryDetails(data.categories);
       } catch (error) {
         console.error("Error al obtener la experiencia:", error.message);
+        setError("Hubo un error al cargar la experiencia. Intenta más tarde.");
       }
     };
 
+    // Fetch Category Details based on the category names
     const fetchCategoryDetails = async (categoryNames) => {
       try {
         const response = await fetch(`${config.API_URL}/categories`);
@@ -69,14 +72,43 @@ const ExperienceDetails = () => {
         setCategoryDetails(details);
       } catch (error) {
         console.error("No se pudo obtener las categorías", error);
+        setError("No se pudieron cargar las categorías de la experiencia.");
       }
     };
 
     fetchExperience();
   }, [id, token]);
 
+  if (error) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Typography variant="h4" color="error">
+          {error}
+        </Typography>
+      </Box>
+    );
+  }
+
   if (!experience) {
-    return <CircularProgress />;
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   return (
@@ -134,13 +166,22 @@ const ExperienceDetails = () => {
                   <Typography sx={{ mb: 3, color: palette.primary.dark }}>
                     {experience.description}
                   </Typography>
-                  {/* Display additional experience details here */}
+
+                  {/* City: Display fallback text if undefined */}
+                  <Typography sx={{ mb: 1 }}>
+                    <strong>Ciudad:</strong>{" "}
+                    {experience.city?.length > 0
+                      ? experience.city.join(", ")
+                      : "Ciudad no definida"}
+                  </Typography>
+
                   <Typography sx={{ mb: 1 }}>
                     <strong>Prefectura:</strong>{" "}
                     {experience.prefecture
                       ? experience.prefecture.name
                       : "Cargando..."}
                   </Typography>
+
                   <Typography sx={{ mb: 1 }}>
                     <strong>Presupuesto:</strong>{" "}
                     {experience.budget ? experience.budget.name : "Cargando..."}{" "}
@@ -148,12 +189,11 @@ const ExperienceDetails = () => {
                       ? experience.budget.abbreviation
                       : "Cargando..."}
                   </Typography>
-                  <Typography sx={{ mb: 1 }}>
-                    <strong>Ciudad:</strong> {experience.city.join(", ")}
-                  </Typography>
+
                   <Typography sx={{ mb: 1 }}>
                     <strong>Precio:</strong> ${experience.price}
-                  </Typography>{" "}
+                  </Typography>
+
                   {/* Categorías */}
                   <Box
                     display="flex"
@@ -180,28 +220,38 @@ const ExperienceDetails = () => {
                         ))
                       : "Sin categorías"}
                   </Box>
+
                   <Typography sx={{ mb: 1 }}>
                     <strong>Rango de Precio:</strong> $
                     {experience.range_price.min} - ${experience.range_price.max}
                   </Typography>
+
                   <Typography sx={{ mb: 1 }}>
                     <strong>Hora de Apertura:</strong> {experience.opening_time}
                   </Typography>
+
                   <Typography sx={{ mb: 1 }}>
                     <strong>Hora de Cierre:</strong> {experience.closing_time}
                   </Typography>
+
                   <Typography sx={{ mb: 1 }}>
                     <strong>Coordenadas de Ubicación:</strong>{" "}
-                    {experience.location.coordinates.join(", ")}
+                    {experience.location.coordinates &&
+                    experience.location.coordinates.length > 0
+                      ? experience.location.coordinates.join(", ")
+                      : "Coordenadas no disponibles"}
                   </Typography>
+
                   <Typography sx={{ mb: 1 }}>
                     <strong>Disponible todo el año:</strong>{" "}
                     {experience.availability.all_year ? "Sí" : "No"}
                   </Typography>
+
                   <Typography sx={{ mb: 1 }}>
                     <strong>Mejor Temporada:</strong>{" "}
                     {experience.availability.best_season.join(", ")}
                   </Typography>
+
                   <Box sx={{ mb: 3 }}>
                     <Typography variant="h6" sx={{ mb: 2 }}>
                       Imágenes:
@@ -226,6 +276,7 @@ const ExperienceDetails = () => {
                     </Box>
                   </Box>
                 </Box>
+
                 <Box flex={1}>
                   {/* Contact and Map Column */}
                   <Typography variant="h6">Contacto:</Typography>

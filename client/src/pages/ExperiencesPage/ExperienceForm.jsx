@@ -20,7 +20,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import Dropzone from "react-dropzone";
 import NavBar from "@components/NavBar/NavBar.jsx";
 import Footer from "@components/Footer/Footer.jsx";
-import "@css/Items/ExperienceForm.css"; // Changed to ExperienceForm.css
+import "@css/Items/ExperienceForm.css";
 import config from "@config/config.js";
 
 const experienceSchema = yup.object().shape({
