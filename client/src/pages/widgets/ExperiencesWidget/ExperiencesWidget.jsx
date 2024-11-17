@@ -3,25 +3,22 @@ import PropTypes from "prop-types";
 import { Box, Typography, Pagination, Skeleton } from "@mui/material";
 import ExperienceWidget from "./ExperienceWidget.jsx";
 
-const ExperiencesWidget = ({ experience, experiences }) => {
-  const [loading, setLoading] = useState(true); // Set loading to true initially
+const ExperiencesWidget = ({ experience, experiences, filterBy }) => {
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const experiencesPerPage = 8;
 
-  // Filter by name (case-insensitive)
-  const filteredByName = experiences.filter((exp) =>
-    exp.name.toLowerCase().includes(experience.toLowerCase())
-  );
+  // Filtering based on the filterBy prop
+  const filteredExperiences =
+    filterBy === "name"
+      ? experiences.filter((exp) =>
+          exp.name.toLowerCase().includes(experience.toLowerCase())
+        )
+      : filterBy === "type"
+      ? experiences.filter((exp) => exp.type === experience)
+      : experiences;
 
-  // Filter by type
-  const filteredByType = experiences.filter((exp) => exp.type === experience);
-
-  // Combine both filters - if both are applied, they will intersect
-  const filteredExperiences = filteredByName.filter((exp) =>
-    filteredByType.some((filteredExp) => filteredExp._id === exp._id)
-  );
-
-  console.log("Filtered experiences by name and type:", filteredExperiences);
+  console.log("Filtered experiences:", filteredExperiences);
 
   // Calculate total pages
   const totalPages = Math.ceil(filteredExperiences.length / experiencesPerPage);
@@ -115,8 +112,9 @@ const ExperiencesWidget = ({ experience, experiences }) => {
 
 // Prop validation
 ExperiencesWidget.propTypes = {
-  experience: PropTypes.string.isRequired, // Experience type (e.g., "Atractivo", "Hotel", "Restaurante")
-  experiences: PropTypes.array.isRequired, // Array of experiences to be filtered
+  experience: PropTypes.string.isRequired,
+  experiences: PropTypes.array.isRequired,
+  filterBy: PropTypes.oneOf(["name", "type"]).isRequired,
 };
 
 export default ExperiencesWidget;

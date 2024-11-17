@@ -10,8 +10,8 @@ import config from "@config/config.js";
 
 const ExplorePage = () => {
   const [experience, setExperience] = useState("todo");
-  const [searchResults, setSearchResults] = useState([]); // Store search results
-  const [searchQuery, setSearchQuery] = useState(""); // To store search query
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const theme = useTheme();
   const { primary, text } = theme.palette;
 
@@ -19,7 +19,7 @@ const ExplorePage = () => {
 
   const handleButtonClick = (experience) => {
     setExperience(experience);
-    setSearchQuery(""); // Reset search when switching tabs
+    setSearchQuery("");
   };
 
   const handleSearch = async (query) => {
@@ -31,14 +31,14 @@ const ExplorePage = () => {
         }
       );
       const data = await response.json();
-      setSearchResults(data); // Update search results with filtered data
-      setSearchQuery(query); // Save the search query for display
+      setSearchResults(data);
+      setSearchQuery(query);
+      setExperience("resultados");
     } catch (err) {
       console.error("Error fetching search results:", err);
     }
   };
 
-  // Fetch all experiences when the component mounts
   useEffect(() => {
     const fetchAllExperiences = async () => {
       try {
@@ -46,13 +46,13 @@ const ExplorePage = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await response.json();
-        setSearchResults(data); // Initially, show all experiences
+        setSearchResults(data);
       } catch (err) {
         console.error("Error fetching experiences:", err);
       }
     };
 
-    fetchAllExperiences(); // Fetch data when component mounts
+    fetchAllExperiences();
   }, [token]);
 
   return (
@@ -61,11 +61,28 @@ const ExplorePage = () => {
       <Header />
       <div className="content p-4">
         <FiltersWidget onSearch={handleSearch} />
-        {/* Pass handleSearch to FiltersWidget */}
 
-        {/* Tab Buttons */}
         <div className="mb-4 flex gap-2 flex-col">
           <div className="flex">
+            {searchQuery && (
+              <button
+                onClick={() => setExperience("resultados")}
+                style={{
+                  backgroundColor:
+                    experience === "resultados" ? primary.main : primary.light,
+                  color:
+                    experience === "resultados"
+                      ? primary.contrastText
+                      : text.primary,
+                  border: `1px solid ${primary.main}`,
+                  borderRadius: "30px 30px 30px 30px",
+                  marginRight: "10px",
+                }}
+                className="py-2 px-4 hover:bg-opacity-90"
+              >
+                Resultados
+              </button>
+            )}
             <button
               onClick={() => handleButtonClick("todo")}
               style={{
@@ -110,6 +127,7 @@ const ExplorePage = () => {
             >
               Hoteles
             </button>
+
             <button
               onClick={() => handleButtonClick("restaurantes")}
               style={{
@@ -126,63 +144,52 @@ const ExplorePage = () => {
             >
               Restaurantes
             </button>
-
-            {/* Resultados Tab (Only show if there's a search query) */}
-            {searchQuery && (
-              <button
-                onClick={() => setExperience("resultados")}
-                style={{
-                  backgroundColor:
-                    experience === "resultados" ? primary.main : primary.light,
-                  color:
-                    experience === "resultados"
-                      ? primary.contrastText
-                      : text.primary,
-                  border: `1px solid ${primary.main}`,
-                  borderRadius: "0px 30px 30px 0px",
-                }}
-                className="py-2 px-4 hover:bg-opacity-90"
-              >
-                Resultados
-              </button>
-            )}
           </div>
 
           {/* Render search results or default experiences based on selected tab */}
           <div className="my-4">
             {experience === "resultados" ? (
-              // Display search results when "Resultados" tab is selected
               searchResults.length > 0 ? (
-                searchResults.map((experienceItem) => (
-                  <ExperiencesWidget
-                    key={experienceItem._id}
-                    experience={experienceItem.name}
-                  />
-                ))
+                <ExperiencesWidget
+                  experiences={searchResults}
+                  experience={searchQuery}
+                  filterBy="name"
+                />
               ) : (
-                <p>No results found for.</p>
+                <p>No se encontraron resultados.</p>
               )
             ) : (
-              // Show default experiences based on selected experience
               <>
                 {experience === "todo" && (
-                  <>
-                    <ExperiencesWidget experience="Atractivo" />
-                    <ExperiencesWidget experience="Hotel" />
-                    <ExperiencesWidget experience="Restaurante" />
-                  </>
+                  <ExperiencesWidget
+                    experiences={searchResults}
+                    experience=""
+                    filterBy=""
+                  />
                 )}
 
                 {experience === "atractivos" && (
-                  <ExperiencesWidget experience="Atractivo" />
+                  <ExperiencesWidget
+                    experiences={searchResults}
+                    experience="Atractivo"
+                    filterBy="type"
+                  />
                 )}
 
                 {experience === "hoteles" && (
-                  <ExperiencesWidget experience="Hotel" />
+                  <ExperiencesWidget
+                    experiences={searchResults}
+                    experience="Hotel"
+                    filterBy="type"
+                  />
                 )}
 
                 {experience === "restaurantes" && (
-                  <ExperiencesWidget experience="Restaurante" />
+                  <ExperiencesWidget
+                    experiences={searchResults}
+                    experience="Restaurante"
+                    filterBy="type"
+                  />
                 )}
               </>
             )}
