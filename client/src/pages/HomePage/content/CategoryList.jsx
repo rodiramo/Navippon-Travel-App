@@ -9,7 +9,7 @@ const CategoryList = () => {
   const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
   const [showAll, setShowAll] = useState(false);
-  const [visibleCategories, setVisibleCategories] = useState(5);
+  const [visibleCategories, setVisibleCategories] = useState(8);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const CategoryList = () => {
   const handleLoadMore = () => {
     if (showAll) {
       setShowAll(false);
-      setVisibleCategories(6);
+      setVisibleCategories(8);
     } else {
       setShowAll(true);
       setVisibleCategories(categories.length);
@@ -43,8 +43,10 @@ const CategoryList = () => {
   }
 
   return (
-    <div className="category-list my-12 p-6">
-      <h2 className="text-left mb-4 text-2xl">Navega por categoría</h2>
+    <div className="category-list my-12 p-6" style={{ padding: "0 3rem " }}>
+      <h2 className="text-left mb-4 text-3xl font-bold ml-12">
+        Navega por categoría
+      </h2>
 
       <div
         className="category-container"
@@ -52,8 +54,7 @@ const CategoryList = () => {
           display: "flex",
           flexWrap: "wrap",
           justifyContent: "center",
-          alignItems: "center",
-          gap: "15px",
+          gap: "5rem",
           maxHeight: showAll ? "1000px" : "300px",
           overflow: "hidden",
           opacity: showAll ? 1 : 0.7,
@@ -63,27 +64,33 @@ const CategoryList = () => {
         {categories.slice(0, visibleCategories).map((category, index) => (
           <div
             key={index}
-            className="category-item p-4 cursor-pointer"
+            className="category-item p-6 cursor-pointer"
             onClick={() => handleCategoryClick(category.category)}
             style={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               textAlign: "center",
+              width: "150px", // Larger width for better alignment
             }}
           >
             <div
               className="icon-container mb-4 shadow-lg rounded-full flex justify-center items-center"
               style={{
-                width: "80px",
-                height: "80px",
+                width: "100px", // Larger icon size
+                height: "100px", // Larger icon size
                 justifyContent: "center",
                 alignItems: "center",
+                backgroundColor: "#f9f9f9",
+                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
               }}
             >
               <IconMapping iconName={category.icon} />
             </div>
-            <span className="text-[#8F9BB3]">
+            <span
+              className="text-[#8F9BB3] text-lg font-semibold"
+              style={{ fontSize: "1rem", marginTop: "10px" }} // Larger text size
+            >
               {category.category}
               {` (${category.count})`}
             </span>
@@ -94,8 +101,8 @@ const CategoryList = () => {
       <div className="load-more-container flex justify-center mt-6">
         <button
           onClick={handleLoadMore}
-          style={{ color: "#fa5564" }}
-          className="load-more-btn flex items-center px-4 py-2 rounded-lg"
+          style={{ color: "#fa5564", fontSize: "1rem" }}
+          className="load-more-btn flex items-center px-6 py-3 rounded-lg"
         >
           {showAll ? (
             <>

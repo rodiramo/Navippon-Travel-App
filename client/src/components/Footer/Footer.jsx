@@ -13,7 +13,10 @@ const Footer = () => {
     >
       <div className=" mx-auto grid grid-cols-1 md:grid-cols-4 gap-4 mt-3 text-center md:text-left">
         {/* Primera Columna */}
-        <div className="flex justify-center md:ml-20">
+        <div
+          className="flex justify-center md:ml-20"
+          style={{ width: "50%", height: "50%", margin: "auto" }}
+        >
           <img
             src="/assets/navippon-logo-white.png"
             alt="Logo Navippon en Blanco"

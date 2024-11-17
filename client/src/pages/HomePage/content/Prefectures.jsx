@@ -8,23 +8,19 @@ const Prefectures = () => {
         height: "20vh",
         marginTop: "4rem",
         display: "flex",
-        marginBottom: "4rem",
+        marginBottom: "10rem",
         flexDirection: "column",
         justifyContent: "space-around",
       }}
     >
-      <Typography
-        variant="h4"
-        className="subtitle"
-        gutterBottom
-        sx={{ marginLeft: "2rem" }}
-      >
-        Navega Japón por Región
-      </Typography>
-      <p style={{ marginLeft: "2rem" }}>
+      <h2 className="text-left mb-4 text-3xl font-bold ml-8">
+        Navega por Región
+      </h2>
+
+      <Typography style={{ marginLeft: "2rem" }}>
         Encuentra tus atractivos y restaurantes favoritos en la región que más
         te llame la atención.
-      </p>
+      </Typography>
       <PrefecturesWidget />
     </Box>
   );

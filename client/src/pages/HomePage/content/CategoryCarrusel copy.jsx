@@ -43,7 +43,7 @@ const CategoryCarousel = () => {
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 5,
+          slidesToShow: 10,
           slidesToScroll: 5,
           infinite: true,
           dots: true,

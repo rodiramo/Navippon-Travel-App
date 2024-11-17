@@ -61,7 +61,7 @@ const PrefecturesWidget = () => {
   };
 
   return (
-    <Box className="mb-20">
+    <Box className="mb-50">
       <Slider {...settings}>
         {prefectures.map((prefecture) => (
           <ListItem

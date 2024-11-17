@@ -120,30 +120,30 @@ export const themeSettings = (mode) => {
     },
     typography: {
       fontFamily: ["Poppins", "sans-serif"].join(","),
-      fontSize: 12,
+      fontSize: 14,
       h1: {
         fontFamily: ["SifonnPro", "sans-serif"].join(","),
-        fontSize: 40,
+        fontSize: 50,
       },
       h2: {
         fontFamily: ["Poppins", "sans-serif"].join(","),
-        fontSize: 32,
+        fontSize: 35,
       },
       h3: {
         fontFamily: ["Poppins", "sans-serif"].join(","),
-        fontSize: 24,
+        fontSize: 32,
       },
       h4: {
         fontFamily: ["Poppins", "sans-serif"].join(","),
-        fontSize: 20,
+        fontSize: 30,
       },
       h5: {
         fontFamily: ["Poppins", "sans-serif"].join(","),
-        fontSize: 16,
+        fontSize: 25,
       },
       h6: {
         fontFamily: ["Poppins", "sans-serif"].join(","),
-        fontSize: 14,
+        fontSize: 20,
       },
     },
   };
