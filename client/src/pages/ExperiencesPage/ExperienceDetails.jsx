@@ -11,6 +11,11 @@ import {
   Button,
   useTheme,
 } from "@mui/material";
+import { LuGlobe2 } from "react-icons/lu";
+
+import { HiOutlineMail } from "react-icons/hi";
+import { FaRegMap } from "react-icons/fa";
+import { TbPhone } from "react-icons/tb";
 import BreadcrumbBack from "@components/BreadcrumbBack.jsx";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -185,8 +190,12 @@ const ExperienceDetails = () => {
               <HiOutlineLocationMarker />{" "}
             </div>
             <Typography sx={{ mb: 1 }}>
-              {experience.city?.length > 0
-                ? experience.city.join(", ")
+              {Array.isArray(experience.city)
+                ? experience.city.length > 0
+                  ? experience.city.join(", ")
+                  : "Ciudad no definida"
+                : experience.city && experience.city.trim() !== ""
+                ? experience.city
                 : "Ciudad no definida"}
               ,{" "}
               {experience.prefecture
@@ -322,10 +331,33 @@ const ExperienceDetails = () => {
 
                   <Box flex={1}>
                     {/* Contact and Map Column */}
-
                     <Typography variant="h6">Contacto:</Typography>
-                    <Typography>{experience.address}</Typography>
-                    <Typography>{experience.contact}</Typography>
+                    <Typography>
+                      <FaRegMap />
+                      {experience.address}
+                    </Typography>
+                    <Typography>
+                      <HiOutlineMail />
+                      {experience.email}
+                    </Typography>{" "}
+                    <Typography>
+                      <TbPhone /> +{experience.phone}
+                    </Typography>
+                    <Typography>
+                      <LuGlobe2 />
+                      <a
+                        href={
+                          experience.web.startsWith("http")
+                            ? experience.web
+                            : `http://${experience.web}`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ textDecoration: "none", color: "inherit" }}
+                      >
+                        {experience.web}
+                      </a>
+                    </Typography>
                     <Typography variant="h6" sx={{ mt: 2 }}>
                       Ubicación:
                     </Typography>

@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, Link as RouterLink } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import {
   TextField,
   Button,
+  Slider,
+  Grid,
   useTheme,
   FormControl,
   CircularProgress,
@@ -13,7 +15,6 @@ import {
   MenuItem,
   Typography,
   Box,
-  Link,
 } from "@mui/material";
 import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -31,11 +32,35 @@ const experienceSchema = yup.object().shape({
     .array()
     .of(yup.string())
     .required("Se requiere al menos una categoría"),
+  web: yup
+    .string()
+    .matches(
+      /^(https?:\/\/|www\.)[^\s$.?#].[^\s]*$/,
+      "Debe ser un enlace válido que empiece con http://, https://, o www."
+    )
+    .transform((value) => {
+      if (
+        value &&
+        !value.startsWith("http://") &&
+        !value.startsWith("https://")
+      ) {
+        return `http://${value}`;
+      }
+      return value;
+    }),
+  range_price: yup.object({
+    min: yup.number(),
+    max: yup
+      .number()
+      .min(yup.ref("min"), "El rango Máximo debe ser mayor al mínimo."),
+  }),
+  email: yup.string().required("El email es obligatorio"),
   phone: yup.string().required("El número de teléfono es obligatorio"),
   address: yup.string().required("La dirección es obligatoria"),
   price: yup.number().required("El tipo de experiencia es obligatorio"),
   type: yup.string().required("El tipo de experiencia es obligatorio"),
   prefecture: yup.string().required("La prefectura es obligatoria"),
+  city: yup.string().required("La ciudad es obligatoria"),
   budget: yup.string().required("El presupuesto es obligatorio"),
   image: yup.mixed(),
 });
@@ -69,12 +94,15 @@ const ExperienceForm = () => {
           throw new Error("Error al obtener los datos");
         }
 
-        const [categoriesData, prefecturesData, budgetsData] =
-          await Promise.all([
-            categoriesRes.json(),
-            prefecturesRes.json(),
-            budgetsRes.json(),
-          ]);
+        const [
+          categoriesData,
+          prefecturesData,
+          budgetsData,
+        ] = await Promise.all([
+          categoriesRes.json(),
+          prefecturesRes.json(),
+          budgetsRes.json(),
+        ]);
 
         setCategories(categoriesData);
         setPrefectures(prefecturesData);
@@ -99,7 +127,16 @@ const ExperienceForm = () => {
             categories: experienceData.categories || [],
             prefecture: experienceData.prefecture?._id || "",
             type: experienceData.type || "",
+            city: experienceData.city || "",
             budget: experienceData.budget?._id || "",
+            address: experienceData.address || "",
+            web: experienceData.web || "",
+            range_price: {
+              min: experienceData.range_price?.min || 0,
+              max: experienceData.range_price?.max || 10000,
+            },
+            phone: experienceData.phone || "",
+            email: experienceData.email || "",
             price: experienceData.price || 0,
             image: null,
           });
@@ -113,6 +150,15 @@ const ExperienceForm = () => {
             prefecture: "",
             budget: "",
             type: "",
+            web: "",
+            city: "",
+            range_price: {
+              min: 0,
+              max: 10000,
+            },
+            email: "",
+            address: "",
+            phone: "",
             price: 0,
             image: null,
           });
@@ -142,7 +188,11 @@ const ExperienceForm = () => {
     formData.append("budget", values.budget);
     formData.append("address", values.address);
     formData.append("type", values.type);
+    formData.append("web", values.web);
     formData.append("phone", values.phone);
+    formData.append("city", values.city);
+    formData.append("range_price", JSON.stringify(values.range_price));
+    formData.append("email", values.email);
     formData.append("price", values.price);
     if (values.image) {
       formData.append("picture", values.image);
@@ -193,8 +243,11 @@ const ExperienceForm = () => {
     categories: [],
     prefecture: "",
     address: "",
+    city: "",
     budget: "",
     type: "",
+    web: "",
+    email: "",
     phone: "",
     price: 0,
     image: null,
@@ -334,10 +387,16 @@ const ExperienceForm = () => {
                 <Select
                   name="prefecture"
                   value={values.prefecture}
-                  onChange={(e) => setFieldValue("prefecture", e.target.value)}
+                  onChange={(e) => {
+                    setFieldValue("prefecture", e.target.value); // Update prefecture
+                    setFieldValue("city", ""); // Reset city when prefecture changes
+                  }}
                   error={Boolean(touched.prefecture && errors.prefecture)}
                   style={{ color: palette.text.primary, borderRadius: "30rem" }}
                 >
+                  <MenuItem value="" disabled>
+                    Selecciona una prefectura
+                  </MenuItem>
                   {prefectures.map((prefecture) => (
                     <MenuItem
                       key={prefecture._id}
@@ -354,6 +413,47 @@ const ExperienceForm = () => {
                   style={{ color: palette.error.main }}
                 />
               </FormControl>
+              {/* City Field */}
+              {values.prefecture && (
+                <FormControl fullWidth style={{ marginBottom: spacing(2) }}>
+                  <Typography
+                    variant="h6"
+                    style={{ color: palette.text.primary }}
+                  >
+                    Ciudad*
+                  </Typography>
+                  <Select
+                    name="city"
+                    value={values.city}
+                    onChange={(e) => setFieldValue("city", e.target.value)}
+                    error={Boolean(touched.city && errors.city)}
+                    style={{
+                      color: palette.text.primary,
+                      borderRadius: "30rem",
+                    }}
+                  >
+                    <MenuItem value="" disabled>
+                      Selecciona una ciudad
+                    </MenuItem>
+                    {prefectures
+                      .find((pref) => pref._id === values.prefecture)
+                      ?.cities.map((city) => (
+                        <MenuItem
+                          key={city}
+                          value={city}
+                          style={{ color: palette.text.primary }}
+                        >
+                          {city}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                  <ErrorMessage
+                    name="city"
+                    component="div"
+                    style={{ color: palette.error.main }}
+                  />
+                </FormControl>
+              )}
               <FormControl fullWidth style={{ marginBottom: spacing(2) }}>
                 <Typography
                   variant="h6"
@@ -399,8 +499,73 @@ const ExperienceForm = () => {
                 InputLabelProps={{
                   style: { color: palette.text.secondary },
                 }}
-              />
+                onChange={(e) => {
+                  const newPrice = e.target.value;
+                  setFieldValue("price", newPrice);
 
+                  // Dynamically update the range based on price
+                  const minPrice = Math.max(newPrice * 0.8, 0); // 80% of the price as the min
+                  const maxPrice = newPrice * 1.2; // 120% of the price as the max
+
+                  setFieldValue("range_price.min", minPrice);
+                  setFieldValue("range_price.max", maxPrice);
+                }}
+              />
+              <Slider
+                value={[values.range_price.min, values.range_price.max]}
+                valueLabelDisplay="auto"
+                min={0}
+                max={10000}
+                step={100}
+                onChange={(e, newValue) => {
+                  setFieldValue("range_price", {
+                    min: newValue[0],
+                    max: newValue[1],
+                  });
+                }}
+                sx={{ mt: 2 }}
+              />
+              {/* Display Input Fields for Min and Max Price */}
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <TextField
+                    label="Precio Mínimo"
+                    type="number"
+                    name="range_price.min"
+                    value={values.range_price.min}
+                    onChange={(e) =>
+                      setFieldValue("range_price.min", Number(e.target.value))
+                    }
+                    error={
+                      touched.range_price?.min &&
+                      Boolean(errors.range_price?.min)
+                    }
+                    helperText={
+                      touched.range_price?.min && errors.range_price?.min
+                    }
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    label="Precio Máximo"
+                    type="number"
+                    name="range_price.max"
+                    value={values.range_price.max}
+                    onChange={(e) =>
+                      setFieldValue("range_price.max", Number(e.target.value))
+                    }
+                    error={
+                      touched.range_price?.max &&
+                      Boolean(errors.range_price?.max)
+                    }
+                    helperText={
+                      touched.range_price?.max && errors.range_price?.max
+                    }
+                    fullWidth
+                  />
+                </Grid>
+              </Grid>
               <Box style={{ marginBottom: spacing(2) }}>
                 <Typography
                   variant="h6"
@@ -464,24 +629,74 @@ const ExperienceForm = () => {
                   component="div"
                   style={{ color: palette.error.main }}
                 />
-              </Box>
+              </Box>{" "}
               <div>
-                <label htmlFor="phone">Número de Telefono:</label>
-                <PhoneInput
-                  country={"jp"}
-                  value={values.phone}
-                  onChange={(phone) => setFieldValue("phone", phone)}
-                  inputProps={{
-                    name: "phone",
-                    required: true,
-                    id: "phone",
+                <Typography>Datos de Contacto</Typography>
+                <Field
+                  name="email"
+                  as={TextField}
+                  label="Email*"
+                  fullWidth
+                  error={Boolean(touched.email && errors.email)}
+                  helperText={<ErrorMessage name="email" />}
+                  style={{ marginBottom: spacing(2) }}
+                  InputProps={{
+                    style: {
+                      color: palette.text.primary,
+                      borderRadius: "30rem",
+                    },
+                  }}
+                  InputLabelProps={{
+                    style: { color: palette.text.secondary },
                   }}
                 />
-                <ErrorMessage
-                  name="phone"
-                  component="div"
-                  style={{ color: "red" }}
+                <Field
+                  name="web"
+                  as={TextField}
+                  type="url"
+                  label="Sitio Web"
+                  fullWidth
+                  error={Boolean(touched.web && errors.web)}
+                  helperText={<ErrorMessage name="web" />}
+                  style={{ marginBottom: spacing(2) }}
+                  InputProps={{
+                    style: {
+                      color: palette.text.primary,
+                      borderRadius: "30rem",
+                    },
+                  }}
+                  InputLabelProps={{
+                    style: { color: palette.text.secondary },
+                  }}
+                  onBlur={(e) => {
+                    const value = e.target.value;
+                    if (
+                      value &&
+                      !value.startsWith("http://") &&
+                      !value.startsWith("https://")
+                    ) {
+                      setFieldValue("web", `http://${value}`);
+                    }
+                  }}
                 />
+                <div>
+                  <label htmlFor="phone">Número de Telefono:</label>
+                  <PhoneInput
+                    country={"jp"}
+                    value={values.phone}
+                    onChange={(phone) => setFieldValue("phone", phone)}
+                    inputProps={{
+                      name: "phone",
+                      required: true,
+                      id: "phone",
+                    }}
+                  />
+                  <ErrorMessage
+                    name="phone"
+                    component="div"
+                    style={{ color: "red" }}
+                  />
+                </div>{" "}
               </div>
               <FormControl fullWidth style={{ marginBottom: spacing(2) }}>
                 <Typography

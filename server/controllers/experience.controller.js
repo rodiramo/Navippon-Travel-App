@@ -14,7 +14,7 @@ export const createExperience = async (req, res) => {
       budget,
       contact,
       type,
-      website,
+      web,
       opening_time,
       closing_time,
       location,
@@ -39,6 +39,17 @@ export const createExperience = async (req, res) => {
       days,
     } = req.body;
 
+    // Handle range_price parsing
+    let parsedRangePrice = { min: false, max: false };
+    if (range_price) {
+      try {
+        parsedRangePrice = JSON.parse(range_price);
+      } catch (err) {
+        console.error("Error parsing range_price:", err);
+        return res.status(400).json({ message: "Invalid range_price format" });
+      }
+    }
+
     const existingExperience = await Experience.findOne({ name });
     if (existingExperience) {
       return res
@@ -46,6 +57,7 @@ export const createExperience = async (req, res) => {
         .json({ message: "An experience with this name already exists." });
     }
 
+    // Process the location
     let locationData = {};
     if (location && location.coordinates) {
       locationData = {
@@ -67,7 +79,7 @@ export const createExperience = async (req, res) => {
       image,
       budget,
       contact,
-      website,
+      web,
       opening_time,
       closing_time,
       location: locationData,
@@ -76,10 +88,7 @@ export const createExperience = async (req, res) => {
         best_season: availability.best_season || [],
       },
       price,
-      range_price: {
-        min: range_price.min || false,
-        max: range_price.max || false,
-      },
+      range_price: parsedRangePrice,
       categories: JSON.parse(categories),
       subcategory,
       hotelType,
@@ -98,13 +107,16 @@ export const createExperience = async (req, res) => {
       days,
     });
 
+    // Save the new experience to the database
     await newExperience.save();
 
+    // Retrieve all experiences (optional)
     const experiences = await Experience.find()
       .populate("prefecture")
       .populate("budget")
       .sort({ createdAt: -1 });
 
+    // Send a response back to the client
     res.status(201).json({ experiences });
   } catch (err) {
     console.error("Error creating experience:", err);
@@ -159,7 +171,7 @@ export const editExperience = async (req, res) => {
       image,
       budget,
       contact,
-      website,
+      web,
       opening_time,
       closing_time,
       location,
@@ -184,11 +196,13 @@ export const editExperience = async (req, res) => {
       days,
     } = req.body;
 
-    const activity = await Experience.findById(id);
-    if (!activity) {
+    // Find the experience by ID
+    const experience = await Experience.findById(id);
+    if (!experience) {
       return res.status(404).json({ message: "Experience not found" });
     }
 
+    // Prepare the updated data
     const updatedData = {
       name,
       description,
@@ -196,26 +210,26 @@ export const editExperience = async (req, res) => {
       budget,
       contact,
       type,
-      website,
+      web,
       opening_time,
       closing_time,
       location: {
         type: "Point",
-        coordinates: location?.coordinates || activity.location.coordinates,
+        coordinates: location?.coordinates || experience.location.coordinates, // Use provided coordinates or the existing ones
       },
       availability: {
-        all_year: availability?.all_year || activity.availability.all_year,
+        all_year: availability?.all_year || experience.availability.all_year,
         best_season:
-          availability?.best_season || activity.availability.best_season,
+          availability?.best_season || experience.availability.best_season,
       },
       price,
       range_price: {
-        min: range_price?.min || activity.range_price.min,
-        max: range_price?.max || activity.range_price.max,
+        min: range_price?.min || experience.range_price.min, // Update min price if provided
+        max: range_price?.max || experience.range_price.max, // Update max price if provided
       },
       categories: Array.isArray(categories)
         ? categories
-        : JSON.parse(categories),
+        : JSON.parse(categories), // Ensure categories is always an array
       subcategory,
       hotelType,
       hotelService,
@@ -233,18 +247,20 @@ export const editExperience = async (req, res) => {
       days,
     };
 
+    // If there's a new image uploaded, handle replacing the old image
     if (req.file) {
-      if (activity.image) {
-        const oldImagePath = path.join("public/assets", activity.image);
+      if (experience.image) {
+        const oldImagePath = path.join("public/assets", experience.image);
         if (fs.existsSync(oldImagePath)) {
-          fs.unlinkSync(oldImagePath);
+          fs.unlinkSync(oldImagePath); // Delete the old image from the server
         }
       }
-      updatedData.image = req.file.filename;
+      updatedData.image = req.file.filename; // Save the new image file name
     } else {
-      updatedData.image = activity.image;
+      updatedData.image = experience.image; // Keep the old image if none is uploaded
     }
 
+    // Update the experience in the database
     const updatedExperience = await Experience.findByIdAndUpdate(
       id,
       updatedData,
@@ -259,6 +275,7 @@ export const editExperience = async (req, res) => {
         .json({ message: "Experience could not be updated" });
     }
 
+    // Return the updated experience
     res.status(200).json(updatedExperience);
   } catch (err) {
     console.error("Error updating experience:", err);
@@ -269,14 +286,14 @@ export const editExperience = async (req, res) => {
 export const getExperience = async (req, res) => {
   try {
     const { id } = req.params;
-    const activity = await Experience.findById(id)
+    const experience = await Experience.findById(id)
       .populate("prefecture")
       .populate("budget");
 
-    if (!activity) {
+    if (!experience) {
       return res.status(404).json({ message: "Experience not found" });
     }
-    res.status(200).json(activity);
+    res.status(200).json(experience);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -285,9 +302,9 @@ export const getExperience = async (req, res) => {
 export const deleteExperience = async (req, res) => {
   try {
     const { id } = req.params;
-    const activity = await Experience.findByIdAndDelete(id);
+    const experience = await Experience.findByIdAndDelete(id);
 
-    if (!activity) {
+    if (!experience) {
       return res.status(404).json({ message: "Experience not found" });
     }
 
