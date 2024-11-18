@@ -21,6 +21,8 @@ import Dropzone from "react-dropzone";
 import "@css/Items/ExperienceForm.css";
 import config from "@config/config.js";
 import BreadcrumbBack from "@components/BreadcrumbBack.jsx";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 const experienceSchema = yup.object().shape({
   name: yup.string().required("El nombre de la experiencia es obligatorio"),
@@ -29,6 +31,8 @@ const experienceSchema = yup.object().shape({
     .array()
     .of(yup.string())
     .required("Se requiere al menos una categoría"),
+  phone: yup.string().required("El número de teléfono es obligatorio"),
+  address: yup.string().required("La dirección es obligatoria"),
   price: yup.number().required("El tipo de experiencia es obligatorio"),
   type: yup.string().required("El tipo de experiencia es obligatorio"),
   prefecture: yup.string().required("La prefectura es obligatoria"),
@@ -136,7 +140,9 @@ const ExperienceForm = () => {
     formData.append("categories", JSON.stringify(selectedCategories));
     formData.append("prefecture", values.prefecture);
     formData.append("budget", values.budget);
+    formData.append("address", values.address);
     formData.append("type", values.type);
+    formData.append("phone", values.phone);
     formData.append("price", values.price);
     if (values.image) {
       formData.append("picture", values.image);
@@ -186,8 +192,10 @@ const ExperienceForm = () => {
     description: "",
     categories: [],
     prefecture: "",
+    address: "",
     budget: "",
     type: "",
+    phone: "",
     price: 0,
     image: null,
   };
@@ -293,6 +301,21 @@ const ExperienceForm = () => {
                 fullWidth
                 error={Boolean(touched.description && errors.description)}
                 helperText={<ErrorMessage name="description" />}
+                style={{ marginBottom: spacing(2) }}
+                InputProps={{
+                  style: { color: palette.text.primary, borderRadius: "30rem" },
+                }}
+                InputLabelProps={{
+                  style: { color: palette.text.secondary },
+                }}
+              />
+              <Field
+                name="address"
+                as={TextField}
+                label="Calle*"
+                fullWidth
+                error={Boolean(touched.address && errors.address)}
+                helperText={<ErrorMessage name="address" />}
                 style={{ marginBottom: spacing(2) }}
                 InputProps={{
                   style: { color: palette.text.primary, borderRadius: "30rem" },
@@ -442,7 +465,24 @@ const ExperienceForm = () => {
                   style={{ color: palette.error.main }}
                 />
               </Box>
-
+              <div>
+                <label htmlFor="phone">Número de Telefono:</label>
+                <PhoneInput
+                  country={"jp"}
+                  value={values.phone}
+                  onChange={(phone) => setFieldValue("phone", phone)}
+                  inputProps={{
+                    name: "phone",
+                    required: true,
+                    id: "phone",
+                  }}
+                />
+                <ErrorMessage
+                  name="phone"
+                  component="div"
+                  style={{ color: "red" }}
+                />
+              </div>
               <FormControl fullWidth style={{ marginBottom: spacing(2) }}>
                 <Typography
                   variant="h6"
