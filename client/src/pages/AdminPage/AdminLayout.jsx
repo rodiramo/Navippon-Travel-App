@@ -43,9 +43,7 @@ const AdminLayout = () => {
             Only authorized users can access this page.
           </Typography>
         ) : (
-          <Typography variant="h4">
-            Edit and manage all Navippon content in this admin panel.
-          </Typography>
+          <Typography variant="h4"></Typography>
         )}
       </Box>
     </div>

@@ -8,7 +8,6 @@ const ExperiencesWidget = ({ experience, experiences, filterBy }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const experiencesPerPage = 8;
 
-  // Filtering based on the filterBy prop
   const filteredExperiences =
     filterBy === "name"
       ? experiences.filter((exp) =>
@@ -20,10 +19,8 @@ const ExperiencesWidget = ({ experience, experiences, filterBy }) => {
 
   console.log("Filtered experiences:", filteredExperiences);
 
-  // Calculate total pages
   const totalPages = Math.ceil(filteredExperiences.length / experiencesPerPage);
 
-  // Handle pagination
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   };
@@ -69,7 +66,7 @@ const ExperiencesWidget = ({ experience, experiences, filterBy }) => {
         flex: 1,
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
+        alignItems: "stretch",
       }}
     >
       {filteredExperiences.length === 0 ? (

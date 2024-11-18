@@ -100,7 +100,10 @@ const ExperienceWidget = ({
     <WidgetWrapper
       mb="2rem"
       className="activity-item"
-      style={{ backgroundColor: palette.primary.white }}
+      style={{
+        backgroundColor: palette.primary.white,
+        border: `1.75px solid ${palette.secondary.light}`,
+      }}
     >
       <img
         src={`${config.API_URL}/assets/${image}`}
@@ -109,16 +112,28 @@ const ExperienceWidget = ({
         style={{ color: palette.primary.black }}
       />
       <div className="activity-details">
-        <Typography variant="h4" color="primary" className="experience-title">
+        <Typography
+          variant="h4"
+          color="primary"
+          style={{ display: "flex", alignItems: "center" }}
+        >
           {name}{" "}
-          <span className="location-badge">
+          <span
+            className="location-badge"
+            style={{
+              background: palette.primary.light,
+              marginLeft: 10,
+              fontSize: "1rem",
+              padding: "0.5rem",
+              borderRadius: "30px",
+            }}
+          >
             {prefecture?.name || "No prefecture"}
           </span>
         </Typography>
-        <Typography style={{ color: palette.primary.black }}>
-          Categorías:{" "}
+        <Typography style={{ color: palette.secondary.main }}>
           {categoryDetails.length
-            ? categoryDetails.map((category) => category.category).join(", ")
+            ? categoryDetails.map((category) => category.category).join(" | ")
             : "Sin categorías"}
         </Typography>
         <Typography
@@ -128,19 +143,12 @@ const ExperienceWidget = ({
           {description}
         </Typography>
 
-        {/* Display type, if provided */}
-        {type && (
-          <Typography style={{ color: palette.primary.black }}>
-            Tipo: {type}
-          </Typography>
-        )}
-
         <FlexBetween className="wrap-buttons">
           <Button
             variant="contained"
             sx={{
               textTransform: "none",
-              bgcolor: palette.secondary.dark,
+              bgcolor: palette.secondary.main,
               mr: 2,
               borderRadius: 20,
             }}
@@ -170,23 +178,35 @@ const ExperienceWidget = ({
           )}
         </FlexBetween>
       </div>
-      <IconButton
-        className="favorite"
+      <div
         style={{
-          backgroundColor: palette.primary.main,
-          color: palette.primary.white,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
-        onClick={handleSaveExperience}
       >
-        {isSaved ? (
-          <FavoriteOutlined sx={{ color: "#fff" }} />
-        ) : (
-          <FavoriteBorderOutlined />
-        )}
-      </IconButton>
-      <Typography style={{ color: palette.primary.black }} className="price">
-        {`${price} $` || "Cargando..."}
-      </Typography>
+        <IconButton
+          className="favorite"
+          style={{
+            backgroundColor: palette.primary.main,
+            color: palette.primary.white,
+          }}
+          onClick={handleSaveExperience}
+        >
+          {isSaved ? (
+            <FavoriteOutlined sx={{ color: "#fff" }} />
+          ) : (
+            <FavoriteBorderOutlined />
+          )}
+        </IconButton>
+        <Typography
+          style={{ color: palette.primary.black, fontWeight: "bold" }}
+          className="price"
+        >
+          {`${price} $` || "Cargando..."}
+        </Typography>
+      </div>
       <Dialog open={openDeleteModal} onClose={handleCloseDeleteModal}>
         <DialogTitle>Confirmar eliminación</DialogTitle>
         <DialogContent>

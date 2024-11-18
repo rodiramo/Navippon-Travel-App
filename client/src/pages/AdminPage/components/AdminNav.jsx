@@ -82,7 +82,7 @@ const AdminNav = ({ userId, picturePath }) => {
             src="/assets/navippon-logo-white.png"
             alt="Logo"
             style={{
-              width: isMenuOpen ? "100px" : "60px",
+              width: isMenuOpen ? "70px" : "40px",
               transition: "width 0.3s ease-in-out",
             }}
           />
@@ -92,7 +92,7 @@ const AdminNav = ({ userId, picturePath }) => {
           sx={{
             display: "flex",
             justifyContent: "flex-end",
-            padding: 2,
+            padding: 1,
             marginRight: "-15px",
           }}
         >
@@ -128,7 +128,7 @@ const AdminNav = ({ userId, picturePath }) => {
           </Box>
         )}
 
-        <Divider sx={{ margin: 2 }} />
+        <Divider sx={{ margin: 1 }} />
 
         {/* Menu Items */}
         <List sx={{ padding: 0 }}>
@@ -239,24 +239,6 @@ const AdminNav = ({ userId, picturePath }) => {
             )}
           </ListItem>
         </List>
-
-        <Divider sx={{ margin: 2 }} />
-
-        <Box sx={{ marginTop: "auto", padding: 2 }}>
-          <Box
-            sx={{
-              backgroundColor: "#FF4A5A",
-              padding: 1,
-              borderRadius: 1,
-              textAlign: "center",
-              color: "#fff",
-              cursor: "pointer",
-            }}
-          >
-            <HiOutlineMail size={24} />
-            {isMenuOpen && <Box sx={{ marginTop: 1 }}>Create New Task</Box>}
-          </Box>
-        </Box>
       </Box>
 
       <Box sx={{ marginLeft: isMenuOpen ? 30 : 10, padding: 3, flexGrow: 1 }}>

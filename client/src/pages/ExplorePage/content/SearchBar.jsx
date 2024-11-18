@@ -1,9 +1,10 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
-import { TextField, InputAdornment } from "@mui/material";
+import { TextField, InputAdornment, useTheme, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
 const SearchBar = ({ onSearch }) => {
+  const theme = useTheme();
   const [query, setQuery] = useState("");
 
   const handleKeyPress = (event) => {
@@ -13,12 +14,29 @@ const SearchBar = ({ onSearch }) => {
   };
 
   return (
-    <div className="search-bar">
-      <h2>Search by Name:</h2>
+    <div
+      className="search-bar"
+      style={{
+        backgroundColor: theme.palette.primary.mid,
+        padding: "2rem 1rem",
+        display: "flex",
+        flexDirection: "column",
+        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+        justifyContent: "space-between",
+        borderRadius: "6px",
+      }}
+    >
+      <div style={{ marginBottom: " 1rem" }}>
+        <Typography variant="p">Buscar por Nombre</Typography>
+      </div>
       <TextField
         fullWidth
         variant="outlined"
-        placeholder="Search by name"
+        placeholder="Ej.: Templo Senso-Ji"
+        sx={{
+          border: "none",
+          backgroundColor: theme.palette.primary.white,
+        }}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onKeyPress={handleKeyPress}
@@ -34,7 +52,6 @@ const SearchBar = ({ onSearch }) => {
   );
 };
 
-// Prop validation
 SearchBar.propTypes = {
   onSearch: PropTypes.func.isRequired,
 };

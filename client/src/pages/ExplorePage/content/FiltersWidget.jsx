@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import SearchBar from "./SearchBar.jsx";
 import "@css/Items/ItemsPage.css";
-import { useTheme, Box } from "@mui/material";
+import { useTheme, Box, Typography } from "@mui/material";
 
 const FiltersWidget = ({ onSearch }) => {
   const theme = useTheme();
@@ -14,7 +14,7 @@ const FiltersWidget = ({ onSearch }) => {
       }}
     >
       <SearchBar onSearch={onSearch} />
-      <h2>Filter by:</h2>
+      <Typography variant="p">Filtrar por:</Typography>
     </Box>
   );
 };

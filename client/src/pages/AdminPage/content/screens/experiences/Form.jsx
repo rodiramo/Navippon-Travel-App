@@ -13,16 +13,14 @@ import {
   MenuItem,
   Typography,
   Box,
-  Breadcrumbs,
   Link,
 } from "@mui/material";
 import * as yup from "yup";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Dropzone from "react-dropzone";
-import NavBar from "@components/NavBar/NavBar.jsx";
-import Footer from "@components/Footer/Footer.jsx";
 import "@css/Items/ExperienceForm.css";
 import config from "@config/config.js";
+import BreadcrumbBack from "@components/BreadcrumbBack.jsx";
 
 const experienceSchema = yup.object().shape({
   name: yup.string().required("El nombre de la experiencia es obligatorio"),
@@ -50,6 +48,9 @@ const ExperienceForm = () => {
   const isEditMode = Boolean(experienceId);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [existingImage, setExistingImage] = useState(null);
+  const handleCancel = () => {
+    navigate(-1);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,15 +65,12 @@ const ExperienceForm = () => {
           throw new Error("Error al obtener los datos");
         }
 
-        const [
-          categoriesData,
-          prefecturesData,
-          budgetsData,
-        ] = await Promise.all([
-          categoriesRes.json(),
-          prefecturesRes.json(),
-          budgetsRes.json(),
-        ]);
+        const [categoriesData, prefecturesData, budgetsData] =
+          await Promise.all([
+            categoriesRes.json(),
+            prefecturesRes.json(),
+            budgetsRes.json(),
+          ]);
 
         setCategories(categoriesData);
         setPrefectures(prefecturesData);
@@ -205,25 +203,38 @@ const ExperienceForm = () => {
 
   return (
     <div id="body">
-      <NavBar />
-      <Box sx={{ padding: spacing(3) }}>
-        <Box className="breadcrumbs-container">
-          <Breadcrumbs
-            aria-label="breadcrumb"
-            style={{ marginBottom: spacing(3) }}
+      <Box>
+        <Box
+          style={{
+            backgroundColor: palette.background.light,
+            height: "150px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end",
+            borderRadius: " 0 0 10rem 10rem",
+          }}
+        >
+          <BreadcrumbBack />
+          <Typography
+            variant="h1"
+            gutterBottom
+            style={{ color: palette.secondary.dark, textAlign: "center" }}
           >
-            <Link component={RouterLink} to="/home">
-              Inicio
-            </Link>
-            <Link component={RouterLink} to="/experiences">
-              Experiencias
-            </Link>
-            <Typography color="textPrimary">
-              {isEditMode
-                ? `Editar experiencia: ${initialData.name}`
-                : "Crear nueva experiencia"}
-            </Typography>
-          </Breadcrumbs>
+            {isEditMode
+              ? `Editar experiencia: ${initialData.name}`
+              : "Crea una nueva experiencia"}
+          </Typography>
+          <Typography
+            variant="p"
+            style={{
+              color: palette.secondary.dark,
+              textAlign: "center",
+              paddingBottom: "2rem",
+            }}
+          >
+            Asegurate de completar todos los campos para que el usuario tenga
+            toda la información.
+          </Typography>
         </Box>
         <Formik
           initialValues={initialValues}
@@ -231,16 +242,7 @@ const ExperienceForm = () => {
           onSubmit={handleSubmit}
         >
           {({ setFieldValue, values, errors, touched, isSubmitting }) => (
-            <Form className="experience-form">
-              <Typography
-                variant="h1"
-                gutterBottom
-                style={{ color: palette.primary.main }}
-              >
-                {isEditMode
-                  ? `Editar experiencia: ${initialData.name}`
-                  : "Crear nueva experiencia"}
-              </Typography>
+            <Form className="experience-form" style={{ padding: "5rem" }}>
               <FormControl fullWidth style={{ marginBottom: spacing(2) }}>
                 <Typography
                   variant="h6"
@@ -501,16 +503,30 @@ const ExperienceForm = () => {
                 sx={{
                   display: "flex",
                   justifyContent: "flex-end",
-                  paddingTop: spacing(2),
+                  paddingTop: 2,
                 }}
               >
+                <Button
+                  variant="outlined"
+                  onClick={handleCancel}
+                  style={{
+                    borderColor: "#ccc",
+                    color: "#555",
+                    borderRadius: "30rem",
+                    padding: "10px 20px",
+                    marginRight: "10px",
+                  }}
+                >
+                  Cancelar
+                </Button>
+
                 <Button
                   variant="contained"
                   type="submit"
                   disabled={isSubmitting}
                   style={{
                     backgroundColor: palette.primary.main,
-                    color: palette.common.white,
+                    color: "#fff",
                     borderRadius: "30rem",
                     padding: "10px 20px",
                   }}
@@ -526,7 +542,6 @@ const ExperienceForm = () => {
           )}
         </Formik>
       </Box>
-      <Footer />
     </div>
   );
 };

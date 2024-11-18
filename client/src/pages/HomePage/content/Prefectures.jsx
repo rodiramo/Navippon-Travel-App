@@ -8,7 +8,7 @@ const Prefectures = () => {
         height: "20vh",
         marginTop: "4rem",
         display: "flex",
-        marginBottom: "10rem",
+        marginBottom: "15rem",
         flexDirection: "column",
         justifyContent: "space-around",
       }}
