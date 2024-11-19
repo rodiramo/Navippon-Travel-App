@@ -14,6 +14,7 @@ import userRoute from "./routes/users.routes.js";
 import postRoute from "./routes/posts.routes.js";
 import budgetRoute from "./routes/budget.routes.js";
 import prefectureRoute from "./routes/prefectures.routes.js";
+import regionRoute from "./routes/region.routes.js";
 import categoryRoute from "./routes/categories.routes.js";
 import experienceRoute from "./routes/experience.routes.js";
 import tripsRoute from "./routes/trips.routes.js";
@@ -28,12 +29,14 @@ import { createPost } from "./controllers/posts.controller.js";
 import User from "./models/User.js";
 import Category from "./models/Category.js";
 import Prefecture from "./models/Prefecture.js";
+import Region from "./models/Region.js";
 import Experience from "./models/Experience.js";
 import Budget from "./models/Budget.js";
 import {
   prefectures,
   categories,
   users,
+  regions,
   experiences,
   budgets,
 } from "./data/index.js";
@@ -98,6 +101,7 @@ app.use("/trips", tripsRoute);
 app.use("/budget", budgetRoute);
 app.use("/categories", categoryRoute);
 app.use("/prefectures", prefectureRoute);
+app.use("/regions", regionRoute);
 app.use("/experiences", experienceRoute);
 
 app.use((err, req, res, next) => {
@@ -143,6 +147,11 @@ mongoose
       if (prefectureCount === 0) {
         await Prefecture.insertMany(prefectures);
         console.log("Prefectures inserted successfully.");
+      }
+        const regionCount = await Region.countDocuments();
+      if (regionCount === 0) {
+        await Region.insertMany(regions);
+        console.log("Regions inserted successfully.");
       }
     } catch (error) {
       console.error("Error inserting initial data:", error);

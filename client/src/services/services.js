@@ -75,6 +75,17 @@ export const fetchPrefectures = async () => {
   return await response.json();
 };
 
+
+/* fetch prefectures */
+export const fetchRegions = async () => {
+  const response = await fetch(`${config.API_URL}/regions`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch regions");
+  }
+  return await response.json();
+};
+
+
 /* users  */
 export const fetchUserPicture = async (token, postUserId) => {
   const response = await fetch(`${config.API_URL}/users/${postUserId}`, {

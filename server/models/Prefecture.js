@@ -10,6 +10,11 @@ const PrefectureSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+   region: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Region', 
+    required: true
+  },
 });
 
 const Prefecture = mongoose.model("Prefecture", PrefectureSchema);

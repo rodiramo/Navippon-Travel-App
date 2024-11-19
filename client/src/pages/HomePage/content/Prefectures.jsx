@@ -1,6 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import PrefecturesWidget from "@widgets/PrefecturesWidget.jsx";
-
+import Regions from "@widgets/Regions/Regions.jsx";
 const Prefectures = () => {
   return (
     <Box
@@ -8,7 +7,7 @@ const Prefectures = () => {
         height: "20vh",
         marginTop: "4rem",
         display: "flex",
-        marginBottom: "15rem",
+        marginBottom: "40rem",
         flexDirection: "column",
         justifyContent: "space-around",
       }}
@@ -21,7 +20,7 @@ const Prefectures = () => {
         Encuentra tus atractivos y restaurantes favoritos en la región que más
         te llame la atención.
       </Typography>
-      <PrefecturesWidget />
+      <Regions />
     </Box>
   );
 };

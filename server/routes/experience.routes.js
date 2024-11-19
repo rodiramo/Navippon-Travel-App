@@ -6,6 +6,7 @@ import {
   getExperience,
   getExperiencesSearch,
   filterCategory,
+  filterRegion,
   deleteExperience,
   filterPrefecture,
 } from "../controllers/experience.controller.js";
@@ -20,5 +21,6 @@ router.get("/:id", verifyToken, getExperience);
 router.patch("/:id", verifyToken, editExperience);
 router.delete("/:id", verifyToken, deleteExperience);
 router.get("/filtered-category/:categoryName", verifyToken, filterCategory);
+router.get("/filtered-region/:regionId", verifyToken, filterRegion);
 router.get("/filtered-prefecture/:prefectureId", verifyToken, filterPrefecture);
 export default router;

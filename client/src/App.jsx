@@ -15,6 +15,7 @@ import TripView from "./pages/TripPage/TripView.jsx";
 import UserTripsPage from "./pages/TripPage/UserTripPage.jsx";
 import BlogPage from "./pages/BlogPage/BlogPage.jsx";
 import ContactPage from "./pages/ContactPage/ContactPage.jsx";
+import FilteredRegionPage from "./pages/ExperiencesPage/FilteredRegionPage.jsx";
 import FilteredCategoriesPage from "./pages/ExperiencesPage/FilteredCategoriesPage.jsx";
 import FilteredPrefecturePage from "./pages/ExperiencesPage/FilteredPrefecturePage.jsx";
 import AdminPanel from "./pages/AdminPage/AdminLayout.jsx";
@@ -45,6 +46,10 @@ function App() {
             <Route
               path="/experiences/filtered-category/:categoryName"
               element={<FilteredCategoriesPage />}
+            />{" "}
+            <Route
+              path="/experiences/filtered-region/:regionId"
+              element={<FilteredRegionPage />}
             />
             <Route
               path="/experiences/filtered-prefecture/:prefectureId"

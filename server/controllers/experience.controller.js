@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Experience from "../models/Experience.js";
 import Prefecture from "../models/Prefecture.js";
+import Region from "../models/Region.js";
 import fs from "fs";
 import path from "path";
 
@@ -352,6 +353,39 @@ export const filterPrefecture = async (req, res) => {
 
     const experiences = await Experience.find({ prefecture: prefectureId })
       .populate("prefecture")
+      .populate("budget");
+
+    if (experiences.length === 0) {
+      return res.status(204).json([]);
+    }
+
+    res.status(200).json(experiences);
+  } catch (error) {
+    console.error("Error object:", error);
+    res
+      .status(500)
+      .json({ error: "Internal Server Error", details: error.message });
+  }
+};
+
+
+export const filterRegion = async (req, res) => {
+  const { regionId } = req.params;
+
+  if (!regionId) {
+    console.log("Missing region ID in path");
+    return res.status(400).json({ error: "Region ID is required" });
+  }
+
+  try {
+    const isRegionValid = await Region.exists({ _id: regionId });
+    if (!isRegionValid) {
+      console.log("Region not found:", regionId);
+      return res.status(404).json({ error: "Region not found" });
+    }
+
+    const experiences = await Experience.find({ region: regionId })
+      .populate("region")
       .populate("budget");
 
     if (experiences.length === 0) {
