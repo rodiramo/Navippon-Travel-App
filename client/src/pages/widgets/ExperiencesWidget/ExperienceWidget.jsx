@@ -48,6 +48,13 @@ const ExperienceWidget = ({
   const [isSaved, setIsSaved] = useState(false);
   const role = useSelector((state) => state.user.role);
 
+  const truncateText = (text, maxLength) => {
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength) + "...";
+    }
+    return text;
+  };
+
   useEffect(() => {
     const fetchCategoryData = async () => {
       try {
@@ -140,7 +147,7 @@ const ExperienceWidget = ({
           style={{ color: palette.primary.black }}
           className="activity-description"
         >
-          {description}
+          {truncateText(description, 150)} {/* Truncated description */}
         </Typography>
 
         <FlexBetween className="wrap-buttons">
@@ -264,7 +271,7 @@ ExperienceWidget.propTypes = {
   coordinates: PropTypes.arrayOf(PropTypes.number).isRequired,
   onSave: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
-  type: PropTypes.string, // Add type prop validation
+  type: PropTypes.string,
 };
 
 export default ExperienceWidget;

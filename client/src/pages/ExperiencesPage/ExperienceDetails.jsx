@@ -201,6 +201,10 @@ const ExperienceDetails = () => {
               {experience.prefecture
                 ? experience.prefecture.name
                 : "Cargando..."}
+              ,{" "}
+              {experience.region
+                ? experience.region.region // Access the `region` field
+                : "Cargando..."}
             </Typography>
           </div>
           <div>
@@ -329,22 +333,30 @@ const ExperienceDetails = () => {
                     </Box>
                   </Box>
 
-                  <Box flex={1}>
-                    {/* Contact and Map Column */}
+                  <Box flex={1} className="contacto">
                     <Typography variant="h6">Contacto:</Typography>
-                    <Typography>
-                      <FaRegMap />
+                    <Typography sx={{ display: "flex", alignItems: "center" }}>
+                      <Box sx={{ mr: 1, color: palette.primary.main }}>
+                        <FaRegMap />
+                      </Box>
                       {experience.address}
                     </Typography>
-                    <Typography>
-                      <HiOutlineMail />
+                    <Typography sx={{ display: "flex", alignItems: "center" }}>
+                      <Box sx={{ mr: 1, color: palette.primary.main }}>
+                        <HiOutlineMail />
+                      </Box>
                       {experience.email}
-                    </Typography>{" "}
-                    <Typography>
-                      <TbPhone /> +{experience.phone}
                     </Typography>
-                    <Typography>
-                      <LuGlobe2 />
+                    <Typography sx={{ display: "flex", alignItems: "center" }}>
+                      <Box sx={{ mr: 1, color: palette.primary.main }}>
+                        <TbPhone />
+                      </Box>
+                      +{experience.phone}
+                    </Typography>
+                    <Typography sx={{ display: "flex", alignItems: "center" }}>
+                      <Box sx={{ mr: 1, color: palette.primary.main }}>
+                        <LuGlobe2 />
+                      </Box>
                       <a
                         href={
                           experience.web.startsWith("http")
@@ -358,6 +370,7 @@ const ExperienceDetails = () => {
                         {experience.web}
                       </a>
                     </Typography>
+
                     <Typography variant="h6" sx={{ mt: 2 }}>
                       Ubicación:
                     </Typography>

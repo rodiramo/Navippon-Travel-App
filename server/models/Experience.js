@@ -26,6 +26,11 @@ const ExperienceSchema = new mongoose.Schema({
     ref: "Prefecture",
     required: true,
   },
+  region: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Region",
+    required: true,
+  },
   city: {
     type: String,
   },

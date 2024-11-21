@@ -113,7 +113,7 @@ export const createExperience = async (req, res) => {
 
     // Retrieve all experiences (optional)
     const experiences = await Experience.find()
-      .populate("prefecture")
+      .populate("prefecture")  .populate("region")
       .populate("budget")
       .sort({ createdAt: -1 });
 
@@ -128,7 +128,7 @@ export const createExperience = async (req, res) => {
 export const getExperiences = async (req, res) => {
   try {
     const experiences = await Experience.find()
-      .populate("prefecture")
+      .populate("prefecture") .populate("region")
       .populate("budget")
       .sort({ createdAt: -1 });
 
@@ -149,7 +149,7 @@ export const getExperiencesSearch = async (req, res) => {
     }
 
     const experiences = await Experience.find(filter)
-      .populate("prefecture")
+      .populate("prefecture").populate("region")
       .populate("budget");
 
     res.json(experiences);
@@ -268,6 +268,7 @@ export const editExperience = async (req, res) => {
       { new: true, runValidators: true }
     )
       .populate("prefecture")
+      .populate("region")
       .populate("budget");
 
     if (!updatedExperience) {
@@ -288,7 +289,8 @@ export const getExperience = async (req, res) => {
   try {
     const { id } = req.params;
     const experience = await Experience.findById(id)
-      .populate("prefecture")
+      .populate("prefecture")  
+      .populate("region")
       .populate("budget");
 
     if (!experience) {
@@ -324,7 +326,7 @@ export const filterCategory = async (req, res) => {
     }
 
     const experiences = await Experience.find({ categories: categoryName })
-      .populate("prefecture")
+      .populate("prefecture") .populate("region")
       .populate("budget");
 
     res.status(200).json(experiences);
@@ -352,7 +354,7 @@ export const filterPrefecture = async (req, res) => {
     }
 
     const experiences = await Experience.find({ prefecture: prefectureId })
-      .populate("prefecture")
+      .populate("prefecture").populate("region")
       .populate("budget");
 
     if (experiences.length === 0) {
@@ -385,7 +387,7 @@ export const filterRegion = async (req, res) => {
     }
 
     const experiences = await Experience.find({ region: regionId })
-      .populate("region")
+      .populate("region") .populate("prefecture")
       .populate("budget");
 
     if (experiences.length === 0) {

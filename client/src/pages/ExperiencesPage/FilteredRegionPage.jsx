@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Typography, Box, Grid } from "@mui/material";
+import { Typography, Box, Grid, CircularProgress } from "@mui/material";
 import ExperienceSmall from "../widgets/ExperiencesWidget/ExperienceSmall.jsx";
 import { useSelector } from "react-redux";
 import NavBar from "@components/NavBar/NavBar.jsx";
 import Footer from "@components/Footer/Footer.jsx";
 import config from "@config/config.js";
 import BreadcrumbBack from "@components/BreadcrumbBack.jsx";
+import { fetchWeather } from "@widgets/Weather/Weather.jsx"; // Import the fetchWeather function
 
 const FilteredRegionPage = () => {
   const [experiences, setExperiences] = useState([]);
   const [regionName, setRegionName] = useState("");
+  const [regionWeather, setRegionWeather] = useState(null); // For storing weather data
   const [error, setError] = useState(null);
   const { regionId } = useParams();
   const token = useSelector((state) => state.token);
@@ -18,6 +20,7 @@ const FilteredRegionPage = () => {
   useEffect(() => {
     const fetchExperiencesAndRegion = async () => {
       try {
+        // Fetch experiences for the region
         const experiencesResponse = await fetch(
           `${config.API_URL}/experiences/filtered-region/${regionId}`,
           {
@@ -38,10 +41,10 @@ const FilteredRegionPage = () => {
           : [];
         setExperiences(experiencesData);
 
+        // Fetch region data
         const regionResponse = await fetch(
           `${config.API_URL}/regions/${regionId}`
         );
-
         if (!regionResponse.ok) {
           const errorData = await regionResponse.json();
           throw new Error(errorData.error || "Error al obtener la región");
@@ -49,6 +52,11 @@ const FilteredRegionPage = () => {
 
         const regionData = await regionResponse.json();
         setRegionName(regionData.region);
+
+        // Fetch weather for the region (using latitude and longitude from the region)
+        const { latitude, longitude } = regionData;
+        const weatherData = await fetchWeather(latitude, longitude); // Fetch weather
+        setRegionWeather(weatherData); // Set weather data
       } catch (error) {
         console.error("Error al obtener los datos:", error.message);
         setError(error.message);
@@ -91,24 +99,46 @@ const FilteredRegionPage = () => {
       <BreadcrumbBack />
       <Box sx={{ marginBottom: 2, paddingTop: 15, marginLeft: 2 }}>
         <Typography variant="h1" gutterBottom sx={{ textAlign: "center" }}>
-          Actividades en la región de {regionName}
+          {regionName}
         </Typography>
+
+        {/* Display Weather Information */}
+        {regionWeather ? (
+          <Box sx={{ textAlign: "center", marginBottom: 4 }}>
+            <Typography variant="h6">Clima actual en {regionName}:</Typography>
+            <Typography variant="body1">
+              {regionWeather.temperature}°C - {regionWeather.description}
+            </Typography>
+            <img
+              src={`http://openweathermap.org/img/wn/${regionWeather.icon}.png`}
+              alt={regionWeather.description}
+            />
+          </Box>
+        ) : (
+          <CircularProgress />
+        )}
+
         {experiences.length === 0 ? (
           <Typography variant="h6" color="text.secondary">
             No hay experiencias para esta región.
           </Typography>
         ) : (
-          <Grid container spacing={2}>
-            {experiences.map((experience) => (
-              <Grid item key={experience._id} xs={12} sm={6} md={4}>
-                <ExperienceSmall
-                  {...experience}
-                  experienceId={experience._id}
-                  onDelete={handleDelete}
-                />
-              </Grid>
-            ))}
-          </Grid>
+          <Box>
+            <Typography variant="h2" color="text.secondary">
+              Experiencias para esta región.
+            </Typography>
+            <Grid container spacing={2}>
+              {experiences.map((experience) => (
+                <Grid item key={experience._id} xs={12} sm={6} md={4}>
+                  <ExperienceSmall
+                    {...experience}
+                    experienceId={experience._id}
+                    onDelete={handleDelete}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
         )}
       </Box>
 
