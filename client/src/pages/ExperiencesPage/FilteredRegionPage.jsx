@@ -7,12 +7,12 @@ import NavBar from "@components/NavBar/NavBar.jsx";
 import Footer from "@components/Footer/Footer.jsx";
 import config from "@config/config.js";
 import BreadcrumbBack from "@components/BreadcrumbBack.jsx";
-import { fetchWeather } from "@widgets/Weather/Weather.jsx"; // Import the fetchWeather function
+import { fetchWeather } from "@widgets/Weather/Weather.jsx";
 
 const FilteredRegionPage = () => {
   const [experiences, setExperiences] = useState([]);
   const [regionName, setRegionName] = useState("");
-  const [regionWeather, setRegionWeather] = useState(null); // For storing weather data
+  const [regionWeather, setRegionWeather] = useState(null);
   const [error, setError] = useState(null);
   const { regionId } = useParams();
   const token = useSelector((state) => state.token);
@@ -20,7 +20,6 @@ const FilteredRegionPage = () => {
   useEffect(() => {
     const fetchExperiencesAndRegion = async () => {
       try {
-        // Fetch experiences for the region
         const experiencesResponse = await fetch(
           `${config.API_URL}/experiences/filtered-region/${regionId}`,
           {
@@ -41,7 +40,6 @@ const FilteredRegionPage = () => {
           : [];
         setExperiences(experiencesData);
 
-        // Fetch region data
         const regionResponse = await fetch(
           `${config.API_URL}/regions/${regionId}`
         );
@@ -53,10 +51,9 @@ const FilteredRegionPage = () => {
         const regionData = await regionResponse.json();
         setRegionName(regionData.region);
 
-        // Fetch weather for the region (using latitude and longitude from the region)
         const { latitude, longitude } = regionData;
-        const weatherData = await fetchWeather(latitude, longitude); // Fetch weather
-        setRegionWeather(weatherData); // Set weather data
+        const weatherData = await fetchWeather(latitude, longitude);
+        setRegionWeather(weatherData);
       } catch (error) {
         console.error("Error al obtener los datos:", error.message);
         setError(error.message);

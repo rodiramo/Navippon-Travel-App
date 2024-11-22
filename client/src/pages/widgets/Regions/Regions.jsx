@@ -39,23 +39,19 @@ const Regions = () => {
             className="card-wrap"
           >
             <div className="card-tipos">
-              {/* Card Background Image */}
               <img
                 src={`${config.API_URL}/assets/${region.image}`}
                 alt={region.region}
                 className="card__image"
               />
 
-              {/* Card Overlay */}
               <div className="card__overlay">
-                {/* Card Header */}
                 <div className="card__header">
                   <div>
                     <h3 className="card__title">{region.region}</h3>
                   </div>
                 </div>
 
-                {/* Card Description */}
                 <p className="card__description">
                   {region.description || "No description available."}
                 </p>

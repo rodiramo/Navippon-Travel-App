@@ -25,6 +25,9 @@ import BgShape from "@components/Shapes/BgShape.jsx";
 import "@css/Items/ActivityDetail.css";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import config from "@config/config.js";
 import CommentsContainer from "../../components/comments/CommentsContainer";
 
@@ -117,6 +120,16 @@ const ExperienceDetails = () => {
       </Box>
     );
   }
+  const coordinates = experience.location.coordinates || [null, null];
+
+  const myIcon = L.icon({
+    iconUrl: "/assets/location.png",
+    iconSize: [40, 40],
+    iconAnchor: [22, 94],
+    popupAnchor: [-3, -76],
+    shadowSize: [68, 95],
+    shadowAnchor: [22, 94],
+  });
 
   return (
     <Box id="body">
@@ -201,10 +214,7 @@ const ExperienceDetails = () => {
               {experience.prefecture
                 ? experience.prefecture.name
                 : "Cargando..."}
-              ,{" "}
-              {experience.region
-                ? experience.region.region // Access the `region` field
-                : "Cargando..."}
+              , {experience.region ? experience.region.region : "Cargando..."}
             </Typography>
           </div>
           <div>
@@ -293,13 +303,7 @@ const ExperienceDetails = () => {
                     <Typography sx={{ mb: 1 }}>
                       <strong>Hora de Cierre:</strong> {experience.closing_time}
                     </Typography>
-                    <Typography sx={{ mb: 1 }}>
-                      <strong>Coordenadas de Ubicación:</strong>{" "}
-                      {experience.location.coordinates &&
-                      experience.location.coordinates.length > 0
-                        ? experience.location.coordinates.join(", ")
-                        : "Coordenadas no disponibles"}
-                    </Typography>
+
                     <Typography sx={{ mb: 1 }}>
                       <strong>Disponible todo el año:</strong>{" "}
                       {experience.availability.all_year ? "Sí" : "No"}
@@ -377,11 +381,30 @@ const ExperienceDetails = () => {
                     <Box
                       sx={{
                         width: "100%",
-                        height: "200px",
-                        backgroundColor: "#E0E0E0",
+                        height: "150px",
                         borderRadius: "8px",
                       }}
-                    ></Box>
+                    >
+                      <MapContainer
+                        center={coordinates}
+                        zoom={13}
+                        style={{
+                          width: "100%",
+                          height: "200px",
+                          borderRadius: "8px",
+                        }}
+                      >
+                        <TileLayer
+                          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        />
+                        <Marker position={coordinates} icon={myIcon}>
+                          <Popup>
+                            <strong>{experience.name}</strong>
+                          </Popup>
+                        </Marker>
+                      </MapContainer>
+                    </Box>
                   </Box>
                 </Box>
               )}

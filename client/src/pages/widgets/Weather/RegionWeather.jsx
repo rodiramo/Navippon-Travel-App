@@ -21,7 +21,7 @@ const RegionWeather = ({ latitude, longitude }) => {
           <p>Temperature: {weather.temperature}°C</p>
           <p>Description: {weather.description}</p>
           <img
-            src={`http://openweathermap.org/img/wn/${weather.icon}@2x.png`} // Weather icon image
+            src={`http://openweathermap.org/img/wn/${weather.icon}@2x.png`}
             alt="weather icon"
           />
         </div>
