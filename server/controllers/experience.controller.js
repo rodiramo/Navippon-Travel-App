@@ -135,6 +135,48 @@ export const getExperiences = async (req, res) => {
   }
 };
 
+export const searchExperiences = async (req, res) => {
+  try {
+    const { region, prefecture, query } = req.query;
+    console.log("Received search params:", { region, prefecture, query });
+
+    const filter = {};
+
+    if (region) filter.region = region;
+    if (prefecture) filter.prefecture = prefecture;
+    if (query) {
+      const regex = new RegExp(query, "i");
+      filter.$or = [
+        { name: { $regex: regex } },
+        { description: { $regex: regex } },
+      ];
+    }
+
+    console.log("Constructed filter:", filter);
+
+    try {
+      const experiences = await Experience.find(filter)
+        .populate("prefecture")
+        .populate("region")
+        .populate("budget");
+
+      console.log("Fetched experiences:", experiences);
+
+      if (experiences.length === 0) {
+        console.log("No experiences found with the given filter.");
+      }
+
+      res.json(experiences);
+    } catch (error) {
+      console.error("Error fetching experiences:", error);
+      res.status(500).json({ message: "Error fetching experiences" });
+    }
+  } catch (error) {
+    console.error("Error searching experiences:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
 export const getExperiencesSearch = async (req, res) => {
   try {
     const { query } = req.query;

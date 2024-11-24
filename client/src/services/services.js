@@ -23,6 +23,42 @@ export const fetchExperiences = async (token) => {
   }
 };
 
+// Function to fetch searched experiences from the server
+export const fetchSearchedExperiences = async (
+  token,
+  { region, prefecture, query }
+) => {
+  try {
+    const params = new URLSearchParams();
+
+    if (region) params.append("region", region);
+    if (prefecture) params.append("prefecture", prefecture);
+    if (query) params.append("query", query);
+
+    // Construct the search URL with the query params
+    const response = await fetch(
+      `${config.API_URL}/experiences/search-location?${params.toString()}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Error al obtener experiencias.");
+    }
+
+    const data = await response.json();
+    console.log("Fetched experiences data:", data); // For debugging
+    return data;
+  } catch (error) {
+    console.error("Fetch searched experiences error:", error);
+    throw error;
+  }
+};
+
 export const saveOrUnsaveExperience = async (
   loggedInUserId,
   experienceId,
@@ -67,24 +103,26 @@ export const deleteExperience = async (experienceId, token) => {
 };
 
 /* fetch prefectures */
-export const fetchPrefectures = async () => {
-  const response = await fetch(`${config.API_URL}/prefectures`);
+export const fetchPrefectures = async (token) => {
+  const response = await fetch(`${config.API_URL}/prefectures`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   if (!response.ok) {
     throw new Error("Failed to fetch prefectures");
   }
   return await response.json();
 };
 
-
 /* fetch prefectures */
-export const fetchRegions = async () => {
-  const response = await fetch(`${config.API_URL}/regions`);
+export const fetchRegions = async (token) => {
+  const response = await fetch(`${config.API_URL}/regions`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   if (!response.ok) {
     throw new Error("Failed to fetch regions");
   }
   return await response.json();
 };
-
 
 /* users  */
 export const fetchUserPicture = async (token, postUserId) => {

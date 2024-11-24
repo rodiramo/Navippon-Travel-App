@@ -5,6 +5,7 @@ import {
   editExperience,
   getExperience,
   getExperiencesSearch,
+  searchExperiences,
   filterCategory,
   filterRegion,
   deleteExperience,
@@ -17,6 +18,7 @@ const router = express.Router();
 router.post("/", verifyToken, createExperience);
 router.get("/", verifyToken, getExperiences);
 router.get("/search", verifyToken, getExperiencesSearch);
+router.get("/search-location", searchExperiences);
 router.get("/:id", verifyToken, getExperience);
 router.patch("/:id", verifyToken, editExperience);
 router.delete("/:id", verifyToken, deleteExperience);

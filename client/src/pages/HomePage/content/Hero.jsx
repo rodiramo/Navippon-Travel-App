@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
-import SearchBar from "@components/SearchBar.jsx";
+import SearchBar from "@components/SearchBarHome.jsx";
 
 const backgroundImages = [
   "/assets/bg-home1.jpg",
@@ -43,7 +43,6 @@ const Hero = () => {
         overflow: "hidden",
       }}
     >
-      {/* Background image container */}
       {backgroundImages.map((image, index) => (
         <Box
           key={index}
@@ -62,7 +61,6 @@ const Hero = () => {
         />
       ))}
 
-      {/* Content on top of the background */}
       <Typography
         variant="h1"
         sx={{ textAlign: "center", fontWeight: "bold", zIndex: 2 }}

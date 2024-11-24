@@ -22,7 +22,7 @@ import AdminPanel from "./pages/AdminPage/AdminLayout.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import ExperienceForm from "./pages/AdminPage/content/screens/experiences/Form.jsx";
 import NotFound from "./pages/NotFound.jsx";
-
+import ResultPage from "./pages/ResultPage/ResultPage.jsx";
 function App() {
   const mode = useSelector((state) => state.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
@@ -40,6 +40,7 @@ function App() {
 
           {/* Private routes */}
           <Route element={<PrivateRoute />}>
+            <Route path="/results" element={<ResultPage />} />
             <Route path="/profile/:userId" element={<ProfilePage />} />
             <Route path="/posts" element={<BlogPage />} />
             <Route path="/experiences" element={<ExplorePage />} />

@@ -304,7 +304,6 @@ const ExperienceForm = () => {
                     multiple
                     value={selectedSubcategories}
                     onChange={(e) => {
-                      // Call handleSubcategoryToggle when user selects or deselects subcategory
                       handleSubcategoryToggle(e.target.value);
                     }}
                     renderValue={(selected) => selected.join(", ")}
