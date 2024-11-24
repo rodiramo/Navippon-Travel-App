@@ -12,16 +12,16 @@ export const getUser = async (req, res) => {
   }
 };
 
-export const getUserActivities = async (req, res) => {
+export const getUserExperiences = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.findById(id).populate("favoriteActivities");
+    const user = await User.findById(id).populate("favoriteExperiences");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json(user.favoriteActivities);
+    res.status(200).json(user.favoriteExperiences);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -54,40 +54,40 @@ export const editUser = async (req, res) => {
   }
 };
 
-export const addRemoveFavoriteActivity = async (req, res) => {
+export const addRemoveFavoriteExperience = async (req, res) => {
   try {
-    const { id, activityId } = req.params;
+    const { id, experienceId } = req.params;
     const user = await User.findById(id);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (user.favoriteActivities.includes(activityId)) {
-      user.favoriteActivities = user.favoriteActivities.filter(
-        (favActivityId) => favActivityId.toString() !== activityId
+    if (user.favoriteExperiences.includes(experienceId)) {
+      user.favoriteExperiences = user.favoriteExperiences.filter(
+        (favExperienceId) => favExperienceId.toString() !== experienceId
       );
     } else {
-      user.favoriteActivities.push(activityId);
+      user.favoriteExperiences.push(experienceId);
     }
 
     await user.save();
-    res.status(200).json(user.favoriteActivities);
+    res.status(200).json(user.favoriteExperiences);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
-export const checkIfActivityIsSaved = async (req, res) => {
+export const checkIfExperienceIsSaved = async (req, res) => {
   try {
-    const { userId, activityId } = req.params;
+    const { userId, experienceId } = req.params;
     const user = await User.findById(userId).select("favorites");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const isSaved = user.favoriteActivities.includes(activityId);
+    const isSaved = user.favoriteExperiences.includes(experienceId);
 
     return res.status(200).json({ isSaved });
   } catch (error) {

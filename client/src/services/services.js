@@ -114,6 +114,17 @@ export const fetchPrefectures = async (token) => {
 };
 
 /* fetch prefectures */
+export const fetchBudgets = async (token) => {
+  const response = await fetch(`${config.API_URL}/budget`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!response.ok) {
+    throw new Error("Failed to fetch budgets");
+  }
+  return await response.json();
+};
+
+/* fetch budgets */
 export const fetchRegions = async (token) => {
   const response = await fetch(`${config.API_URL}/regions`, {
     headers: { Authorization: `Bearer ${token}` },
@@ -122,6 +133,38 @@ export const fetchRegions = async (token) => {
     throw new Error("Failed to fetch regions");
   }
   return await response.json();
+};
+
+export const fetchFavoriteExperiences = async (
+  userId,
+  token,
+  prefectureMap,
+  budgetMap
+) => {
+  const response = await fetch(
+    `${config.API_URL}/users/${userId}/experiences`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error("Error response from server:", errorText);
+    throw new Error("Failed to fetch favorite experiences");
+  }
+
+  const data = await response.json();
+  return data.map((experience) => ({
+    ...experience,
+    prefecture: {
+      name: prefectureMap[experience.prefecture] || "Unknown",
+    },
+    budget: {
+      name: budgetMap[experience.budget] || "Unknown",
+    },
+    isSaved: true,
+  }));
 };
 
 /* users  */

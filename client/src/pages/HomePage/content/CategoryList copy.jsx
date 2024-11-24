@@ -89,6 +89,8 @@ const CategoryList = () => {
                 style={{
                   width: "100px",
                   height: "100px",
+                  justifyContent: "center",
+                  alignItems: "center",
                   marginBottom: "1.5rem",
                   backgroundColor: "#f9f9f9",
                   boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",

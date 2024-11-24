@@ -46,9 +46,9 @@ const UserSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
-    favoriteActivities: {
+    favoriteExperiences: {
       type: [mongoose.Schema.Types.ObjectId],
-      ref: "Activity",
+      ref: "Experience",
       default: [],
     },
   },
