@@ -30,9 +30,9 @@ const Hero = () => {
 
   return (
     <Box
+      className="h-screen md:h-[79vh]"
       sx={{
         position: "relative",
-        height: "70vh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -56,7 +56,7 @@ const Hero = () => {
             backgroundSize: "cover",
             backgroundPosition: "center",
             transition: "opacity 1s ease-in-out",
-            opacity: index === currentImage && fade ? 1 : 0, // Fade effect
+            opacity: index === currentImage && fade ? 1 : 0,
           }}
         />
       ))}

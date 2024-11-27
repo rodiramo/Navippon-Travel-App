@@ -9,6 +9,14 @@ const RegionSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  descriptionLong: {
+    type: String,
+    required: false,
+  },
+  funFact: {
+    type: String,
+    required: false,
+  },
   description: {
     type: String,
     required: false,

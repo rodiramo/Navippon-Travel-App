@@ -35,64 +35,96 @@ export const regions = [
     region: "Kanto",
     image: "kanto.jpg",
     description: "Explora la vibrante Tokio y la histórica Kamakura.",
+    descriptionLong:
+      "La región de Kanto es el centro político, económico y cultural de Japón, hogar de la bulliciosa ciudad de Tokio, donde tradición y modernidad conviven en armonía. Además, Kamakura ofrece templos históricos y playas encantadoras.",
     latitude: 35.6762,
     longitude: 139.6503,
+    funFact:
+      "El Monte Fuji, aunque técnicamente en Chubu, es fácilmente visible desde partes de Kanto.",
   },
   {
     _id: new mongoose.Types.ObjectId(),
     region: "Kansai",
     image: "kansai.jpg",
     description: "Descubre Kioto, Osaka y la rica cultura japonesa.",
+    descriptionLong:
+      "Kansai es conocido como el corazón cultural de Japón, con la histórica Kioto, famosa por sus templos y geishas; Osaka, célebre por su cocina y vida nocturna; y Nara, hogar de algunos de los templos y estatuas más antiguos del país.",
     latitude: 34.6937,
     longitude: 135.5023,
+    funFact:
+      "El takoyaki (bolas de pulpo) y el okonomiyaki (una especie de pancake salado) se originaron en Osaka.",
   },
   {
     _id: new mongoose.Types.ObjectId(),
     region: "Hokkaido",
     image: "hokkaido.jpg",
     description: "Disfruta de la naturaleza, nieve y mariscos frescos.",
+    descriptionLong:
+      "Hokkaido es la isla más septentrional de Japón, famosa por sus inviernos nevados ideales para esquiar, su flora y fauna únicas, y su gastronomía que incluye mariscos frescos y ramen de Sapporo.",
     latitude: 43.2203,
     longitude: 142.863,
+    funFact:
+      "Hokkaido es conocida por ser el lugar donde se celebra el Festival de Nieve de Sapporo, que atrae visitantes de todo el mundo.",
   },
   {
     _id: new mongoose.Types.ObjectId(),
     region: "Kyushu",
     image: "kyushu.jpg",
     description: "Termas relajantes y paisajes volcánicos únicos.",
+    descriptionLong:
+      "Kyushu, la tercera isla más grande de Japón, combina paisajes volcánicos impresionantes, fuentes termales relajantes y una historia rica. Es famosa por el monte Aso, uno de los volcanes más grandes del mundo.",
     latitude: 32.7898,
     longitude: 130.7417,
+    funFact:
+      "La ciudad de Beppu en Kyushu alberga algunas de las fuentes termales más famosas de Japón, conocidas como los 'Infiernos de Beppu'.",
   },
   {
     _id: new mongoose.Types.ObjectId(),
     region: "Chubu",
     image: "chubu.jpg",
     description: "Montañas majestuosas y la pintoresca aldea de Shirakawa-go.",
+    descriptionLong:
+      "Chubu es una región de contrastes, con las majestuosas montañas de los Alpes Japoneses, la pintoresca aldea de Shirakawa-go (Patrimonio de la Humanidad) y la moderna ciudad de Nagoya, conocida por su industria automotriz.",
     latitude: 35.1802,
     longitude: 137.2407,
+    funFact:
+      "La aldea de Shirakawa-go es famosa por sus casas de techo de paja diseñadas para soportar fuertes nevadas.",
   },
   {
     _id: new mongoose.Types.ObjectId(),
     region: "Chugoku",
     image: "chugoku.jpg",
     description: "Visita Hiroshima y los santuarios de Miyajima.",
+    descriptionLong:
+      "Chugoku es una región rica en historia, famosa por Hiroshima y su Parque de la Paz, así como la isla de Miyajima, conocida por el icónico torii flotante del Santuario de Itsukushima.",
     latitude: 38.2682,
     longitude: 140.8694,
+    funFact:
+      "El Santuario de Itsukushima, declarado Patrimonio de la Humanidad, parece flotar en el agua durante la marea alta.",
   },
   {
     _id: new mongoose.Types.ObjectId(),
     region: "Tohoku",
     image: "tohoku.jpg",
     description: "Belleza rural, festivales tradicionales y onsen.",
+    descriptionLong:
+      "Tohoku es conocida por su belleza natural, con paisajes montañosos, lagos serenos y aguas termales. La región también alberga festivales vibrantes como el Nebuta Matsuri de Aomori.",
     latitude: 33.8428,
     longitude: 133.8202,
+    funFact:
+      "Tohoku es donde se encuentran las ruinas de Hiraizumi, que representan la antigua gloria cultural del Japón del siglo XII.",
   },
   {
     _id: new mongoose.Types.ObjectId(),
     region: "Shikoku",
     image: "shikoku.jpg",
     description: "El Camino de los 88 Templos y paisajes tranquilos.",
+    descriptionLong:
+      "Shikoku es la isla más pequeña de Japón, conocida por su peregrinación de 88 templos budistas, hermosos paisajes y puentes icónicos como el Puente de Naruto.",
     latitude: 34.3963,
     longitude: 132.4594,
+    funFact:
+      "El remolino de Naruto es un fenómeno natural causado por las corrientes que convergen en el estrecho de Naruto.",
   },
 ];
 

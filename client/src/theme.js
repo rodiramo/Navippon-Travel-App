@@ -30,7 +30,7 @@ export const colorTokens = {
     900: "#991B51",
   },
   lightBlue: {
-    50: "#EAF4F7",
+    50: "#D7EDFC",
     100: "#CBE3EB",
     200: "#CDD9E1",
     300: "#8BBBD3",
@@ -86,7 +86,7 @@ export const themeSettings = (mode) => {
               default: colorTokens.darkBlue[900],
               alt: colorTokens.darkBlue[800],
               light: colorTokens.lightBlue[900],
-              grey: colorTokens.grey[800], 
+              grey: colorTokens.grey[800],
               nav: colorTokens.darkBlue[800],
             },
           }
@@ -104,6 +104,7 @@ export const themeSettings = (mode) => {
               dark: colorTokens.darkBlue[800],
               main: colorTokens.lightBlue[500],
               bg: colorTokens.lightBlue[200],
+              medium: colorTokens.lightBlue[600],
               light: colorTokens.lightBlue[100],
             },
             neutral: {

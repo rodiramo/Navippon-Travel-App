@@ -23,19 +23,18 @@ export const fetchExperiences = async (token) => {
   }
 };
 
-// Function to fetch searched experiences from the server
 export const fetchSearchedExperiences = async (
   token,
-  { region, prefecture, query }
+  { region, prefecture, budget, query }
 ) => {
   try {
     const params = new URLSearchParams();
 
     if (region) params.append("region", region);
     if (prefecture) params.append("prefecture", prefecture);
+    if (budget) params.append("budget", budget);
     if (query) params.append("query", query);
 
-    // Construct the search URL with the query params
     const response = await fetch(
       `${config.API_URL}/experiences/search-location?${params.toString()}`,
       {
@@ -51,7 +50,8 @@ export const fetchSearchedExperiences = async (
     }
 
     const data = await response.json();
-    console.log("Fetched experiences data:", data); // For debugging
+    console.log("Fetched experiences data:", data);
+
     return data;
   } catch (error) {
     console.error("Fetch searched experiences error:", error);

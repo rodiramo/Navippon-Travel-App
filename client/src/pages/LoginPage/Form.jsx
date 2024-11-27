@@ -19,6 +19,7 @@ import Dropzone from "react-dropzone";
 import { setLogin } from "@state/state.js";
 import FlexBetween from "@components/FlexBetween.jsx";
 import config from "@config/config.js";
+import DefaultAvatar from "/assets/default-avatar.jpg";
 
 // Validation schemas
 const registerSchema = yup.object().shape({
@@ -69,7 +70,11 @@ const Form = () => {
     for (let value in values) {
       formData.append(value, values[value]);
     }
-    formData.append("picturePath", values.picture.name);
+    if (!values.picture || typeof values.picture === "undefined") {
+      formData.append("picturePath", "default-avatar.jpg");
+    } else {
+      formData.append("picturePath", values.picture.name);
+    }
 
     const savedUserResponse = await fetch(`${config.API_URL}/auth/register`, {
       method: "POST",
@@ -222,10 +227,19 @@ const Form = () => {
                       >
                         <input {...getInputProps()} />
                         {!values.picture ? (
-                          <p>Agrega un Avatar Aquí</p>
+                          <img
+                            src={DefaultAvatar}
+                            alt="Default Avatar"
+                            style={{
+                              width: "100px",
+                              height: "100px",
+                              borderRadius: "50%",
+                              objectFit: "cover",
+                            }}
+                          />
                         ) : (
                           <FlexBetween>
-                            <Typography>{values.picture.name}</Typography>
+                            <Typography>{values.picture}</Typography>
                           </FlexBetween>
                         )}
                       </Box>

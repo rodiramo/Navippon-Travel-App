@@ -17,7 +17,8 @@ export const fetchWeather = async (latitude, longitude) => {
     });
 
     if (response.data && response.data.weather && response.data.main) {
-      const { temp, weather } = response.data;
+      const { temp } = response.data.main;
+      const { weather } = response.data;
       return {
         temperature: temp,
         description: weather[0].description,

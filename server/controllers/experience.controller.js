@@ -123,13 +123,84 @@ export const createExperience = async (req, res) => {
 
 export const getExperiences = async (req, res) => {
   try {
-    const experiences = await Experience.find()
-      .populate("prefecture")
-      .populate("region")
-      .populate("budget")
-      .sort({ createdAt: -1 });
+    // Extract query parameters for filtering, sorting, and pagination
+    const {
+      minPrice,
+      maxPrice,
+      categories,
+      subcategory,
+      hotelType,
+      restaurantService,
+      region,
+      prefecture,
+      city,
+      page = 1, // Default pagination page
+      limit = 10, // Default limit per page
+      sortBy = "createdAt", // Default sorting field
+      order = "desc", // Default sorting order
+    } = req.query;
 
-    res.status(200).json(experiences);
+    // Build the dynamic query object
+    const query = {};
+
+    // Price range filter
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.$gte = Number(minPrice);
+      if (maxPrice) query.price.$lte = Number(maxPrice);
+    }
+
+    // Categories filter (array of categories)
+    if (categories) {
+      query.categories = { $in: categories.split(",") };
+    }
+
+    // Subcategory filter
+    if (subcategory) {
+      query.subcategory = subcategory;
+    }
+
+    // Hotel type filter
+    if (hotelType) {
+      query.hotelType = hotelType;
+    }
+
+    // Restaurant service filter
+    if (restaurantService) {
+      query.restaurantService = { $all: restaurantService.split(",") };
+    }
+
+    // Region, prefecture, and city filters
+    if (region) query.region = region;
+    if (prefecture) query.prefecture = prefecture;
+    if (city) query.city = city;
+
+    // Pagination and sorting
+    const skip = (page - 1) * limit; // Calculate skip value for pagination
+    const sortOrder = order === "asc" ? 1 : -1; // Determine sorting order
+
+    // Fetch filtered experiences with population and sorting
+    const experiences = await Experience.find(query)
+      .populate("prefecture", "name") // Populate specific fields
+      .populate("region", "name")
+      .populate("budget", "name")
+      .sort({ [sortBy]: sortOrder }) // Apply sorting
+      .skip(skip) // Pagination: Skip documents
+      .limit(Number(limit)); // Pagination: Limit documents per page
+
+    // Get total count for pagination metadata
+    const total = await Experience.countDocuments(query);
+
+    // Respond with the data and metadata
+    res.status(200).json({
+      experiences,
+      pagination: {
+        total,
+        page: Number(page),
+        limit: Number(limit),
+        totalPages: Math.ceil(total / limit),
+      },
+    });
   } catch (err) {
     res.status(404).json({ message: err.message });
   }
@@ -137,13 +208,15 @@ export const getExperiences = async (req, res) => {
 
 export const searchExperiences = async (req, res) => {
   try {
-    const { region, prefecture, query } = req.query;
-    console.log("Received search params:", { region, prefecture, query });
+    // Log the incoming request query parameters
+    console.log("Received search params:", req.query); // This should log the query params from the URL
 
+    const { region, prefecture, budget, query } = req.query;
     const filter = {};
 
     if (region) filter.region = region;
     if (prefecture) filter.prefecture = prefecture;
+    if (budget) filter.budget = budget;
     if (query) {
       const regex = new RegExp(query, "i");
       filter.$or = [
@@ -154,23 +227,17 @@ export const searchExperiences = async (req, res) => {
 
     console.log("Constructed filter:", filter);
 
-    try {
-      const experiences = await Experience.find(filter)
-        .populate("prefecture")
-        .populate("region")
-        .populate("budget");
+    // Fetch experiences using the filter
+    const experiences = await Experience.find(filter)
+      .populate("prefecture")
+      .populate("region")
+      .populate("budget");
 
-      console.log("Fetched experiences:", experiences);
-
-      if (experiences.length === 0) {
-        console.log("No experiences found with the given filter.");
-      }
-
-      res.json(experiences);
-    } catch (error) {
-      console.error("Error fetching experiences:", error);
-      res.status(500).json({ message: "Error fetching experiences" });
+    if (experiences.length === 0) {
+      console.log("No experiences found with the given filter.");
     }
+
+    res.json(experiences);
   } catch (error) {
     console.error("Error searching experiences:", error);
     return res.status(500).json({ message: "Server error" });

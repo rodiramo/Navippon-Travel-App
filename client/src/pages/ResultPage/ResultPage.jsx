@@ -28,10 +28,12 @@ const ResultsPage = () => {
         const params = new URLSearchParams(location.search);
         const region = params.get("region");
         const prefecture = params.get("prefecture");
+        const budget = params.get("budget");
         const query = params.get("query");
 
         const searchedExperiences = await fetchSearchedExperiences(token, {
           region,
+          budget,
           prefecture,
           query,
         });

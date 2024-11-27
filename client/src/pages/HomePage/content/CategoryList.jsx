@@ -1,10 +1,10 @@
 // CategoryList.js
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Slider from "react-slick";
 import { Typography } from "@mui/material";
 import { fetchCategoryDetails } from "@services/services";
 import IconMapping from "@widgets/CategoriesWidget/components/IconMapping";
+import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 

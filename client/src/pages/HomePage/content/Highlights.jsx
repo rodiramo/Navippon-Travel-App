@@ -1,5 +1,6 @@
 import { useTheme } from "@mui/material";
 import "@css/Universal.css";
+import { Link } from "react-router-dom";
 
 const Highlights = () => {
   const theme = useTheme();
@@ -42,16 +43,18 @@ const Highlights = () => {
             recuerdos que durarán toda la vida. Deja que Navippon sea tu guía
             confiable en el viaje de tus sueños.
           </p>
-          <button
-            type="submit"
-            className="rounded-full px-6 py-3 w-full md:w-auto"
-            style={{
-              backgroundColor: theme.palette.primary.main,
-              color: theme.palette.primary.white,
-            }}
-          >
-            Explorar destinos
-          </button>
+          <Link to="/experiences" style={{ textDecoration: "none" }}>
+            <button
+              type="submit"
+              className="rounded-full px-6 py-3 w-full md:w-auto"
+              style={{
+                backgroundColor: theme.palette.primary.main,
+                color: theme.palette.primary.white,
+              }}
+            >
+              Explorar destinos
+            </button>
+          </Link>
         </div>
       </div>
     </div>
