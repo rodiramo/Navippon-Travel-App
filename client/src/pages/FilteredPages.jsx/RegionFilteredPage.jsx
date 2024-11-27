@@ -9,7 +9,7 @@ import config from "@config/config.js";
 import BreadcrumbBack from "@components/BreadcrumbBack.jsx";
 import { fetchWeather } from "@widgets/Weather/Weather.jsx";
 
-const FilteredRegionPage = () => {
+const RegionFilteredPage = () => {
   const [experiences, setExperiences] = useState([]);
   const [regionName, setRegionName] = useState("");
   const [regionWeather, setRegionWeather] = useState(null);
@@ -144,4 +144,4 @@ const FilteredRegionPage = () => {
   );
 };
 
-export default FilteredRegionPage;
+export default RegionFilteredPage;
