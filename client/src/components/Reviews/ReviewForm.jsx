@@ -1,6 +1,7 @@
 import { useState } from "react";
+import PropTypes from "prop-types"; // Import PropTypes
 
-const CommentForm = ({
+const ReviewForm = ({
   btnLabel,
   formSubmitHanlder,
   formCancelHandler = null,
@@ -37,8 +38,7 @@ const CommentForm = ({
           <button
             disabled={loading}
             type="submit"
-            className="px-6 py-2.5 rounded-lg bg-primary
-         text-white font-semibold disabled:opacity-70 disabled:cursor-not-allowed"
+            className="px-6 py-2.5 rounded-lg bg-primary text-white font-semibold disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {btnLabel}
           </button>
@@ -48,4 +48,20 @@ const CommentForm = ({
   );
 };
 
-export default CommentForm;
+// Prop Types validation
+ReviewForm.propTypes = {
+  btnLabel: PropTypes.string.isRequired, // btnLabel is required and should be a string
+  formSubmitHanlder: PropTypes.func.isRequired, // formSubmitHanlder is required and should be a function
+  formCancelHandler: PropTypes.func, // formCancelHandler is optional and should be a function
+  initialText: PropTypes.string, // initialText is optional and should be a string
+  loading: PropTypes.bool, // loading is optional and should be a boolean
+};
+
+// Default props in case they are not passed
+ReviewForm.defaultProps = {
+  formCancelHandler: null,
+  initialText: "",
+  loading: false,
+};
+
+export default ReviewForm;

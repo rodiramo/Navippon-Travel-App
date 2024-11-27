@@ -1,11 +1,11 @@
-import { images } from "../../constants";
-import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
-import { BiMessage } from "react-icons/bi";
+import { FiMessageSquare, FiEdit2, FiTrash } from "react-icons/fi";
+import { images, stables } from "../../constants";
 import CommentForm from "./CommentForm";
+import useAuth from "@hooks/useAuth";
 
 const Comment = ({
   comment,
-  loggineUserId,
+  logginedUserId,
   affectedComment,
   setAffectedComment,
   addComment,
@@ -14,93 +14,105 @@ const Comment = ({
   deleteComment,
   replies,
 }) => {
-  const isUserLoggined = Boolean(loggineUserId);
-  const commentBelongsToUser = loggineUserId === comment.user._id;
+  const { jwt } = useAuth();
+  const isUserLoggined = Boolean(logginedUserId);
+  const commentBelongsToUser = logginedUserId === comment.user._id;
   const isReplying =
     affectedComment &&
-    affectedComment.type === "repliying" &&
+    affectedComment.type === "replying" &&
     affectedComment._id === comment._id;
-  const repliedCommentId = parentId ? parentId : comment._id;
-  const repluOnUserId = comment.user._id;
-
   const isEditing =
     affectedComment &&
     affectedComment.type === "editing" &&
     affectedComment._id === comment._id;
+  const repliedCommentId = parentId ? parentId : comment._id;
+  const replyOnUserId = comment.user._id;
 
   return (
-    <div className="flex flex-nowrap items-start gsp-x-3 bg-[#F2F4F5] p-3 rounded-lg">
+    <div
+      className="flex flex-nowrap items-start gap-x-3 bg-[#F2F4F5] p-3 rounded-lg"
+      id={`comment-${comment?._id}`}
+    >
       <img
-        src={images.PostProfileImage}
-        alt="Avatar"
-        className="w-9 h-9 object-cover rounded-full mr-3"
+        src={
+          comment?.user?.avatar
+            ? stables.UPLOAD_FOLDER_BASE_URL + comment.user.avatar
+            : images.userImage
+        }
+        alt="user profile"
+        className="w-9 h-9 object-cover rounded-full"
       />
-      <div>
-        <div className="flex-l flex flex-col">
-          <h5 className="font-bold">{comment.user.name}</h5>
-          <span className="text-gray-600 text-xs pl-2">
-            {new Date(comment.createdAt).toLocaleDateString("es-ES", {
-              day: "numeric",
-              month: "short",
-              year: "numeric",
-              hour: "2-digit",
-            })}
-          </span>
-        </div>
-        {!isEditing && <p className="mt-[10px]">{comment.desc}</p>}
-
+      <div className="flex-1 flex flex-col">
+        <h5 className="font-bold text-dark-hard text-xs lg:text-sm">
+          {comment.user.name}
+        </h5>
+        <span className="text-xs text-dark-light">
+          {new Date(comment.createdAt).toLocaleDateString("en-US", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+          })}
+        </span>
+        {!isEditing && (
+          <p className="font-opensans mt-[10px] text-dark-light">
+            {comment.desc}
+          </p>
+        )}
         {isEditing && (
           <CommentForm
-            btnLabel="Editar"
-            formSubmitHanlder={(value) => updateComment(value, comment._id)}
+            btnLabel="Update"
+            formSubmitHanlder={(value) =>
+              updateComment(value, comment._id, jwt)
+            }
             formCancelHandler={() => setAffectedComment(null)}
             initialText={comment.desc}
           />
         )}
-        <div className=" flex items-center gap-x-3 text-sm mt-3 mb-3">
+        <div className="flex items-center gap-x-3 text-dark-light text-sm mt-3 mb-3">
           {isUserLoggined && (
             <button
               className="flex items-center space-x-2"
               onClick={() =>
-                setAffectedComment({ type: "repliying", _id: comment._id })
+                setAffectedComment({ type: "replying", _id: comment._id })
               }
             >
-              <BiMessage className="w-4 h-auto text-[#96C6D9]" />
-              <span className="text-[#96C6D9]">Responder</span>
+              <FiMessageSquare className="w-4 h-auto" />
+              <span>Reply</span>
             </button>
           )}
           {commentBelongsToUser && (
-            <div className="flex space-x-4">
+            <>
               <button
                 className="flex items-center space-x-2"
                 onClick={() =>
                   setAffectedComment({ type: "editing", _id: comment._id })
                 }
               >
-                <FaEdit className="w-4 h-auto text-[#96C6D9]" />
-                <span className="text-[#96C6D9]">Editar</span>
+                <FiEdit2 className="w-4 h-auto" />
+                <span>Edit</span>
               </button>
               <button
                 className="flex items-center space-x-2"
-                onClick={() => deleteComment(comment._id)}
+                onClick={() => deleteComment(comment._id, jwt)}
               >
-                <FaRegTrashAlt className="w-4 h-auto text-[#96C6D9]" />
-                <span className="text-[#96C6D9]">Borrar</span>
+                <FiTrash className="w-4 h-auto" />
+                <span>Delete</span>
               </button>
-            </div>
+            </>
           )}
         </div>
         {isReplying && (
           <CommentForm
             btnLabel="Reply"
             formSubmitHanlder={(value) =>
-              addComment(value, repliedCommentId, repluOnUserId)
+              addComment(value, repliedCommentId, replyOnUserId, jwt)
             }
             formCancelHandler={() => setAffectedComment(null)}
           />
         )}
         {replies.length > 0 && (
-          <div className="pl-9 border-l-2 border-[#96C6D9]">
+          <div>
             {replies.map((reply) => (
               <Comment
                 key={reply._id}
@@ -109,7 +121,7 @@ const Comment = ({
                 setAffectedComment={setAffectedComment}
                 comment={reply}
                 deleteComment={deleteComment}
-                loggineUserId={loggineUserId}
+                logginedUserId={logginedUserId}
                 replies={[]}
                 updateComment={updateComment}
                 parentId={comment._id}

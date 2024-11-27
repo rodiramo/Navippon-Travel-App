@@ -13,6 +13,7 @@ import adminRoute from "./routes/admin.routes.js";
 import userRoute from "./routes/users.routes.js";
 import postRoute from "./routes/posts.routes.js";
 import budgetRoute from "./routes/budget.routes.js";
+import reviewRoute from "./routes/review.routes.js";
 import prefectureRoute from "./routes/prefectures.routes.js";
 import regionRoute from "./routes/region.routes.js";
 import categoryRoute from "./routes/categories.routes.js";
@@ -94,6 +95,7 @@ app.patch(
 
 /** Routes */
 app.use("/auth", authRoute);
+app.use("/review", reviewRoute);
 app.use("/admin", adminRoute);
 app.use("/users", userRoute);
 app.use("/posts", postRoute);
@@ -148,7 +150,7 @@ mongoose
         await Prefecture.insertMany(prefectures);
         console.log("Prefectures inserted successfully.");
       }
-        const regionCount = await Region.countDocuments();
+      const regionCount = await Region.countDocuments();
       if (regionCount === 0) {
         await Region.insertMany(regions);
         console.log("Regions inserted successfully.");

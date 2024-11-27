@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import NavBar from "@components/NavBar/NavBar.jsx";
 import Footer from "@components/Footer/Footer.jsx";
-import FiltersWidget from "./content/FiltersWidget.jsx";
+import FiltersWidget from "./content/FiltersContainer.jsx";
 import Header from "./content/Header.jsx";
 import ExperiencesWidget from "../widgets/ExperiencesWidget/ExperiencesWidget.jsx";
 import { useTheme } from "@mui/material";

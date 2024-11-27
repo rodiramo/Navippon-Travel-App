@@ -100,8 +100,10 @@ const Form = () => {
       if (!loggedInResponse.ok) {
         throw new Error("User info not found");
       }
-
       const loggedIn = await loggedInResponse.json();
+      onSubmitProps.resetForm();
+      // Store the JWT token in localStorage
+      localStorage.setItem("jwt", loggedIn.token);
       onSubmitProps.resetForm();
       dispatch(
         setLogin({

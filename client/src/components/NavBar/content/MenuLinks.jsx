@@ -5,9 +5,9 @@ import PropTypes from "prop-types";
 const MenuLinks = ({ isActiveLink }) => {
   const links = [
     { path: "/", label: "Inicio" },
-    { path: "/about-us", label: "Nosotros" },
     { path: "/experiences", label: "Explora" },
     { path: "/posts", label: "Blog" },
+    { path: "/about-us", label: "Nosotros" },
     { path: "/contact", label: "Contacto" },
   ];
 

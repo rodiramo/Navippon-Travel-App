@@ -29,16 +29,36 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import config from "@config/config.js";
-import CommentsContainer from "../../components/comments/CommentsContainer";
+import ReviewsContainer from "@components/Reviews/ReviewsContainer";
 
 const ExperienceDetails = () => {
   const { palette } = useTheme();
+  const [experienceSlug, setExperienceSlug] = useState("");
+  const [reviews, setReviews] = useState([]);
   const { id } = useParams();
   const [tabValue, setTabValue] = useState(0);
   const [experience, setExperience] = useState(null);
   const [categoryDetails, setCategoryDetails] = useState([]);
   const [error, setError] = useState(null);
   const token = useSelector((state) => state.token);
+  useEffect(() => {
+    const fetchReviews = async () => {
+      if (!experienceSlug) return; // Avoid making the request if experienceSlug is not set
+
+      try {
+        // Fetch reviews based on experienceSlug
+        const response = await fetch(
+          `/api/experiences/${experienceSlug}/reviews`
+        );
+        const data = await response.json();
+        setReviews(data.reviews || []); // Assuming data contains reviews
+      } catch (error) {
+        console.error("Failed to fetch reviews:", error);
+      }
+    };
+
+    fetchReviews();
+  }, [experienceSlug]); // Fetch reviews when experienceSlug changes
 
   useEffect(() => {
     const fetchExperience = async () => {
@@ -88,6 +108,24 @@ const ExperienceDetails = () => {
 
     fetchExperience();
   }, [id, token]);
+  useEffect(() => {
+    const fetchReviews = async () => {
+      if (!experienceSlug) return; // Avoid making the request if experienceSlug is not set
+
+      try {
+        // Fetch reviews based on experienceSlug
+        const response = await fetch(
+          `/api/experiences/${experienceSlug}/reviews`
+        );
+        const data = await response.json();
+        setReviews(data.reviews || []); // Assuming data contains reviews
+      } catch (error) {
+        console.error("Failed to fetch reviews:", error);
+      }
+    };
+
+    fetchReviews();
+  }, [experienceSlug]); // Fetch reviews when experienceSlug changes
 
   if (error) {
     return (
@@ -291,11 +329,7 @@ const ExperienceDetails = () => {
                           ))
                         : "Sin categorías"}
                     </Box>
-                    <Typography sx={{ mb: 1 }}>
-                      <strong>Rango de Precio:</strong> $
-                      {experience.range_price.min} - $
-                      {experience.range_price.max}
-                    </Typography>
+
                     <Typography sx={{ mb: 1 }}>
                       <strong>Hora de Apertura:</strong>{" "}
                       {experience.opening_time}
@@ -412,7 +446,11 @@ const ExperienceDetails = () => {
                 <Box>
                   <Typography variant="h3">Reseñas</Typography>
                   <div className="mb-4 p-4">
-                    <CommentsContainer className="mt-10" loggineUserId="a" />
+                    <ReviewsContainer
+                      reviews={reviews}
+                      experienceSlug={experienceSlug}
+                      logginedUserId="userId"
+                    />
                   </div>
                 </Box>
               )}
