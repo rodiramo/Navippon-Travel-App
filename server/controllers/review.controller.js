@@ -3,33 +3,55 @@ import Experience from "../models/Experience.js";
 
 const createReview = async (req, res, next) => {
   try {
-    const { desc, slug, parent, replyOnUser } = req.body;
+    const { desc, title, rating, experienceId, parent, replyOnUser } = req.body;
 
-    const experience = await Experience.findOne({ slug: slug });
+    console.log("Incoming Review Data:", req.body);
+
+    // Ensure that the incoming data is valid
+    if (typeof title !== "string") {
+      throw new Error("Invalid title format: expected a string.");
+    }
+    if (typeof rating !== "number") {
+      throw new Error("Invalid rating format: expected a number.");
+    }
+    if (typeof desc !== "string") {
+      throw new Error("Invalid description format: expected a string.");
+    }
+
+    const experience = await Experience.findById(experienceId);
 
     if (!experience) {
-      const error = new Error("Experiencia no encontrada");
+      const error = new Error(`Experience with _id ${experienceId} not found`);
       return next(error);
     }
 
+    // Create and save the new review
     const newReview = new Review({
       user: req.user._id,
-      desc,
+      title, // Ensure this is a string
+      rating, // Ensure this is a number
+      desc, // Ensure this is a string
       experience: experience._id,
       parent,
       replyOnUser,
     });
 
     const savedReview = await newReview.save();
-    return res.json(savedReview);
+
+    // Update the experience with the new review
+    experience.reviews.push(savedReview._id);
+    await experience.save();
+
+    return res.json(savedReview); // Respond with the saved review
   } catch (error) {
-    next(error);
+    console.error("Error creating review:", error);
+    return next(error); // Forward error to error handler middleware
   }
 };
 
 const updateReview = async (req, res, next) => {
   try {
-    const { desc, check } = req.body;
+    const { desc, check, title, rating } = req.body;
 
     const review = await Review.findById(req.params.reviewId);
 
@@ -39,8 +61,17 @@ const updateReview = async (req, res, next) => {
     }
 
     review.desc = desc || review.desc;
+    review.title = title || review.title;
     review.check = typeof check !== "undefined" ? check : review.check;
 
+    if (typeof rating !== "undefined") {
+      if (rating >= 0 && rating <= 5) {
+        review.rating = rating;
+      } else {
+        const error = new Error("La calificación debe estar entre 0 y 5");
+        return next(error);
+      }
+    }
     const updatedReview = await review.save();
     return res.json(updatedReview);
   } catch (error) {

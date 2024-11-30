@@ -95,7 +95,7 @@ app.patch(
 
 /** Routes */
 app.use("/auth", authRoute);
-app.use("/review", reviewRoute);
+app.use("/reviews", reviewRoute);
 app.use("/admin", adminRoute);
 app.use("/users", userRoute);
 app.use("/posts", postRoute);

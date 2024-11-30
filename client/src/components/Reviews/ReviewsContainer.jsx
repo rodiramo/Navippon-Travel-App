@@ -1,7 +1,5 @@
 import { useState } from "react";
-import PropTypes from "prop-types"; // Import PropTypes
-import Review from "./Review";
-import ReviewForm from "./ReviewForm";
+import PropTypes from "prop-types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   createNewReview,
@@ -9,90 +7,112 @@ import {
   updateReview,
 } from "@services/index/reviews";
 import { toast } from "react-hot-toast";
-import useAuth from "@hooks/useAuth";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import Review from "./Review";
+import ReviewForm from "./ReviewForm";
 
-const ReviewsContainer = ({
-  className,
-  logginedUserId,
-  reviews = [], // Default to an empty array in case reviews is undefined
-  experienceSlug = "",
-}) => {
+const ReviewsContainer = ({ className, loggedInUserId, reviews = [] }) => {
   const queryClient = useQueryClient();
-  const { jwt } = useAuth(); // Get JWT from useAuth hook
+  const { id: experienceId } = useParams();
+  console.log("Experience _id from URL:", experienceId);
+
+  const token = useSelector((state) => state.token);
   const [affectedReview, setAffectedReview] = useState(null);
 
-  // Add review handler
-  const addReviewHandler = (value, parent = null, replyOnUser = null) => {
-    if (!jwt) {
+  const addReviewHandler = ({
+    title,
+    rating,
+    desc,
+    parent = null,
+    replyOnUser = null,
+  }) => {
+    if (!token) {
       toast.error("No JWT token found.");
       return;
     }
 
     mutateNewReview({
-      desc: value,
+      title: title,
+      rating: rating,
+      desc: desc,
       parent,
       replyOnUser,
-      token: jwt,
-      slug: experienceSlug,
+      token,
+      experienceId,
     });
     setAffectedReview(null);
   };
 
-  // Update review handler
-  const updateReviewHandler = (value, reviewId) => {
-    if (!jwt) {
+  const updateReviewHandler = (desc, title, rating, reviewId) => {
+    if (!token) {
       toast.error("No JWT token found.");
       return;
     }
 
     mutateUpdateReview({
-      token: jwt,
-      desc: value,
+      token,
+      title: title,
+      rating: rating,
+      desc: desc,
       reviewId,
     });
     setAffectedReview(null);
   };
 
-  // Delete review handler
   const deleteReviewHandler = (reviewId) => {
-    if (!jwt) {
+    if (!token) {
       toast.error("No JWT token found.");
       return;
     }
 
-    mutateDeleteReview({ token: jwt, reviewId });
+    mutateDeleteReview({ token, reviewId });
   };
 
-  // Mutations for adding, updating, and deleting reviews
-  const {
-    mutate: mutateNewReview,
-    isLoading: isLoadingNewReview,
-  } = useMutation({
-    mutationFn: ({ token, desc, slug, parent, replyOnUser }) => {
-      return createNewReview({ token, desc, slug, parent, replyOnUser });
-    },
-    onSuccess: () => {
-      toast.success(
-        "Tu reseña se ha enviado con éxito, será visible tras la confirmación del Administrador"
-      );
-    },
-    onError: (error) => {
-      toast.error(error.message);
-      console.log(error);
-    },
-  });
+  const { mutate: mutateNewReview, isLoading: isLoadingNewReview } =
+    useMutation({
+      mutationFn: ({
+        token,
+        desc,
+        title,
+        rating,
+        experienceId,
+        parent,
+        replyOnUser,
+      }) => {
+        return createNewReview({
+          token,
+          title: title,
+          rating,
+          desc,
+          experienceId,
+          parent,
+          replyOnUser,
+        });
+      },
+      onSuccess: () => {
+        toast.success(
+          "Tu reseña se ha enviado con éxito, será visible tras la confirmación del Administrador"
+        );
+        queryClient.invalidateQueries(["experience", experienceId]);
+      },
+      onError: (error) => {
+        toast.error(error.message || "Error creating review");
+        console.error("Error creating review:", error);
+      },
+    });
 
   const { mutate: mutateUpdateReview } = useMutation({
-    mutationFn: ({ token, desc, reviewId }) => {
-      return updateReview({ token, desc, reviewId });
+    mutationFn: ({ token, title, rating, desc, reviewId }) => {
+      return updateReview({ token, title, rating, desc, reviewId });
     },
     onSuccess: () => {
       toast.success("Tu reseña se ha actualizado correctamente");
-      queryClient.invalidateQueries(["experience", experienceSlug]);
+      queryClient.invalidateQueries(["experience", experienceId]);
     },
     onError: (error) => {
-      toast.error(error.message);
-      console.log(error);
+      toast.error(error.message || "Error updating review");
+      console.error("Error updating review:", error);
     },
   });
 
@@ -102,39 +122,48 @@ const ReviewsContainer = ({
     },
     onSuccess: () => {
       toast.success("Tu reseña se borró correctamente");
-      queryClient.invalidateQueries(["experience", experienceSlug]);
+      queryClient.invalidateQueries(["experience", experienceId]);
     },
     onError: (error) => {
-      toast.error(error.message);
-      console.log(error);
+      toast.error(error.message || "Error deleting review");
+      console.error("Error deleting review:", error);
     },
   });
 
   return (
     <div className={`${className}`}>
+      {/* Review Form */}
       <ReviewForm
         btnLabel="Enviar"
-        formSubmitHanlder={(value) => addReviewHandler(value)}
+        formSubmitHandler={(title, rating, desc) =>
+          addReviewHandler(title, rating, desc)
+        }
         loading={isLoadingNewReview}
       />
+
+      {/* Reviews List */}
       <div className="space-y-4 mt-8">
-        {/* Conditionally render reviews if it's an array and has content */}
         {Array.isArray(reviews) && reviews.length > 0 ? (
-          reviews.map((review) => (
-            <Review
-              key={review._id}
-              review={review}
-              logginedUserId={logginedUserId}
-              affectedReview={affectedReview}
-              setAffectedReview={setAffectedReview}
-              addReview={addReviewHandler}
-              updateReview={updateReviewHandler}
-              deleteReview={deleteReviewHandler}
-              replies={review.replies}
-            />
-          ))
+          reviews.map((review) => {
+            console.log("Review Object: ", review); // Log the review object
+
+            return (
+              <Review
+                key={review._id}
+                review={review}
+                user={review.user}
+                loggedInUserId={loggedInUserId} // Ensure logged-in user ID is passed
+                affectedReview={affectedReview} // Manage state for editing/replying
+                setAffectedReview={setAffectedReview} // Method to update affected review state
+                addReview={addReviewHandler} // Method to handle adding reviews
+                updateReview={updateReviewHandler} // Method to handle updating reviews
+                deleteReview={deleteReviewHandler} // Method to handle deleting reviews
+                replies={review.replies} // Handle replies if any
+              />
+            );
+          })
         ) : (
-          <p>No reviews available.</p> // Message for when no reviews exist
+          <p>No reviews available</p>
         )}
       </div>
     </div>
@@ -143,31 +172,34 @@ const ReviewsContainer = ({
 
 // Prop Types validation
 ReviewsContainer.propTypes = {
-  className: PropTypes.string, // className is optional and expected to be a string
-  logginedUserId: PropTypes.string, // logginedUserId is optional and expected to be a string
+  className: PropTypes.string,
+  loggedInUserId: PropTypes.string,
   reviews: PropTypes.arrayOf(
     PropTypes.shape({
       _id: PropTypes.string.isRequired,
       user: PropTypes.shape({
         _id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
+        PicturePath: PropTypes.string.isRequired,
+        firstName: PropTypes.string.isRequired,
       }).isRequired,
       createdAt: PropTypes.string.isRequired,
+      title: PropTypes.string,
       desc: PropTypes.string.isRequired,
+      rating: PropTypes.number.isRequired,
       replies: PropTypes.arrayOf(
         PropTypes.shape({
           _id: PropTypes.string.isRequired,
           user: PropTypes.shape({
             _id: PropTypes.string.isRequired,
-            name: PropTypes.string.isRequired,
+            userPicturePath: PropTypes.string.isRequired,
+            firstName: PropTypes.string.isRequired,
           }).isRequired,
           createdAt: PropTypes.string.isRequired,
           desc: PropTypes.string.isRequired,
         })
       ).isRequired,
     })
-  ).isRequired,
-  experienceSlug: PropTypes.string.isRequired, // experienceSlug is required and should be a string
+  ),
 };
 
 export default ReviewsContainer;

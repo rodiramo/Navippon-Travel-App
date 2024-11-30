@@ -39,6 +39,8 @@ export const authSlice = createSlice({
     setLogout: (state) => {
       state.user = { _id: null, friends: [], role: "", favorites: [] };
       state.token = null;
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
     },
     setFriends: (state, action) => {
       if (state.user) {

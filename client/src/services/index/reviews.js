@@ -2,37 +2,34 @@ import config from "@config/config.js";
 
 export const createNewReview = async ({
   token,
+  title,
+  rating,
   desc,
-  slug,
+  experienceId,
   parent,
   replyOnUser,
 }) => {
-  try {
-    const response = await fetch(`${config.API_URL}/reviews`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        desc,
-        slug,
-        parent,
-        replyOnUser,
-      }),
-    });
+  const response = await fetch(`${config.API_URL}/reviews`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      title: title,
+      desc: desc,
+      rating: rating,
+      experienceId,
+      parent,
+      replyOnUser,
+    }),
+  });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Error creating review.");
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error creating review:", error);
-    throw error;
+  if (!response.ok) {
+    throw new Error(`Error creating review: ${response.statusText}`);
   }
+
+  return response.json();
 };
 
 export const updateReview = async ({ token, desc, check, reviewId }) => {

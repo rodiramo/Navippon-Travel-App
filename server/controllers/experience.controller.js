@@ -110,6 +110,7 @@ export const createExperience = async (req, res) => {
 
     const experiences = await Experience.find()
       .populate("prefecture")
+      .populate("reviews")
       .populate("region")
       .populate("budget")
       .sort({ createdAt: -1 });
@@ -181,10 +182,11 @@ export const getExperiences = async (req, res) => {
 
     // Fetch filtered experiences with population and sorting
     const experiences = await Experience.find(query)
-      .populate("prefecture", "name") // Populate specific fields
+      .populate("prefecture", "name")
       .populate("region", "name")
       .populate("budget", "name")
-      .sort({ [sortBy]: sortOrder }) // Apply sorting
+      .populate("reviews")
+      .sort({ [sortBy]: sortOrder })
       .skip(skip) // Pagination: Skip documents
       .limit(Number(limit)); // Pagination: Limit documents per page
 
@@ -231,6 +233,7 @@ export const searchExperiences = async (req, res) => {
     const experiences = await Experience.find(filter)
       .populate("prefecture")
       .populate("region")
+      .populate("reviews")
       .populate("budget");
 
     if (experiences.length === 0) {
@@ -257,6 +260,7 @@ export const getExperiencesSearch = async (req, res) => {
     const experiences = await Experience.find(filter)
       .populate("prefecture")
       .populate("region")
+      .populate("reviews")
       .populate("budget");
 
     res.json(experiences);
@@ -372,6 +376,7 @@ export const editExperience = async (req, res) => {
     )
       .populate("prefecture")
       .populate("region")
+      .populate("reviews")
       .populate("budget");
 
     if (!updatedExperience) {
@@ -393,6 +398,7 @@ export const getExperience = async (req, res) => {
     const experience = await Experience.findById(id)
       .populate("prefecture")
       .populate("region")
+      .populate("reviews")
       .populate("budget");
 
     if (!experience) {
@@ -430,6 +436,7 @@ export const filterCategory = async (req, res) => {
     const experiences = await Experience.find({ categories: categoryName })
       .populate("prefecture")
       .populate("region")
+      .populate("reviews")
       .populate("budget");
 
     res.status(200).json(experiences);
@@ -459,6 +466,7 @@ export const filterPrefecture = async (req, res) => {
     const experiences = await Experience.find({ prefecture: prefectureId })
       .populate("prefecture")
       .populate("region")
+      .populate("reviews")
       .populate("budget");
 
     if (experiences.length === 0) {
@@ -492,6 +500,7 @@ export const filterRegion = async (req, res) => {
     const experiences = await Experience.find({ region: regionId })
       .populate("region")
       .populate("prefecture")
+      .populate("reviews")
       .populate("budget");
 
     if (experiences.length === 0) {

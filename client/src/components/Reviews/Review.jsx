@@ -1,22 +1,68 @@
-import PropTypes from "prop-types"; // Import PropTypes
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { FiMessageSquare, FiEdit2, FiTrash } from "react-icons/fi";
 import ReviewForm from "./ReviewForm";
-import useAuth from "@hooks/useAuth";
+import { Avatar } from "@mui/material";
+import config from "@config/config.js";
+import { useSelector } from "react-redux"; // Import useSelector
 
 const Review = ({
   review,
-  logginedUserId,
+  loggedInUserId,
+  user,
   affectedReview,
   setAffectedReview,
   addReview,
-  parentId = null,
   updateReview,
   deleteReview,
-  replies,
+  replies = [],
 }) => {
-  const { jwt } = useAuth();
-  const isUserLoggined = Boolean(logginedUserId);
-  const reviewBelongsToUser = logginedUserId === review.user._id;
+  const [userData, setUserData] = useState(null); // State for storing fetched user data
+  const [loading, setLoading] = useState(true); // State to handle loading state
+
+  // Retrieve the token from Redux store
+  const token = useSelector((state) => state.token);
+  console.log(userData);
+  // Fetch user data based on userId when the component mounts
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+
+      try {
+        const response = await fetch(`${config.API_URL}/users/${user}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        setUserData(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setLoading(false);
+      }
+    };
+
+    if (user) {
+      fetchUserData();
+    }
+  }, [user, token]); // Re-run the effect if the userId or token changes
+
+  // If user data is not available, show an error or fallback UI
+  if (!userData) {
+    return <div>User data not found</div>;
+  }
+
+  const reviewBelongsToUser = userData._id === loggedInUserId; // Check if review belongs to logged-in user
   const isReplying =
     affectedReview &&
     affectedReview.type === "replying" &&
@@ -25,18 +71,27 @@ const Review = ({
     affectedReview &&
     affectedReview.type === "editing" &&
     affectedReview._id === review._id;
-  const repliedReviewId = parentId ? parentId : review._id;
-  const replyOnUserId = review.user._id;
+
+  const repliedReviewId = review._id;
+  const replyOnUserId = userData._id; // Replying to the user who posted the review
 
   return (
     <div
-      className="flex flex-nowrap items-start gap-x-3 bg-[#F2F4F5] p-3 rounded-lg"
-      id={`review-${review?._id}`}
+      className="flex flex-nowrap items-start gap-x-3  p-3 rounded-lg"
+      id={`review-${review._id}`}
     >
       <div className="flex-1 flex flex-col">
         <h5 className="font-bold text-dark-hard text-xs lg:text-sm">
-          {review.user.name}
+          {userData.firstName} {userData.lastName}{" "}
+          {/* Access firstName and lastName from userData */}
         </h5>
+        <Avatar
+          src={
+            userData.picturePath
+              ? `${config.API_URL}/assets/${userData.picturePath}`
+              : "/path/to/default-avatar.png"
+          }
+        />
         <span className="text-xs text-dark-light">
           {new Date(review.createdAt).toLocaleDateString("en-US", {
             day: "numeric",
@@ -45,21 +100,35 @@ const Review = ({
             hour: "2-digit",
           })}
         </span>
+
+        {/* Review description */}
         {!isEditing && (
-          <p className="font-opensans mt-[10px] text-dark-light">
-            {review.desc}
-          </p>
+          <div>
+            <p className="font-opensans mt-[10px] text-dark-light">
+              {review.title}
+            </p>
+            <p className="font-opensans mt-[10px] text-dark-light">
+              {review.rating}
+            </p>
+            <p className="font-opensans mt-[10px] text-dark-light">
+              {review.desc}
+            </p>
+          </div>
         )}
+
+        {/* If editing, show the ReviewForm */}
         {isEditing && (
           <ReviewForm
             btnLabel="Update"
-            formSubmitHanlder={(value) => updateReview(value, review._id, jwt)}
+            formSubmitHanlder={(value) => updateReview(value, review._id)} // Pass token for authentication if needed
             formCancelHandler={() => setAffectedReview(null)}
             initialText={review.desc}
           />
         )}
+
         <div className="flex items-center gap-x-3 text-dark-light text-sm mt-3 mb-3">
-          {isUserLoggined && (
+          {/* If logged-in user, allow replying */}
+          {loggedInUserId && (
             <button
               className="flex items-center space-x-2"
               onClick={() =>
@@ -70,6 +139,8 @@ const Review = ({
               <span>Reply</span>
             </button>
           )}
+
+          {/* Show Edit and Delete if review belongs to logged-in user */}
           {reviewBelongsToUser && (
             <>
               <button
@@ -83,7 +154,7 @@ const Review = ({
               </button>
               <button
                 className="flex items-center space-x-2"
-                onClick={() => deleteReview(review._id, jwt)}
+                onClick={() => deleteReview(review._id)}
               >
                 <FiTrash className="w-4 h-auto" />
                 <span>Delete</span>
@@ -91,29 +162,31 @@ const Review = ({
             </>
           )}
         </div>
+
+        {/* If replying, show the ReviewForm */}
         {isReplying && (
           <ReviewForm
             btnLabel="Reply"
             formSubmitHanlder={(value) =>
-              addReview(value, repliedReviewId, replyOnUserId, jwt)
-            }
+              addReview(value, repliedReviewId, replyOnUserId)
+            } // Pass token for authentication if needed
             formCancelHandler={() => setAffectedReview(null)}
           />
         )}
+
+        {/* Render replies if any */}
         {replies.length > 0 && (
           <div>
             {replies.map((reply) => (
               <Review
                 key={reply._id}
-                addReview={addReview}
-                affectedReview={affectedReview}
-                setAffectedReview={setAffectedReview}
                 review={reply}
-                deleteReview={deleteReview}
-                logginedUserId={logginedUserId}
-                replies={[]}
+                loggedInUserId={loggedInUserId}
+                setAffectedReview={setAffectedReview}
+                addReview={addReview}
                 updateReview={updateReview}
-                parentId={review._id}
+                deleteReview={deleteReview}
+                replies={[]} // Don't pass replies for nested reviews
               />
             ))}
           </div>
@@ -127,34 +200,21 @@ const Review = ({
 Review.propTypes = {
   review: PropTypes.shape({
     _id: PropTypes.string.isRequired,
-    user: PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-    }).isRequired,
-    createdAt: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    rating: PropTypes.number,
     desc: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
   }).isRequired,
-  logginedUserId: PropTypes.string,
+  loggedInUserId: PropTypes.string.isRequired,
   affectedReview: PropTypes.shape({
-    type: PropTypes.string.isRequired,
-    _id: PropTypes.string.isRequired,
+    type: PropTypes.string,
+    _id: PropTypes.string,
   }),
   setAffectedReview: PropTypes.func.isRequired,
   addReview: PropTypes.func.isRequired,
-  parentId: PropTypes.string,
   updateReview: PropTypes.func.isRequired,
   deleteReview: PropTypes.func.isRequired,
-  replies: PropTypes.arrayOf(
-    PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      user: PropTypes.shape({
-        _id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-      }).isRequired,
-      createdAt: PropTypes.string.isRequired,
-      desc: PropTypes.string.isRequired,
-    })
-  ).isRequired,
+  replies: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default Review;

@@ -46,6 +46,11 @@ const UserSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    reviews: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Review",
+      default: [],
+    },
     favoriteExperiences: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "Experience",
