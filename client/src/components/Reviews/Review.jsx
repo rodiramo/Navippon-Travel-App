@@ -2,28 +2,28 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { FiMessageSquare, FiEdit2, FiTrash } from "react-icons/fi";
 import ReviewForm from "./ReviewForm";
-import { Avatar } from "@mui/material";
+import { Avatar, useTheme } from "@mui/material";
 import config from "@config/config.js";
-import { useSelector } from "react-redux"; // Import useSelector
+import StarIcon from "@mui/icons-material/Star";
+import { formatDistanceToNow } from "date-fns";
+import { useSelector } from "react-redux";
 
 const Review = ({
   review,
+  reviewId,
   loggedInUserId,
   user,
   affectedReview,
   setAffectedReview,
-  addReview,
   updateReview,
   deleteReview,
-  replies = [],
 }) => {
-  const [userData, setUserData] = useState(null); // State for storing fetched user data
-  const [loading, setLoading] = useState(true); // State to handle loading state
-
-  // Retrieve the token from Redux store
+  console.log("Review ID from props:", reviewId);
+  const theme = useTheme();
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const token = useSelector((state) => state.token);
-  console.log(userData);
-  // Fetch user data based on userId when the component mounts
+
   useEffect(() => {
     const fetchUserData = async () => {
       if (!token) {
@@ -55,98 +55,134 @@ const Review = ({
     if (user) {
       fetchUserData();
     }
-  }, [user, token]); // Re-run the effect if the userId or token changes
+  }, [user, token]);
 
-  // If user data is not available, show an error or fallback UI
   if (!userData) {
     return <div>User data not found</div>;
   }
 
-  const reviewBelongsToUser = userData._id === loggedInUserId; // Check if review belongs to logged-in user
-  const isReplying =
-    affectedReview &&
-    affectedReview.type === "replying" &&
-    affectedReview._id === review._id;
+  // Log values for debugging purposes
+  console.log("Logged In User ID: ", loggedInUserId);
+  console.log("User Data: ", userData);
+
+  const reviewBelongsToUser = userData._id === loggedInUserId;
+  console.log("Review Belongs To User: ", reviewBelongsToUser);
   const isEditing =
     affectedReview &&
     affectedReview.type === "editing" &&
-    affectedReview._id === review._id;
-
-  const repliedReviewId = review._id;
-  const replyOnUserId = userData._id; // Replying to the user who posted the review
-
+    affectedReview._id === reviewId;
+  console.log("Review Id: ", reviewId);
   return (
     <div
-      className="flex flex-nowrap items-start gap-x-3  p-3 rounded-lg"
-      id={`review-${review._id}`}
+      className="flex flex-nowrap items-start gap-x-3 p-1 rounded-lg"
+      style={{
+        width: "80%",
+      }}
+      id={`review-${reviewId}`}
     >
-      <div className="flex-1 flex flex-col">
-        <h5 className="font-bold text-dark-hard text-xs lg:text-sm">
-          {userData.firstName} {userData.lastName}{" "}
-          {/* Access firstName and lastName from userData */}
-        </h5>
-        <Avatar
-          src={
-            userData.picturePath
-              ? `${config.API_URL}/assets/${userData.picturePath}`
-              : "/path/to/default-avatar.png"
-          }
-        />
-        <span className="text-xs text-dark-light">
-          {new Date(review.createdAt).toLocaleDateString("en-US", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-          })}
-        </span>
+      <div
+        style={{
+          width: "100%",
+          background: theme.palette.primary.white,
+          padding: "1rem",
+          borderRadius: "1rem",
+          alignItems: "center",
+          display: "flex",
+          flexDirection: "row",
+        }}
+      >
+        <div
+          className=" flex"
+          style={{
+            marginLeft: "2rem",
+            alignItems: "start",
+            flexDirection: "column",
+            width: "25%",
+          }}
+        >
+          <Avatar
+            src={
+              userData.picturePath
+                ? `${config.API_URL}/assets/${userData.picturePath}`
+                : "/assets/default-avatar.png"
+            }
+            sx={{ width: 60, height: 60 }}
+          />
 
-        {/* Review description */}
-        {!isEditing && (
-          <div>
-            <p className="font-opensans mt-[10px] text-dark-light">
-              {review.title}
-            </p>
-            <p className="font-opensans mt-[10px] text-dark-light">
-              {review.rating}
-            </p>
-            <p className="font-opensans mt-[10px] text-dark-light">
-              {review.desc}
-            </p>
-          </div>
-        )}
+          <h5 className="font-bold text-dark-hard text-xs lg:text-sm ">
+            @{userData.firstName}
+            {userData.lastName}
+          </h5>
+        </div>
 
-        {/* If editing, show the ReviewForm */}
+        <div style={{ width: "100%" }}>
+          {!isEditing && (
+            <div>
+              <div className="font-opensans text-dark-light flex items-center">
+                {Array.from({ length: 5 }, (_, index) => (
+                  <span key={index}>
+                    {index < Math.floor(review.rating) ? (
+                      <StarIcon
+                        style={{ color: theme.palette.primary.main }}
+                        fontSize="1.5rem"
+                      />
+                    ) : index < review.rating ? (
+                      <StarIcon
+                        style={{ color: theme.palette.primary.main }}
+                        fontSize="inherit"
+                      />
+                    ) : (
+                      <StarIcon style={{ color: "grey" }} fontSize="inherit" />
+                    )}
+                  </span>
+                ))}
+              </div>
+              <p
+                className="font-opensans"
+                style={{
+                  fontWeight: "bold",
+                  marginTop: "10px",
+                  fontStyle: "italic",
+                }}
+              >
+                {review.title}
+              </p>
+
+              <p
+                className="font-opensans "
+                style={{
+                  color: theme.palette.secondary.main,
+                  fontStyle: "italic",
+                  marginTop: "5px",
+                }}
+              >
+                "{review.desc}"
+              </p>
+            </div>
+          )}
+          <span className="text-xs text-dark-light">
+            {formatDistanceToNow(new Date(review.createdAt), {
+              addSuffix: true,
+            })}
+          </span>
+        </div>
+
         {isEditing && (
           <ReviewForm
             btnLabel="Update"
-            formSubmitHanlder={(value) => updateReview(value, review._id)} // Pass token for authentication if needed
+            formSubmitHandler={(value) => updateReview(value, reviewId)}
             formCancelHandler={() => setAffectedReview(null)}
             initialText={review.desc}
           />
         )}
 
         <div className="flex items-center gap-x-3 text-dark-light text-sm mt-3 mb-3">
-          {/* If logged-in user, allow replying */}
-          {loggedInUserId && (
-            <button
-              className="flex items-center space-x-2"
-              onClick={() =>
-                setAffectedReview({ type: "replying", _id: review._id })
-              }
-            >
-              <FiMessageSquare className="w-4 h-auto" />
-              <span>Reply</span>
-            </button>
-          )}
-
-          {/* Show Edit and Delete if review belongs to logged-in user */}
           {reviewBelongsToUser && (
             <>
               <button
                 className="flex items-center space-x-2"
                 onClick={() =>
-                  setAffectedReview({ type: "editing", _id: review._id })
+                  setAffectedReview({ type: "editing", _id: reviewId })
                 }
               >
                 <FiEdit2 className="w-4 h-auto" />
@@ -154,7 +190,7 @@ const Review = ({
               </button>
               <button
                 className="flex items-center space-x-2"
-                onClick={() => deleteReview(review._id)}
+                onClick={() => deleteReview(reviewId)}
               >
                 <FiTrash className="w-4 h-auto" />
                 <span>Delete</span>
@@ -162,41 +198,11 @@ const Review = ({
             </>
           )}
         </div>
-
-        {/* If replying, show the ReviewForm */}
-        {isReplying && (
-          <ReviewForm
-            btnLabel="Reply"
-            formSubmitHanlder={(value) =>
-              addReview(value, repliedReviewId, replyOnUserId)
-            } // Pass token for authentication if needed
-            formCancelHandler={() => setAffectedReview(null)}
-          />
-        )}
-
-        {/* Render replies if any */}
-        {replies.length > 0 && (
-          <div>
-            {replies.map((reply) => (
-              <Review
-                key={reply._id}
-                review={reply}
-                loggedInUserId={loggedInUserId}
-                setAffectedReview={setAffectedReview}
-                addReview={addReview}
-                updateReview={updateReview}
-                deleteReview={deleteReview}
-                replies={[]} // Don't pass replies for nested reviews
-              />
-            ))}
-          </div>
-        )}
       </div>
     </div>
   );
 };
 
-// Prop Types validation
 Review.propTypes = {
   review: PropTypes.shape({
     _id: PropTypes.string.isRequired,
@@ -214,7 +220,6 @@ Review.propTypes = {
   addReview: PropTypes.func.isRequired,
   updateReview: PropTypes.func.isRequired,
   deleteReview: PropTypes.func.isRequired,
-  replies: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default Review;

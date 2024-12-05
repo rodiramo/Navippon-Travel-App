@@ -6,8 +6,6 @@ export const createNewReview = async ({
   rating,
   desc,
   experienceId,
-  parent,
-  replyOnUser,
 }) => {
   const response = await fetch(`${config.API_URL}/reviews`, {
     method: "POST",
@@ -20,8 +18,6 @@ export const createNewReview = async ({
       desc: desc,
       rating: rating,
       experienceId,
-      parent,
-      replyOnUser,
     }),
   });
 
@@ -32,7 +28,13 @@ export const createNewReview = async ({
   return response.json();
 };
 
-export const updateReview = async ({ token, desc, check, reviewId }) => {
+export const updateReview = async ({
+  token,
+  desc,
+  title,
+  rating,
+  reviewId,
+}) => {
   try {
     const response = await fetch(`${config.API_URL}/reviews/${reviewId}`, {
       method: "PUT",
@@ -41,8 +43,9 @@ export const updateReview = async ({ token, desc, check, reviewId }) => {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        desc,
-        check,
+        title: title,
+        desc: desc,
+        rating: rating,
       }),
     });
 
@@ -59,12 +62,15 @@ export const updateReview = async ({ token, desc, check, reviewId }) => {
   }
 };
 export const deleteReview = async ({ token, reviewId }) => {
+  const reviewData = { title, rating, desc, reviewId };
+
   try {
-    const response = await fetch(`${config.API_URL}/reviews/${reviewId}`, {
+    const response = await fetch(`${config.API_URL}/reviews/update`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
       },
+      body: JSON.stringify(reviewData),
     });
 
     if (!response.ok) {

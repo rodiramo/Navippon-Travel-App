@@ -33,6 +33,7 @@ import ReviewsContainer from "@components/Reviews/ReviewsContainer";
 
 const ExperienceDetails = () => {
   const { palette } = useTheme();
+  const loggedInUserId = useSelector((state) => state.user._id);
   const { id } = useParams();
   const [tabValue, setTabValue] = useState(0);
   const [experience, setExperience] = useState(null);
@@ -407,11 +408,10 @@ const ExperienceDetails = () => {
               )}
               {tabValue === 1 && (
                 <Box>
-                  <Typography variant="h3">Reseñas</Typography>
                   <div className="mb-4 p-4">
                     <ReviewsContainer
                       reviews={experience.reviews}
-                      loggedInUserId="userId"
+                      loggedInUserId={loggedInUserId}
                     />
                   </div>
                 </Box>

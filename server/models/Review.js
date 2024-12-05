@@ -7,7 +7,7 @@ const ReviewSchema = new Schema(
     desc: { type: String, required: false },
     rating: {
       type: Number,
-      required: true,
+      required: false,
       min: 1,
       max: 5,
       default: 1,
@@ -18,25 +18,9 @@ const ReviewSchema = new Schema(
       required: true,
     },
     check: { type: Boolean, default: false },
-    parent: {
-      type: Schema.Types.ObjectId,
-      ref: "Review",
-      default: null,
-    },
-    replyOnUser: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      default: null,
-    },
   },
   { timestamps: true, toJSON: { virtuals: true } }
 );
-
-ReviewSchema.virtual("replies", {
-  ref: "Review",
-  localField: "_id",
-  foreignField: "parent",
-});
 
 const Review = model("Review", ReviewSchema);
 export default Review;

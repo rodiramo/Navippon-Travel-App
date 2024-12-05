@@ -13,9 +13,7 @@ router
   .post(verifyToken, createReview)
   .get(verifyToken, getAllReviews);
 
-router
-  .route("/:reviewId")
-  .put(verifyToken, updateReview)
-  .delete(verifyToken, deleteReview);
+router.route("/:reviewId").put(verifyToken).delete(verifyToken, deleteReview);
 
+router.route("/update").put(verifyToken, updateReview);
 export default router;

@@ -3,79 +3,79 @@ import Experience from "../models/Experience.js";
 
 const createReview = async (req, res, next) => {
   try {
-    const { desc, title, rating, experienceId, parent, replyOnUser } = req.body;
+    const { desc, title, rating, experienceId } = req.body;
 
-    console.log("Incoming Review Data:", req.body);
+    console.log("Incoming Review Data:", req.body); // Log the incoming data
 
-    // Ensure that the incoming data is valid
-    if (typeof title !== "string") {
-      throw new Error("Invalid title format: expected a string.");
+    // Validate title
+    if (!title || typeof title !== "string") {
+      return res.status(400).json({
+        message: "Title is required and must be a string for new reviews.",
+      });
     }
+
+    // Validate rating
     if (typeof rating !== "number") {
-      throw new Error("Invalid rating format: expected a number.");
+      return res.status(400).json({
+        message: "Rating is required and must be a number for new reviews.",
+      });
     }
-    if (typeof desc !== "string") {
-      throw new Error("Invalid description format: expected a string.");
+
+    // Validate description
+    if (!desc || typeof desc !== "string") {
+      return res.status(400).json({
+        message: "Description is required and must be a string.",
+      });
     }
 
     const experience = await Experience.findById(experienceId);
-
     if (!experience) {
-      const error = new Error(`Experience with _id ${experienceId} not found`);
-      return next(error);
+      return res.status(404).json({
+        message: `Experience with ID ${experienceId} not found.`,
+      });
     }
 
-    // Create and save the new review
+    // Create and save the review
     const newReview = new Review({
       user: req.user._id,
-      title, // Ensure this is a string
-      rating, // Ensure this is a number
-      desc, // Ensure this is a string
+      title: title,
+      rating: rating,
+      desc,
       experience: experience._id,
-      parent,
-      replyOnUser,
     });
 
     const savedReview = await newReview.save();
 
-    // Update the experience with the new review
+    // Update the experience with the new review ID
     experience.reviews.push(savedReview._id);
     await experience.save();
 
-    return res.json(savedReview); // Respond with the saved review
+    return res.status(201).json(savedReview); // Send the created review back
   } catch (error) {
-    console.error("Error creating review:", error);
-    return next(error); // Forward error to error handler middleware
+    console.error("Error creating review:", error.message);
+    return next(error); // Pass error to the global error handler
   }
 };
 
-const updateReview = async (req, res, next) => {
+export const updateReview = async (req, res) => {
+  const { title, rating, desc, reviewId } = req.body;
+  if (!reviewId) {
+    return res.status(400).json({ message: "Review ID is required" });
+  }
+
   try {
-    const { desc, check, title, rating } = req.body;
-
-    const review = await Review.findById(req.params.reviewId);
-
-    if (!review) {
-      const error = new Error("Comentario no encontrado");
-      return next(error);
+    const updatedReview = await Review.findByIdAndUpdate(
+      reviewId,
+      { title, rating, desc },
+      { new: true } // returns the updated review
+    );
+    if (!updatedReview) {
+      return res.status(404).json({ message: "Review not found" });
     }
-
-    review.desc = desc || review.desc;
-    review.title = title || review.title;
-    review.check = typeof check !== "undefined" ? check : review.check;
-
-    if (typeof rating !== "undefined") {
-      if (rating >= 0 && rating <= 5) {
-        review.rating = rating;
-      } else {
-        const error = new Error("La calificación debe estar entre 0 y 5");
-        return next(error);
-      }
-    }
-    const updatedReview = await review.save();
-    return res.json(updatedReview);
+    res.status(200).json(updatedReview);
   } catch (error) {
-    next(error);
+    console.error("Error updating review:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -88,7 +88,7 @@ const deleteReview = async (req, res, next) => {
       return next(error);
     }
 
-    await Review.deleteMany({ parent: review._id });
+    await Review.deleteMany({});
 
     return res.json({
       message: "El comentario ha sido eliminado",
@@ -132,19 +132,7 @@ const getAllReviews = async (req, res, next) => {
           path: "user",
           select: ["avatar", "name", "verified"],
         },
-        {
-          path: "parent",
-          populate: [
-            {
-              path: "user",
-              select: ["avatar", "name"],
-            },
-          ],
-        },
-        {
-          path: "replyOnUser",
-          select: ["avatar", "name"],
-        },
+
         {
           path: "experience",
           select: ["slug", "title"],
@@ -158,4 +146,4 @@ const getAllReviews = async (req, res, next) => {
   }
 };
 
-export { createReview, updateReview, deleteReview, getAllReviews };
+export { createReview, deleteReview, getAllReviews };

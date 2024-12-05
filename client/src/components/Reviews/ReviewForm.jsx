@@ -1,89 +1,195 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
+import { useTheme } from "@mui/material";
+import Rating from "@mui/material/Rating";
+import Box from "@mui/material/Box";
+import StarIcon from "@mui/icons-material/Star";
 
-const getStarValue = (index) => {
-  return index + 1; // Adding 1 since stars are indexed from 0, but rating starts from 1
+const labels = {
+  0.5: "No es bueno", // Useless
+  1: "No es bueno+", // Useless+
+  1.5: "Pobre", // Poor
+  2: "Pobre+", // Poor+
+  2.5: "Regular", // Ok
+  3: "Regular+", // Ok+
+  3.5: "Bueno", // Good
+  4: "Bueno+", // Good+
+  4.5: "Excelente", // Excellent
+  5: "Excelente+", // Excellent+
 };
+
+function getLabelText(value) {
+  return `${value} Estrella${value !== 1 ? "s" : ""}, ${labels[value]}`;
+}
 
 const ReviewForm = ({
   btnLabel,
   formSubmitHandler,
-  formCancelHandler = null,
+  formCancelHandler,
   initialText = "",
-  initialTitle = "",
-  initialRating = 0,
-  loading = false,
 }) => {
+  const theme = useTheme();
   const [desc, setDesc] = useState(initialText);
-  const [title, setName] = useState(initialTitle); // Using initialTitle
-  const [rating, setRating] = useState(initialRating);
+  const [title, setTitle] = useState("");
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(-1); // Track hover state for displaying labels
+  const [errors, setErrors] = useState({
+    title: "",
+    desc: "",
+    rating: "",
+  });
 
   const submitHandler = (e) => {
     e.preventDefault();
-    formSubmitHandler({
-      title: title,
-      desc: desc,
-      rating: rating,
-    });
 
+    // Validation logic
+    let formErrors = { title: "", desc: "", rating: "" };
+    let isValid = true;
+
+    if (!title) {
+      formErrors.title = "El título es obligatorio";
+      isValid = false;
+    }
+
+    if (!desc) {
+      formErrors.desc = "La descripción es obligatoria";
+      isValid = false;
+    }
+
+    if (rating === 0) {
+      formErrors.rating = "La valoración es obligatoria";
+      isValid = false;
+    }
+
+    // If the form is invalid, set the errors and prevent submit
+    if (!isValid) {
+      setErrors(formErrors);
+      return;
+    }
+
+    // If everything is valid, submit the form
+    formSubmitHandler(title, rating, desc);
     setDesc("");
-    setName("");
+    setTitle("");
     setRating(0);
+    setErrors({ title: "", desc: "", rating: "" }); // Clear errors after successful submit
   };
 
   return (
     <form onSubmit={submitHandler}>
       <div className="flex flex-col items-end border border-primary rounded-lg p-4">
+        {/* Rating Component */}
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            marginBottom: "15px",
+          }}
+        >
+          <p>Agrega una valuación: </p>
+          <Rating
+            name="hover-feedback"
+            value={rating}
+            precision={0.5} // Allows half-star rating
+            getLabelText={getLabelText}
+            onChange={(event, newValue) => {
+              setRating(newValue); // Set rating on change
+            }}
+            onChangeActive={(event, newHover) => {
+              setHover(newHover); // Set hover value for label display
+            }}
+            icon={<StarIcon sx={{ color: theme.palette.secondary.main }} />} // Filled star color
+            emptyIcon={<StarIcon sx={{ color: "gray" }} />}
+          />
+          {rating !== null && (
+            <Box sx={{ ml: 2 }}>{labels[hover !== -1 ? hover : rating]}</Box>
+          )}
+          {errors.rating && (
+            <p style={{ color: "red", marginTop: "5px" }}>{errors.rating}</p>
+          )}
+        </Box>
+
         {/* Title Input */}
-        <input
-          type="text"
-          className="w-full focus:outline-none bg-transparent mb-2"
-          placeholder="Deja un título de reseña..."
-          value={title}
-          onChange={(e) => setName(e.target.value)}
-        />
-
-        {/* Description Input */}
-        <textarea
-          className="w-full focus:outline-none bg-transparent"
-          rows="5"
-          placeholder="Deja tu reseña aquí..."
-          value={desc}
-          onChange={(e) => setDesc(e.target.value)}
-        />
-
-        {/* Star Rating */}
-        <div className="flex items-center mt-3">
-          {[...Array(5)].map((_, index) => (
-            <button
-              key={index}
-              type="button"
-              onClick={() => setRating(getStarValue(index))} // Set rating on star click
-              className={`w-6 h-6 ${
-                rating >= getStarValue(index)
-                  ? "text-yellow-500"
-                  : "text-gray-400"
-              }`}
-            >
-              ★
-            </button>
-          ))}
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            marginBottom: "15px",
+          }}
+        >
+          <p>Agrega una título: </p>
+          <input
+            type="text"
+            style={{
+              backgroundColor: theme.palette.primary.white,
+              padding: "1rem",
+              borderRadius: "30rem",
+            }}
+            className="w-full focus:outline-none bg-transparent mb-2"
+            placeholder="Enter a title..."
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          {errors.title && (
+            <p style={{ color: "red", marginTop: "5px" }}>{errors.title}</p>
+          )}
         </div>
 
-        {/* Buttons */}
+        {/* Description Textarea */}
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            marginBottom: "15px",
+          }}
+        >
+          <p>Agrega tu experiencia: </p>
+          <textarea
+            type="text"
+            style={{
+              backgroundColor: theme.palette.primary.white,
+              padding: "1rem",
+              borderRadius: "30rem",
+            }}
+            className="w-full focus:outline-none bg-transparent mb-2"
+            placeholder="Enter a description..."
+            value={desc}
+            onChange={(e) => setDesc(e.target.value)}
+          ></textarea>
+          {errors.desc && (
+            <p style={{ color: "red", marginTop: "5px" }}>{errors.desc}</p>
+          )}
+        </div>
+
+        {/* Form Buttons */}
         <div className="flex flex-col-reverse gap-y-2 items-center gap-x-2 pt-2 min-[420px]:flex-row">
           {formCancelHandler && (
             <button
-              onClick={formCancelHandler}
-              className="px-6 py-2.5 rounded-lg border border-[#FA5564] text-[#FA5564]"
+              style={{
+                backgroundColor: theme.palette.secondary.light,
+                color: theme.palette.primary.black,
+                padding: "0.5rem 1rem",
+                borderRadius: "30rem",
+              }}
+              onClick={() => formCancelHandler()} // Close form when clicked
             >
-              Cancel
+              Cancelar
             </button>
           )}
           <button
-            disabled={loading}
             type="submit"
-            className="px-6 py-2.5 rounded-lg bg-primary text-white font-semibold disabled:opacity-70 disabled:cursor-not-allowed"
+            style={{
+              backgroundColor: theme.palette.primary.main,
+              color: theme.palette.primary.white,
+              padding: "0.5rem 1rem",
+              borderRadius: "30rem",
+            }}
           >
             {btnLabel}
           </button>
@@ -100,6 +206,7 @@ ReviewForm.propTypes = {
   initialText: PropTypes.string,
   initialTitle: PropTypes.string,
   initialRating: PropTypes.number,
+  reviewId: PropTypes.string,
   loading: PropTypes.bool,
 };
 
