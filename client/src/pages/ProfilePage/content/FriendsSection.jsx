@@ -5,7 +5,7 @@ import FriendListWidget from "../../widgets/FriendListWidget.jsx";
 
 const FriendsSection = ({ userId, picturePath }) => {
   return (
-    <Box flexBasis="26%">
+    <Box flexBasis="30%">
       <UserWidget userId={userId} picturePath={picturePath} />
       <Box m="2rem 0" />
       <FriendListWidget userId={userId} />

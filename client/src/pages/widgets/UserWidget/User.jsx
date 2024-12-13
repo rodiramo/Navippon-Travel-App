@@ -1,8 +1,11 @@
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { EditOutlined, Close } from "@mui/icons-material";
+import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import {
   Box,
   Typography,
+  DialogActions,
   Divider,
   useTheme,
   IconButton,
@@ -16,7 +19,6 @@ import UserImage from "@components/UserImage.jsx";
 import FlexBetween from "@components/FlexBetween.jsx";
 import WidgetWrapper from "@components/Wrapper.jsx";
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Dropzone from "react-dropzone";
 import config from "@config/config.js";
@@ -24,7 +26,11 @@ import config from "@config/config.js";
 const User = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null);
   const [open, setOpen] = useState(false);
+  const loggedInUserId = useSelector((state) => state.user._id);
+  const [openLocation, setOpenLocation] = useState(false);
+  const [location, setLocation] = useState({ city: "", country: "" });
   const [formData, setFormData] = useState({
+    username: "",
     firstName: "",
     lastName: "",
     image: null,
@@ -44,6 +50,7 @@ const User = ({ userId, picturePath }) => {
     const data = await response.json();
     setUser(data);
     setFormData({
+      username: data.username,
       firstName: data.firstName,
       lastName: data.lastName,
       image: null,
@@ -53,13 +60,13 @@ const User = ({ userId, picturePath }) => {
 
   useEffect(() => {
     getUser();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [userId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!user) {
     return null;
   }
 
-  const { firstName, lastName } = user;
+  const { username, firstName, lastName, city, country } = user;
 
   const handleEditUser = () => {
     setOpen(true);
@@ -82,8 +89,48 @@ const User = ({ userId, picturePath }) => {
     }
   };
 
+  const fetchCountry = async (city) => {
+    const apiKey = "520000b141fc413aae789c43254dd0bb";
+    const response = await fetch(
+      `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(
+        city
+      )}&key=${apiKey}`
+    );
+    const data = await response.json();
+    if (data.results.length > 0) {
+      const country = data.results[0].components.country;
+      setLocation({ city, country });
+    }
+  };
+  const handleLocationSubmit = async () => {
+    if (!location.city) return;
+
+    // Save location to backend
+    const response = await fetch(`${config.API_URL}/users/${userId}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(location),
+    });
+
+    if (response.ok) {
+      const updatedUser = {
+        ...user,
+        city: location.city,
+        country: location.country,
+      };
+      setUser(updatedUser);
+      setOpenLocation(false);
+    } else {
+      console.error("Failed to update location");
+    }
+  };
+
   const handleSave = async () => {
     const formDataToSend = new FormData();
+    formDataToSend.append("username", formData.username);
     formDataToSend.append("firstName", formData.firstName);
     formDataToSend.append("lastName", formData.lastName);
     if (formData.image) {
@@ -112,46 +159,99 @@ const User = ({ userId, picturePath }) => {
   return (
     <WidgetWrapper>
       {/* FIRST ROW */}
-      <FlexBetween
-        gap="0.5rem"
-        pb="1.1rem"
-        onClick={() => navigate(`/profile/${userId}`)}
-      >
+      <FlexBetween gap="0.5rem" pb="1.1rem" sx={{ flexDirection: "column" }}>
+        {" "}
         <FlexBetween gap="1rem">
-          <UserImage image={picturePath} />
-          <Box>
-            <Typography
-              variant="h4"
-              color={dark}
-              fontWeight="500"
-              sx={{
-                "&:hover": {
-                  color: palette.primary.light,
-                  cursor: "pointer",
-                },
-              }}
-            >
-              {firstName} {lastName}
-            </Typography>
-          </Box>
+          <UserImage image={picturePath} size="150px" />
         </FlexBetween>
-        <IconButton onClick={handleEditUser}>
-          <EditOutlined
+        <Box gap="1rem">
+          <Box
             sx={{
-              color: palette.primary.main,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
             }}
-          />
-        </IconButton>
+          >
+            {" "}
+            <Typography
+              variant="h6"
+              sx={{ color: palette.secondary.main }}
+              fontWeight="500"
+            >
+              @{username}
+            </Typography>
+            <Typography variant="h4" color={dark} fontWeight="500">
+              {!loggedInUserId === userId ? (
+                `${firstName} ${lastName}`
+              ) : (
+                <Box sx={{ display: "flex" }}>
+                  <Typography fontWeight="bold" variant="h4">
+                    {firstName} {lastName}
+                  </Typography>{" "}
+                  <IconButton onClick={handleEditUser}>
+                    <EditOutlined
+                      sx={{
+                        color: palette.primary.main,
+                      }}
+                    />
+                  </IconButton>
+                </Box>
+              )}
+            </Typography>
+            {user.city && user.country ? (
+              <Typography>
+                <FmdGoodOutlinedIcon sx={{ color: palette.primary.main }} />{" "}
+                {user.city}, {user.country}
+              </Typography>
+            ) : (
+              <Button
+                variant="text"
+                color="primary"
+                onClick={() => setOpenLocation(true)}
+              >
+                Agrega tu Ubicación
+              </Button>
+            )}
+          </Box>
+        </Box>
       </FlexBetween>
 
-      <Divider />
-
-      <Divider />
-
+      {/* EDIT LOCATION MODAL */}
+      <Dialog open={openLocation} onClose={() => setOpenLocation(false)}>
+        <DialogTitle>Agrega tu Ubicación</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            name="city"
+            label="Ciudad"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={location.city}
+            onChange={(e) => setLocation({ ...location, city: e.target.value })}
+            onBlur={(e) => fetchCountry(e.target.value)} // Automatically fetch country on blur
+          />
+          {location.country && (
+            <Typography mt={2}>
+              País detectado: <strong>{location.country}</strong>
+            </Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenLocation(false)} color="secondary">
+            Cancelar
+          </Button>
+          <Button onClick={handleLocationSubmit} color="primary">
+            Guardar
+          </Button>
+        </DialogActions>
+      </Dialog>
       {/* EDIT USER MODAL */}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
-          Edit User
+          Edita tu Perfil
           <IconButton
             aria-label="close"
             onClick={handleClose}
@@ -166,11 +266,23 @@ const User = ({ userId, picturePath }) => {
           </IconButton>
         </DialogTitle>
         <DialogContent>
+          {" "}
+          <TextField
+            autoFocus
+            margin="dense"
+            name="username"
+            label="Nombre de usuario"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={formData.username}
+            onChange={handleChange}
+          />
           <TextField
             autoFocus
             margin="dense"
             name="firstName"
-            label="First Name"
+            label="Primer Nombre"
             type="text"
             fullWidth
             variant="outlined"
@@ -180,7 +292,7 @@ const User = ({ userId, picturePath }) => {
           <TextField
             margin="dense"
             name="lastName"
-            label="Last Name"
+            label="Apellido"
             type="text"
             fullWidth
             variant="outlined"
@@ -207,7 +319,8 @@ const User = ({ userId, picturePath }) => {
                 >
                   <input {...getInputProps()} />
                   <Typography>
-                    Drag and drop an image here, or click to select one
+                    Arrastra y suelta una imagen aquí, o haz clic para
+                    seleccionar una.
                   </Typography>
                 </div>
                 {hasSelectedImage && imagePreview && (
@@ -230,10 +343,19 @@ const User = ({ userId, picturePath }) => {
         </DialogContent>
         <Box sx={{ display: "flex", justifyContent: "flex-end", p: 2 }}>
           <Button onClick={handleClose} color="primary">
-            Cancel
+            Cancelar
           </Button>
-          <Button onClick={handleSave} color="primary">
-            Save
+          <Button
+            onClick={handleSave}
+            style={{
+              background: palette.primary.main,
+              color: palette.primary.white,
+              padding: "0.7rem",
+              borderRadius: "30rem",
+              marginLeft: "0.7rem",
+            }}
+          >
+            Guardar
           </Button>
         </Box>
       </Dialog>

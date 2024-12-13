@@ -77,6 +77,7 @@ const Review = ({
       className="flex flex-nowrap items-start gap-x-3 p-1 rounded-lg"
       style={{
         width: "80%",
+        flexDirection: "column",
       }}
       id={`review-${reviewId}`}
     >
@@ -167,15 +168,6 @@ const Review = ({
           </span>
         </div>
 
-        {isEditing && (
-          <ReviewForm
-            btnLabel="Update"
-            formSubmitHandler={(value) => updateReview(value, reviewId)}
-            formCancelHandler={() => setAffectedReview(null)}
-            initialText={review.desc}
-          />
-        )}
-
         <div className="flex items-center gap-x-3 text-dark-light text-sm mt-3 mb-3">
           {reviewBelongsToUser && (
             <>
@@ -198,6 +190,20 @@ const Review = ({
             </>
           )}
         </div>
+      </div>
+      <div style={{ width: "100%" }}>
+        {isEditing && (
+          <ReviewForm
+            btnLabel="Update"
+            formSubmitHandler={(rating, title, desc) =>
+              updateReview(rating, title, desc, reviewId)
+            }
+            formCancelHandler={() => setAffectedReview(null)}
+            initialText={review.desc}
+            initialTitle={review.title}
+            initialRating={review.rating}
+          />
+        )}
       </div>
     </div>
   );

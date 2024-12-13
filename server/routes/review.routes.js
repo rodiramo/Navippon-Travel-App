@@ -11,9 +11,8 @@ import { verifyToken } from "../middleware/auth.middleware.js";
 router
   .route("/")
   .post(verifyToken, createReview)
+  .put(verifyToken, updateReview)
+  .delete(verifyToken, deleteReview)
   .get(verifyToken, getAllReviews);
 
-router.route("/:reviewId").put(verifyToken).delete(verifyToken, deleteReview);
-
-router.route("/update").put(verifyToken, updateReview);
 export default router;

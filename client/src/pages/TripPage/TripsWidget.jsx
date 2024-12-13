@@ -103,10 +103,10 @@ const TripsWidget = () => {
       {error && <Typography color="error">{error}</Typography>}
       {!loading && !error && (
         <Box mt={2}>
-          <Typography variant="h6">My Trips</Typography>
           {trips.length === 0 ? (
-            <Typography sx={{ marginTop: 2, color: primaryMain }}>
-              No trips found. You havent created any trips yet.
+            <Typography variant="p" sx={{ marginTop: 2 }}>
+              No se ha agregado ningun viaje, agrega un viaje para poder verlo
+              aquí.
             </Typography>
           ) : (
             <List>

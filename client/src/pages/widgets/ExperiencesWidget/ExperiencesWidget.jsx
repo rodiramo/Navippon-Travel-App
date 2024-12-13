@@ -86,8 +86,6 @@ const ExperiencesWidget = ({ experience, experiences, filterBy }) => {
               prefecture={experience.prefecture}
               price={experience.price}
               type={experience.type}
-              onSave={() => {}}
-              onDelete={() => {}}
             />
           ))}
         </Box>

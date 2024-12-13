@@ -24,12 +24,13 @@ import DefaultAvatar from "/assets/default-avatar.jpg";
 // Validation schemas
 const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
+  username: yup.string().required("required"),
   lastName: yup.string().required("required"),
-  email: yup.string().email("Invalid Email").required("required"),
+  email: yup.string().email("Email Invalido").required("required"),
   password: yup.string().required("required"),
   confirmPassword: yup
     .string()
-    .oneOf([yup.ref("password"), null], "Passwords must match")
+    .oneOf([yup.ref("password"), null], "Las contraseñas deben ser identicas")
     .required("required"),
   picture: yup.string(),
 });
@@ -43,6 +44,7 @@ const loginSchema = yup.object().shape({
 const initialValuesRegister = {
   firstName: "",
   lastName: "",
+  username: "",
   email: "",
   password: "",
   confirmPassword: "",
@@ -166,6 +168,24 @@ const Form = () => {
             )}
             {isRegister && (
               <>
+                {" "}
+                <TextField
+                  label="Nombre de Usuario*"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.username}
+                  name="username"
+                  error={Boolean(touched.username) && Boolean(errors.username)}
+                  helperText={touched.username && errors.username}
+                  sx={{ gridColumn: "span 2" }}
+                  InputProps={{
+                    sx: {
+                      borderRadius: "10rem",
+                      background: theme.palette.background.grey,
+                      border: "none",
+                    },
+                  }}
+                />
                 <TextField
                   label="Nombre*"
                   onBlur={handleBlur}

@@ -1,14 +1,14 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import MyPostWidget from "@widgets/MyPostWidget.jsx";
 import PostsWidget from "@widgets/PostsWidget.jsx";
 import PropTypes from "prop-types";
 const PostsSection = ({ userId, picturePath }) => {
   return (
     <Box flexBasis="42%" mt="2rem">
-      <h2>Post Something New</h2>
-      <MyPostWidget picturePath={picturePath} />
+      <Typography variant="h2">Publica algo nuevo</Typography>
+      <MyPostWidget userId={userId} picturePath={picturePath} isProfile />
       <Box m="2rem 0" />
-      <h2>My Posts</h2>
+      <Typography variant="h2">Mis Publicaciones</Typography>
       <PostsWidget userId={userId} picturePath={picturePath} isProfile />
     </Box>
   );

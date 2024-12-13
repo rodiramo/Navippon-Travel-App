@@ -2,8 +2,8 @@ import config from "@config/config.js";
 
 export const createNewReview = async ({
   token,
-  title,
   rating,
+  title,
   desc,
   experienceId,
 }) => {
@@ -14,9 +14,9 @@ export const createNewReview = async ({
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
+      rating: rating,
       title: title,
       desc: desc,
-      rating: rating,
       experienceId,
     }),
   });
@@ -30,22 +30,23 @@ export const createNewReview = async ({
 
 export const updateReview = async ({
   token,
-  desc,
-  title,
   rating,
+  title,
+  desc,
   reviewId,
 }) => {
   try {
-    const response = await fetch(`${config.API_URL}/reviews/${reviewId}`, {
+    const response = await fetch(`${config.API_URL}/reviews`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
+        reviewId,
+        rating: rating,
         title: title,
         desc: desc,
-        rating: rating,
       }),
     });
 
@@ -62,15 +63,16 @@ export const updateReview = async ({
   }
 };
 export const deleteReview = async ({ token, reviewId }) => {
-  const reviewData = { title, rating, desc, reviewId };
-
   try {
-    const response = await fetch(`${config.API_URL}/reviews/update`, {
+    const response = await fetch(`${config.API_URL}/reviews`, {
       method: "DELETE",
       headers: {
+        "Content-Type": "application/json", // Ensure Content-Type is set
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(reviewData),
+      body: JSON.stringify({
+        reviewId: reviewId, // Ensure the reviewId is passed in the body
+      }),
     });
 
     if (!response.ok) {
@@ -85,6 +87,7 @@ export const deleteReview = async ({ token, reviewId }) => {
     throw error;
   }
 };
+
 export const getAllReviews = async (
   token,
   searchKeyword = "",

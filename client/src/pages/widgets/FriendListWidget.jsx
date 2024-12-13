@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
 import { Box, Typography, useTheme } from "@mui/material";
-import Friend from "../../components/Friend.jsx";
-import WidgetWrapper from "../../components/Wrapper.jsx";
+import Friend from "@components/Friend.jsx";
+import WidgetWrapper from "@components/Wrapper.jsx";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setFriends } from "../../state/state.js";
+import { setFriends } from "@state/state.js";
 import config from "@config/config";
 
 const FriendListWidget = ({ userId }) => {

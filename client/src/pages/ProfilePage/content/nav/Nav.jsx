@@ -1,0 +1,225 @@
+import PropTypes from "prop-types";
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+  IconButton,
+} from "@mui/material";
+import { useState, useEffect } from "react";
+import { MdOutlineDashboard } from "react-icons/md";
+import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai";
+
+import { TbWorldPin } from "react-icons/tb";
+import { LuStar } from "react-icons/lu";
+import config from "@config/config.js";
+import UserImage from "@components/UserImage.jsx";
+import { useSelector } from "react-redux";
+import { FaRegComments } from "react-icons/fa";
+import { RiNewspaperLine } from "react-icons/ri";
+
+const Nav = ({ userId, picturePath }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeNav, setActiveNav] = useState("dashboard");
+  const [userData, setUserData] = useState(null);
+
+  const token = useSelector((state) => state.token);
+
+  const toggleSidebar = () => {
+    setIsMenuOpen((prev) => !prev);
+  };
+
+  const fetchUserData = async () => {
+    try {
+      const response = await fetch(`${config.API_URL}/users/${userId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) throw new Error("Failed to fetch user data");
+
+      const data = await response.json();
+      setUserData(data);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (userId && token) {
+      fetchUserData();
+    }
+    if (window.innerWidth >= 1024) setIsMenuOpen(true);
+  }, [userId, token]);
+
+  return (
+    <Box sx={{ display: "flex", height: "100vh", backgroundColor: "#F4F4F4" }}>
+      <Box
+        sx={{
+          width: isMenuOpen ? 250 : 60,
+          backgroundColor: "#0A0330",
+          color: "#fff",
+          transition: "width 0.3s ease-in-out",
+          height: "100%",
+          borderRadius: "0rem 2rem 2rem 0rem",
+          zIndex: 1000,
+          position: "fixed",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {/* Sidebar Header */}
+        <Box sx={{ padding: 2, display: "flex", justifyContent: "center" }}>
+          <img
+            src="/assets/navippon-logo-white.png"
+            alt="Logo"
+            style={{
+              width: isMenuOpen ? "70px" : "40px",
+              transition: "width 0.3s ease-in-out",
+            }}
+          />
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            padding: 1,
+            marginRight: "-15px",
+          }}
+        >
+          <IconButton
+            onClick={toggleSidebar}
+            sx={{
+              background: "#ff0a51",
+              color: "white",
+              marginRight: "-16px",
+              display: { xs: "block", lg: "none" },
+            }}
+          >
+            {isMenuOpen ? (
+              <AiOutlineArrowLeft size={24} />
+            ) : (
+              <AiOutlineArrowRight size={24} />
+            )}
+          </IconButton>
+        </Box>
+
+        {/* Profile Section */}
+        {isMenuOpen && userData && (
+          <Box sx={{ padding: 2, display: "flex", alignItems: "center" }}>
+            <Box sx={{ marginRight: 2 }}>
+              <UserImage image={picturePath} />
+            </Box>
+            <Box>
+              <Box sx={{ fontSize: "14px", fontWeight: "bold" }}>
+                {userData.firstName} {userData.lastName}
+              </Box>
+            </Box>
+          </Box>
+        )}
+
+        <Divider sx={{ margin: 1 }} />
+
+        {/* Menu Items */}
+        <List sx={{ padding: 0 }}>
+          <ListItem
+            button
+            onClick={() => setActiveNav("dashboard")}
+            sx={{
+              backgroundColor:
+                activeNav === "dashboard" ? "#FF4A5A" : "transparent",
+              "&:hover": { backgroundColor: "#FF4A5A" },
+              padding: 2,
+            }}
+          >
+            <MdOutlineDashboard size={24} />
+            {isMenuOpen && (
+              <ListItemText primary="Dashboard" sx={{ marginLeft: 2 }} />
+            )}
+          </ListItem>
+
+          <ListItem
+            button
+            onClick={() => setActiveNav("favorites")}
+            sx={{
+              backgroundColor:
+                activeNav === "favorites" ? "#FF4A5A" : "transparent",
+              "&:hover": { backgroundColor: "#FF4A5A" },
+              padding: 2,
+            }}
+          >
+            <TbWorldPin size={24} />
+            {isMenuOpen && (
+              <ListItemText primary="Favoritos" sx={{ marginLeft: 2 }} />
+            )}
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => setActiveNav("posts")}
+            sx={{
+              backgroundColor:
+                activeNav === "posts" ? "#FF4A5A" : "transparent",
+              "&:hover": { backgroundColor: "#FF4A5A" },
+              padding: 2,
+            }}
+          >
+            <RiNewspaperLine size={24} />
+            {isMenuOpen && (
+              <ListItemText primary="Posts" sx={{ marginLeft: 2 }} />
+            )}
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => setActiveNav("comments")}
+            sx={{
+              backgroundColor:
+                activeNav === "comments" ? "#FF4A5A" : "transparent",
+              "&:hover": { backgroundColor: "#FF4A5A" },
+              padding: 2,
+            }}
+          >
+            <FaRegComments size={24} />
+            {isMenuOpen && (
+              <ListItemText primary="Commentarios" sx={{ marginLeft: 2 }} />
+            )}
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => setActiveNav("reviews")}
+            sx={{
+              backgroundColor:
+                activeNav === "reviews" ? "#FF4A5A" : "transparent",
+              "&:hover": { backgroundColor: "#FF4A5A" },
+              padding: 2,
+            }}
+          >
+            <LuStar size={24} />
+            {isMenuOpen && (
+              <ListItemText primary="Reseñas" sx={{ marginLeft: 2 }} />
+            )}
+          </ListItem>
+        </List>
+      </Box>
+
+      <Box sx={{ marginLeft: isMenuOpen ? 30 : 10, padding: 3, flexGrow: 1 }}>
+        {activeNav === "dashboard" && <h1>Welcome to the User Dashboard</h1>}
+        {activeNav === "favorites" && <h1>Commentarios Publicados</h1>}
+        {activeNav === "comments" && <h1>Commentarios Publicados</h1>}
+        {activeNav === "posts" && <h1>Posts</h1>}
+        {activeNav === "reviews" && <h1>Reseñas Publicadas</h1>}
+      </Box>
+    </Box>
+  );
+};
+
+Nav.propTypes = {
+  userId: PropTypes.string.isRequired,
+  picturePath: PropTypes.string,
+};
+
+export default Nav;

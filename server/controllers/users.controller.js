@@ -54,48 +54,6 @@ export const editUser = async (req, res) => {
   }
 };
 
-export const addRemoveFavoriteExperience = async (req, res) => {
-  try {
-    const { id, experienceId } = req.params;
-    const user = await User.findById(id);
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    if (user.favoriteExperiences.includes(experienceId)) {
-      user.favoriteExperiences = user.favoriteExperiences.filter(
-        (favExperienceId) => favExperienceId.toString() !== experienceId
-      );
-    } else {
-      user.favoriteExperiences.push(experienceId);
-    }
-
-    await user.save();
-    res.status(200).json(user.favoriteExperiences);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
-export const checkIfExperienceIsSaved = async (req, res) => {
-  try {
-    const { userId, experienceId } = req.params;
-    const user = await User.findById(userId).select("favorites");
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    const isSaved = user.favoriteExperiences.includes(experienceId);
-
-    return res.status(200).json({ isSaved });
-  } catch (error) {
-    console.error("Error checking saved status:", error);
-    return res.status(500).json({ message: "Server error" });
-  }
-};
-
 export const getUserFriends = async (req, res) => {
   try {
     const { id } = req.params;
@@ -164,8 +122,9 @@ export const addRemoveFriend = async (req, res) => {
     );
 
     const formattedFriends = friends.map(
-      ({ _id, firstName, lastName, picturePath }) => ({
+      ({ _id, username, firstName, lastName, picturePath }) => ({
         _id,
+        username,
         firstName,
         lastName,
         picturePath,

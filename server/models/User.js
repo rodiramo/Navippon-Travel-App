@@ -7,6 +7,12 @@ const UserSchema = new mongoose.Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+    username: {
+      type: String,
+      required: true,
+      min: 2,
+      max: 50,
+    },
     firstName: {
       type: String,
       required: true,
@@ -15,9 +21,19 @@ const UserSchema = new mongoose.Schema(
     },
     lastName: {
       type: String,
-      required: true,
+      required: false,
       min: 2,
       max: 50,
+    },
+    city: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    country: {
+      type: String,
+      required: false,
+      default: "",
     },
     email: {
       type: String,

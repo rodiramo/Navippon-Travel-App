@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Experience from "../models/Experience.js";
 import Prefecture from "../models/Prefecture.js";
+import User from "../models/User.js";
 import Region from "../models/Region.js";
 import fs from "fs";
 import path from "path";

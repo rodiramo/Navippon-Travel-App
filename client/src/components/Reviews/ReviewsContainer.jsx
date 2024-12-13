@@ -14,7 +14,7 @@ import {
   deleteReview,
   updateReview,
 } from "@services/index/reviews";
-import { toast } from "react-hot-toast";
+import { useToast } from "@components/Toast/ToastManager.jsx";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Review from "./Review";
@@ -23,6 +23,8 @@ import StarIcon from "@mui/icons-material/Star";
 
 const ReviewsContainer = ({ className, loggedInUserId, reviews = [] }) => {
   const queryClient = useQueryClient();
+  const addToast = useToast();
+
   const theme = useTheme();
   const { id: experienceId } = useParams();
   const token = useSelector((state) => state.token);
@@ -57,15 +59,10 @@ const ReviewsContainer = ({ className, loggedInUserId, reviews = [] }) => {
         validRatings.length
       : 0;
 
-  const addReviewHandler = ({ title, rating, desc }) => {
-    if (!token) {
-      toast.error("No JWT token found.");
-      return;
-    }
-
+  const addReviewHandler = ({ rating, title, desc }) => {
     mutateNewReview({
-      title: title,
       rating: rating,
+      title: title,
       desc: desc,
       token,
       experienceId,
@@ -79,36 +76,12 @@ const ReviewsContainer = ({ className, loggedInUserId, reviews = [] }) => {
     console.log("Form canceled");
     setShowReviewForm(false);
   };
-  const updateReviewHandler = (desc, title, rating, reviewId) => {
-    if (!token) {
-      toast.error("No JWT token found.");
-      return;
-    }
-    if (!reviewId) {
-      console.error("Review ID is missing");
-      return;
-    }
-    console.log("Submitting review with ID:", reviewId); // Check if the review ID is correct
-
-    console.log("Updating review with the following details:", {
-      title,
-      rating,
-      desc,
-      reviewId,
-    });
-
+  const updateReviewHandler = (rating, title, desc, reviewId) => {
     mutateUpdateReview({
-      token,
-      title: title,
       rating: rating,
+      title: title,
       desc: desc,
-      reviewId,
-    });
-    console.log("Mutate function data:", {
       token,
-      title,
-      rating,
-      desc,
       reviewId,
     });
 
@@ -117,7 +90,7 @@ const ReviewsContainer = ({ className, loggedInUserId, reviews = [] }) => {
 
   const deleteReviewHandler = (reviewId) => {
     if (!token) {
-      toast.error("No JWT token found.");
+      addToast("No se encontro un Token de identificación!", "error");
       return;
     }
 
@@ -126,42 +99,49 @@ const ReviewsContainer = ({ className, loggedInUserId, reviews = [] }) => {
 
   const { mutate: mutateNewReview, isLoading: isLoadingNewReview } =
     useMutation({
-      mutationFn: ({ token, desc, title, rating, experienceId }) => {
+      mutationFn: ({ token, rating, title, desc, experienceId }) => {
         return createNewReview({
           token,
-          title: title,
           rating,
+          title: title,
           desc: desc,
           experienceId,
         });
       },
       onSuccess: (newReview) => {
-        toast.success(
-          "Tu reseña se ha enviado con éxito, será visible tras la confirmación del Administrador"
+        addToast(
+          "Tu reseña se ha enviado con éxito, será visible tras la confirmación del Administrador",
+          "success"
         );
 
-        // Add the new review directly to the local state
         setAllReviews((prevReviews) => [newReview, ...prevReviews]);
 
-        // Optionally invalidate query to update any related data in the background
         queryClient.invalidateQueries(["experience", experienceId]);
       },
       onError: (error) => {
-        toast.error(error.message || "Error creating review");
+        addToast("Tu reseña no se pudo crear, intentalo denuevo.", "error");
+
         console.error("Error creating review:", error);
       },
     });
 
   const { mutate: mutateUpdateReview } = useMutation({
-    mutationFn: ({ token, title, rating, desc, reviewId }) => {
-      return updateReview({ token, title, rating, desc, reviewId });
+    mutationFn: ({ token, rating, title, desc, reviewId }) => {
+      return updateReview({ token, rating, title, desc, reviewId });
     },
-    onSuccess: () => {
-      toast.success("Tu reseña se ha actualizado correctamente");
+    onSuccess: (updatedReview) => {
+      setAllReviews((prevReviews) =>
+        prevReviews.map((review) =>
+          review._id === updatedReview._id ? updatedReview : review
+        )
+      );
+      addToast("Tu reseña se ha actualizado con éxito", "success");
+
       queryClient.invalidateQueries(["experience", experienceId]);
     },
     onError: (error) => {
-      toast.error(error.message || "Error updating review");
+      addToast("Tu reseña no se ha podido actualizar.", "error");
+
       console.error("Error updating review:", error);
     },
   });
@@ -170,12 +150,18 @@ const ReviewsContainer = ({ className, loggedInUserId, reviews = [] }) => {
     mutationFn: ({ token, reviewId }) => {
       return deleteReview({ token, reviewId });
     },
-    onSuccess: () => {
-      toast.success("Tu reseña se borró correctamente");
+    onSuccess: (deletedReviewId) => {
+      addToast("Tu reseña se ha eliminado con éxito", "success");
+
       queryClient.invalidateQueries(["experience", experienceId]);
+
+      setAllReviews((prevReviews) =>
+        prevReviews.filter((review) => review._id !== deletedReviewId)
+      );
     },
     onError: (error) => {
-      toast.error(error.message || "Error deleting review");
+      addToast("Tu reseña no se ha podido eliminar.", "error");
+
       console.error("Error deleting review:", error);
     },
   });
@@ -214,8 +200,8 @@ const ReviewsContainer = ({ className, loggedInUserId, reviews = [] }) => {
       {showReviewForm && (
         <ReviewForm
           btnLabel="Enviar"
-          formSubmitHandler={(title, rating, desc) =>
-            addReviewHandler({ title, rating, desc })
+          formSubmitHandler={(rating, title, desc) =>
+            addReviewHandler({ rating, title, desc })
           }
           reviewId={affectedReview ? affectedReview._id : null}
           loading={isLoadingNewReview}

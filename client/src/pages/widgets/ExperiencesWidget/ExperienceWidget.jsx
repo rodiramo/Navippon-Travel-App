@@ -19,12 +19,14 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
+import { useToast } from "@components/Toast/ToastManager.jsx";
 import FlexBetween from "@components/FlexBetween.jsx";
 import WidgetWrapper from "@components/Wrapper.jsx";
 import { useSelector } from "react-redux";
 import config from "@config/config.js";
 import { fetchCategoryDetails } from "@services/services.js";
 import "@css/Items/ItemsPage.css";
+import { addFavorite, isFavoriteExperience } from "@services/index/favorite.js";
 
 const ExperienceWidget = ({
   experienceId,
@@ -35,9 +37,10 @@ const ExperienceWidget = ({
   prefecture,
   price,
   type,
-  onSave,
-  onDelete,
 }) => {
+  const addToast = useToast();
+  const token = useSelector((state) => state.token);
+  const [isFavorite, setIsFavorite] = useState(false);
   const navigate = useNavigate();
   const { palette } = useTheme();
   const [categoryDetails, setCategoryDetails] = useState([]);
@@ -45,7 +48,6 @@ const ExperienceWidget = ({
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-  const [isSaved, setIsSaved] = useState(false);
   const role = useSelector((state) => state.user.role);
 
   const truncateText = (text, maxLength) => {
@@ -53,6 +55,39 @@ const ExperienceWidget = ({
       return text.substring(0, maxLength) + "...";
     }
     return text;
+  };
+
+  useEffect(() => {
+    const fetchInitialFavoriteStatus = async () => {
+      try {
+        const isFav = await isFavoriteExperience({ token, experienceId });
+        console.log("Experience ID passed to widget:", experienceId);
+        setIsFavorite(isFav);
+      } catch (error) {
+        console.error("Error fetching favorite status:", error);
+      }
+    };
+
+    fetchInitialFavoriteStatus();
+  }, [experienceId, token]);
+
+  const handleFavoriteExperience = async () => {
+    try {
+      const updatedStatus = await addFavorite({ token, experienceId });
+      setIsFavorite(updatedStatus);
+
+      updatedStatus
+        ? addToast("Experiencia agregada a favoritos!", "success")
+        : addToast("La experiencia ha sido eliminada de favoritos", "warning");
+    } catch (error) {
+      console.error("Error adding to favorites:", error.message);
+      updatedStatus
+        ? addToast(
+            "La experiencia no se ha podido agregar a favoritos!",
+            "error"
+          )
+        : addToast("La experiencia no pudo eliminarse de favoritos!", "error");
+    }
   };
 
   useEffect(() => {
@@ -82,22 +117,9 @@ const ExperienceWidget = ({
   const handleDeleteExperience = async () => {
     if (onDelete) {
       await onDelete();
-      setSnackbarMessage("¡Experiencia eliminada exitosamente!");
-      setSnackbarSeverity("success");
-      setSnackbarOpen(true);
-      handleCloseDeleteModal();
-    }
-  };
+      addToast("Experiencia ha sido eliminada con exito!", "success");
 
-  const handleSaveExperience = async () => {
-    if (onSave) {
-      await onSave(isSaved);
-      setIsSaved(!isSaved);
-      setSnackbarMessage(
-        isSaved ? "¡Eliminado de favoritos!" : "¡Agregado a favoritos!"
-      );
-      setSnackbarSeverity("success");
-      setSnackbarOpen(true);
+      handleCloseDeleteModal();
     }
   };
 
@@ -147,7 +169,7 @@ const ExperienceWidget = ({
           style={{ color: palette.primary.black }}
           className="activity-description"
         >
-          {truncateText(description, 150)} {/* Truncated description */}
+          {truncateText(description, 150)}
         </Typography>
 
         <FlexBetween className="wrap-buttons">
@@ -199,9 +221,9 @@ const ExperienceWidget = ({
             backgroundColor: palette.primary.main,
             color: palette.primary.white,
           }}
-          onClick={handleSaveExperience}
+          onClick={handleFavoriteExperience}
         >
-          {isSaved ? (
+          {isFavorite ? (
             <FavoriteOutlined sx={{ color: "#fff" }} />
           ) : (
             <FavoriteBorderOutlined />
@@ -269,8 +291,6 @@ ExperienceWidget.propTypes = {
     name: PropTypes.string,
   }),
   coordinates: PropTypes.arrayOf(PropTypes.number).isRequired,
-  onSave: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
   type: PropTypes.string,
 };
 

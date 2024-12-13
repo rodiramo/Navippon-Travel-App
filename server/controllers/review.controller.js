@@ -3,7 +3,7 @@ import Experience from "../models/Experience.js";
 
 const createReview = async (req, res, next) => {
   try {
-    const { desc, title, rating, experienceId } = req.body;
+    const { rating, title, desc, experienceId } = req.body;
 
     console.log("Incoming Review Data:", req.body); // Log the incoming data
 
@@ -38,8 +38,8 @@ const createReview = async (req, res, next) => {
     // Create and save the review
     const newReview = new Review({
       user: req.user._id,
-      title: title,
       rating: rating,
+      title: title,
       desc,
       experience: experience._id,
     });
@@ -58,16 +58,17 @@ const createReview = async (req, res, next) => {
 };
 
 export const updateReview = async (req, res) => {
-  const { title, rating, desc, reviewId } = req.body;
+  const { rating, title, desc, reviewId } = req.body;
   if (!reviewId) {
-    return res.status(400).json({ message: "Review ID is required" });
+    console.log("Review ID is required");
   }
 
+  console.log("Incoming Review Data:", req.body);
   try {
     const updatedReview = await Review.findByIdAndUpdate(
       reviewId,
-      { title, rating, desc },
-      { new: true } // returns the updated review
+      { rating, title, desc },
+      { new: true }
     );
     if (!updatedReview) {
       return res.status(404).json({ message: "Review not found" });
@@ -81,14 +82,19 @@ export const updateReview = async (req, res) => {
 
 const deleteReview = async (req, res, next) => {
   try {
-    const review = await Review.findByIdAndDelete(req.params.reviewId);
+    const { reviewId } = req.body; // Extract reviewId from request body
+
+    if (!reviewId) {
+      const error = new Error("Review ID is required.");
+      return next(error);
+    }
+
+    const review = await Review.findOneAndDelete({ _id: reviewId });
 
     if (!review) {
       const error = new Error("Comentario no encontrado");
       return next(error);
     }
-
-    await Review.deleteMany({});
 
     return res.json({
       message: "El comentario ha sido eliminado",

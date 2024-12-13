@@ -27,12 +27,14 @@ const ReviewForm = ({
   formSubmitHandler,
   formCancelHandler,
   initialText = "",
+  initialTitle = "",
+  initialRating = "",
 }) => {
   const theme = useTheme();
   const [desc, setDesc] = useState(initialText);
-  const [title, setTitle] = useState("");
-  const [rating, setRating] = useState(0);
-  const [hover, setHover] = useState(-1); // Track hover state for displaying labels
+  const [title, setTitle] = useState(initialTitle);
+  const [rating, setRating] = useState(initialRating);
+  const [hover, setHover] = useState(-1);
   const [errors, setErrors] = useState({
     title: "",
     desc: "",
@@ -66,9 +68,9 @@ const ReviewForm = ({
       setErrors(formErrors);
       return;
     }
+    console.log({ title, rating, desc });
+    formSubmitHandler(rating, title, desc);
 
-    // If everything is valid, submit the form
-    formSubmitHandler(title, rating, desc);
     setDesc("");
     setTitle("");
     setRating(0);

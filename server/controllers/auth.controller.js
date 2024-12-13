@@ -6,6 +6,7 @@ import User from "../models/User.js";
 export const register = async (req, res) => {
   try {
     const {
+      username,
       firstName,
       lastName,
       email,
@@ -21,6 +22,7 @@ export const register = async (req, res) => {
     const newUser = new User({
       firstName,
       lastName,
+      username,
       email,
       password: passwordHash,
       picturePath,
