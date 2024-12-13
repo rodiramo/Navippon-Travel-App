@@ -29,6 +29,9 @@ export const getUserExperiences = async (req, res) => {
 
 export const editUser = async (req, res) => {
   try {
+    console.log("Received file:", req.file);
+    console.log("Received body:", req.body);
+
     const { id } = req.params;
     const updates = req.body;
 
@@ -39,17 +42,31 @@ export const editUser = async (req, res) => {
     }
 
     if (req.file) {
-      if (user.picturePath) {
-        fs.unlinkSync(path.join("public/assets", user.picturePath));
+      try {
+        if (user.picturePath) {
+          const oldPath = path.join("public/assets", user.picturePath);
+          if (fs.existsSync(oldPath)) {
+            fs.unlinkSync(oldPath);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to delete old image:", err.message);
+        return res.status(500).json({ message: "Error updating image" });
       }
+
       updates.picturePath = req.file.filename;
     }
-
     const updatedUser = await User.findByIdAndUpdate(id, updates, {
       new: true,
     });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Error updating user" });
+    }
+
     res.status(200).json(updatedUser);
   } catch (err) {
+    console.error("Edit user error:", err.message);
     res.status(500).json({ message: "Server error" });
   }
 };

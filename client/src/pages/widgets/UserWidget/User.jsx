@@ -15,6 +15,7 @@ import {
   DialogContent,
   Button,
 } from "@mui/material";
+import ImageCropper from "@components/ImageCropper/ImageCropper.jsx";
 import UserImage from "@components/UserImage.jsx";
 import FlexBetween from "@components/FlexBetween.jsx";
 import WidgetWrapper from "@components/Wrapper.jsx";
@@ -25,9 +26,9 @@ import config from "@config/config.js";
 
 const User = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null);
-  const [open, setOpen] = useState(false);
+  const [openEditImage, setOpenEditImage] = useState(false);
+  const [openEditUser, setOpenEditUser] = useState(false);
   const loggedInUserId = useSelector((state) => state.user._id);
-  const [openLocation, setOpenLocation] = useState(false);
   const [location, setLocation] = useState({ city: "", country: "" });
   const [formData, setFormData] = useState({
     username: "",
@@ -41,6 +42,8 @@ const User = ({ userId, picturePath }) => {
   const navigate = useNavigate();
   const token = useSelector((state) => state.token);
   const dark = palette.neutral.dark;
+  const [isCropping, setIsCropping] = useState(false);
+  const [cropImageSrc, setCropImageSrc] = useState(null);
 
   const getUser = async () => {
     const response = await fetch(`${config.API_URL}/users/${userId}`, {
@@ -60,7 +63,7 @@ const User = ({ userId, picturePath }) => {
 
   useEffect(() => {
     getUser();
-  }, [userId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   if (!user) {
     return null;
@@ -69,11 +72,19 @@ const User = ({ userId, picturePath }) => {
   const { username, firstName, lastName, city, country } = user;
 
   const handleEditUser = () => {
-    setOpen(true);
+    setOpenEditUser(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleEditImage = () => {
+    setOpenEditImage(true);
+  };
+
+  const handleCloseUserModal = () => {
+    setOpenEditUser(false);
+  };
+
+  const handleCloseImageModal = () => {
+    setOpenEditImage(false);
   };
 
   const handleChange = (e) => {
@@ -83,10 +94,17 @@ const User = ({ userId, picturePath }) => {
   const handleImageChange = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
       const file = acceptedFiles[0];
-      setFormData({ ...formData, image: file });
-      setImagePreview(URL.createObjectURL(file));
+      const imageSrc = URL.createObjectURL(file);
+      setCropImageSrc(imageSrc);
+      setImagePreview(imageSrc);
+      setIsCropping(true);
       setHasSelectedImage(true);
     }
+  };
+
+  const handleCropComplete = (croppedImage) => {
+    setFormData({ ...formData, image: croppedImage });
+    setHasSelectedImage(true);
   };
 
   const fetchCountry = async (city) => {
@@ -102,10 +120,10 @@ const User = ({ userId, picturePath }) => {
       setLocation({ city, country });
     }
   };
+
   const handleLocationSubmit = async () => {
     if (!location.city) return;
 
-    // Save location to backend
     const response = await fetch(`${config.API_URL}/users/${userId}`, {
       method: "PATCH",
       headers: {
@@ -128,13 +146,15 @@ const User = ({ userId, picturePath }) => {
     }
   };
 
-  const handleSave = async () => {
+  const handleSaveUser = async () => {
     const formDataToSend = new FormData();
+    const timestamp = new Date().getTime();
+    const uniqueFilename = `${formData.username}-pfp-${timestamp}.jpg`;
     formDataToSend.append("username", formData.username);
     formDataToSend.append("firstName", formData.firstName);
     formDataToSend.append("lastName", formData.lastName);
     if (formData.image) {
-      formDataToSend.append("picture", formData.image);
+      formDataToSend.append("picture", formData.image, uniqueFilename);
     }
 
     const response = await fetch(`${config.API_URL}/users/${userId}`, {
@@ -150,19 +170,60 @@ const User = ({ userId, picturePath }) => {
     } else {
       const data = await response.json();
       setUser(data);
-      setImagePreview(data.picturePath);
-      setOpen(false);
+      setImagePreview(`${data.picturePath}?v=${timestamp}`);
+      setOpenEditUser(false);
+      window.location.reload();
+    }
+  };
+
+  const handleSaveImage = async () => {
+    const formDataToSend = new FormData();
+    const timestamp = new Date().getTime();
+    const uniqueFilename = `${formData.username}-pfp-${timestamp}.jpg`;
+    formDataToSend.append("picture", formData.image, uniqueFilename);
+
+    const response = await fetch(`${config.API_URL}/users/${userId}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formDataToSend,
+    });
+
+    if (!response.ok) {
+      console.error("Failed to update image");
+    } else {
+      const data = await response.json();
+      setUser(data);
+      setImagePreview(`${data.picturePath}?v=${timestamp}`);
+      setOpenEditImage(false);
       window.location.reload();
     }
   };
 
   return (
     <WidgetWrapper>
-      {/* FIRST ROW */}
       <FlexBetween gap="0.5rem" pb="1.1rem" sx={{ flexDirection: "column" }}>
-        {" "}
         <FlexBetween gap="1rem">
           <UserImage image={picturePath} size="150px" />
+          <IconButton
+            onClick={handleEditImage}
+            sx={{
+              position: "absolute",
+              marginTop: "128px",
+              marginLeft: "113px",
+            }}
+          >
+            <EditOutlined
+              sx={{
+                color: palette.primary.white,
+                padding: "4px",
+                borderRadius: "30rem",
+                fontSize: "2rem",
+                background: palette.primary.main,
+              }}
+            />
+          </IconButton>
         </FlexBetween>
         <Box gap="1rem">
           <Box
@@ -173,7 +234,6 @@ const User = ({ userId, picturePath }) => {
               alignItems: "center",
             }}
           >
-            {" "}
             <Typography
               variant="h6"
               sx={{ color: palette.secondary.main }}
@@ -188,13 +248,9 @@ const User = ({ userId, picturePath }) => {
                 <Box sx={{ display: "flex" }}>
                   <Typography fontWeight="bold" variant="h4">
                     {firstName} {lastName}
-                  </Typography>{" "}
+                  </Typography>
                   <IconButton onClick={handleEditUser}>
-                    <EditOutlined
-                      sx={{
-                        color: palette.primary.main,
-                      }}
-                    />
+                    <EditOutlined sx={{ color: palette.primary.main }} />
                   </IconButton>
                 </Box>
               )}
@@ -217,44 +273,13 @@ const User = ({ userId, picturePath }) => {
         </Box>
       </FlexBetween>
 
-      {/* EDIT LOCATION MODAL */}
-      <Dialog open={openLocation} onClose={() => setOpenLocation(false)}>
-        <DialogTitle>Agrega tu Ubicación</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            name="city"
-            label="Ciudad"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={location.city}
-            onChange={(e) => setLocation({ ...location, city: e.target.value })}
-            onBlur={(e) => fetchCountry(e.target.value)} // Automatically fetch country on blur
-          />
-          {location.country && (
-            <Typography mt={2}>
-              País detectado: <strong>{location.country}</strong>
-            </Typography>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenLocation(false)} color="secondary">
-            Cancelar
-          </Button>
-          <Button onClick={handleLocationSubmit} color="primary">
-            Guardar
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {/* EDIT USER MODAL */}
-      <Dialog open={open} onClose={handleClose}>
+      {/* Edit User Modal */}
+      <Dialog open={openEditUser} onClose={handleCloseUserModal}>
         <DialogTitle>
           Edita tu Perfil
           <IconButton
             aria-label="close"
-            onClick={handleClose}
+            onClick={handleCloseUserModal}
             sx={{
               position: "absolute",
               right: 8,
@@ -266,7 +291,6 @@ const User = ({ userId, picturePath }) => {
           </IconButton>
         </DialogTitle>
         <DialogContent>
-          {" "}
           <TextField
             autoFocus
             margin="dense"
@@ -299,6 +323,44 @@ const User = ({ userId, picturePath }) => {
             value={formData.lastName}
             onChange={handleChange}
           />
+        </DialogContent>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", p: 2 }}>
+          <Button onClick={handleCloseUserModal} color="primary">
+            Cancelar
+          </Button>
+          <Button
+            onClick={handleSaveUser}
+            style={{
+              background: palette.primary.main,
+              color: palette.primary.white,
+              padding: "0.7rem",
+              borderRadius: "30rem",
+              marginLeft: "0.7rem",
+            }}
+          >
+            Guardar
+          </Button>
+        </Box>
+      </Dialog>
+
+      {/* Edit Image Modal */}
+      <Dialog open={openEditImage} onClose={handleCloseImageModal}>
+        <DialogTitle>
+          Edita tu Imagen
+          <IconButton
+            aria-label="close"
+            onClick={handleCloseImageModal}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <Close />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
           <Dropzone
             acceptedFiles=".jpg,.jpeg,.png"
             multiple={false}
@@ -341,12 +403,27 @@ const User = ({ userId, picturePath }) => {
             )}
           </Dropzone>
         </DialogContent>
+        {isCropping && cropImageSrc && (
+          <Dialog
+            open={isCropping}
+            onClose={() => setIsCropping(false)}
+            maxWidth="sm"
+            fullWidth
+          >
+            <ImageCropper
+              imageSrc={cropImageSrc}
+              filename={`${formData.username}-pfp.jpg`}
+              onCropComplete={handleCropComplete}
+              onClose={() => setIsCropping(false)}
+            />
+          </Dialog>
+        )}
         <Box sx={{ display: "flex", justifyContent: "flex-end", p: 2 }}>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleCloseImageModal} color="primary">
             Cancelar
           </Button>
           <Button
-            onClick={handleSave}
+            onClick={handleSaveImage}
             style={{
               background: palette.primary.main,
               color: palette.primary.white,
