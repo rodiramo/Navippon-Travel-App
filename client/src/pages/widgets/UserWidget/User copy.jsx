@@ -6,6 +6,7 @@ import {
   Box,
   Typography,
   DialogActions,
+  Divider,
   useTheme,
   IconButton,
   TextField,
@@ -25,10 +26,8 @@ import config from "@config/config.js";
 
 const User = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null);
-  // const [open, setOpen] = useState(false);
   const [openEditImage, setOpenEditImage] = useState(false);
   const [openEditUser, setOpenEditUser] = useState(false);
-  const [openLocation, setOpenLocation] = useState(false);
   const loggedInUserId = useSelector((state) => state.user._id);
   const [location, setLocation] = useState({ city: "", country: "" });
   const [formData, setFormData] = useState({
@@ -64,7 +63,7 @@ const User = ({ userId, picturePath }) => {
 
   useEffect(() => {
     getUser();
-  }, [userId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   if (!user) {
     return null;
@@ -75,9 +74,11 @@ const User = ({ userId, picturePath }) => {
   const handleEditUser = () => {
     setOpenEditUser(true);
   };
+
   const handleEditImage = () => {
     setOpenEditImage(true);
   };
+
   const handleCloseUserModal = () => {
     setOpenEditUser(false);
   };
@@ -89,6 +90,7 @@ const User = ({ userId, picturePath }) => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
   const handleImageChange = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
       const file = acceptedFiles[0];
@@ -102,7 +104,6 @@ const User = ({ userId, picturePath }) => {
 
   const handleCropComplete = (croppedImage) => {
     setFormData({ ...formData, image: croppedImage });
-
     setHasSelectedImage(true);
   };
 
@@ -119,10 +120,10 @@ const User = ({ userId, picturePath }) => {
       setLocation({ city, country });
     }
   };
+
   const handleLocationSubmit = async () => {
     if (!location.city) return;
 
-    // Save location to backend
     const response = await fetch(`${config.API_URL}/users/${userId}`, {
       method: "PATCH",
       headers: {
@@ -174,6 +175,7 @@ const User = ({ userId, picturePath }) => {
       window.location.reload();
     }
   };
+
   const handleSaveImage = async () => {
     const formDataToSend = new FormData();
     const timestamp = new Date().getTime();
@@ -201,9 +203,7 @@ const User = ({ userId, picturePath }) => {
 
   return (
     <WidgetWrapper>
-      {/* FIRST ROW */}
       <FlexBetween gap="0.5rem" pb="1.1rem" sx={{ flexDirection: "column" }}>
-        {" "}
         <FlexBetween gap="1rem">
           <UserImage image={picturePath} size="150px" />
           <IconButton
@@ -234,7 +234,6 @@ const User = ({ userId, picturePath }) => {
               alignItems: "center",
             }}
           >
-            {" "}
             <Typography
               variant="h6"
               sx={{ color: palette.secondary.main }}
@@ -249,13 +248,9 @@ const User = ({ userId, picturePath }) => {
                 <Box sx={{ display: "flex" }}>
                   <Typography fontWeight="bold" variant="h4">
                     {firstName} {lastName}
-                  </Typography>{" "}
+                  </Typography>
                   <IconButton onClick={handleEditUser}>
-                    <EditOutlined
-                      sx={{
-                        color: palette.primary.main,
-                      }}
-                    />
+                    <EditOutlined sx={{ color: palette.primary.main }} />
                   </IconButton>
                 </Box>
               )}
@@ -277,38 +272,8 @@ const User = ({ userId, picturePath }) => {
           </Box>
         </Box>
       </FlexBetween>
-      {/* EDIT LOCATION MODAL */}
-      <Dialog open={openLocation} onClose={() => setOpenLocation(false)}>
-        <DialogTitle>Agrega tu Ubicación</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            name="city"
-            label="Ciudad"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={location.city}
-            onChange={(e) => setLocation({ ...location, city: e.target.value })}
-            onBlur={(e) => fetchCountry(e.target.value)}
-          />
-          {location.country && (
-            <Typography mt={2}>
-              País detectado: <strong>{location.country}</strong>
-            </Typography>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenLocation(false)} color="secondary">
-            Cancelar
-          </Button>
-          <Button onClick={handleLocationSubmit} color="primary">
-            Guardar
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {/* EDIT USER MODAL */}
+
+      {/* Edit User Modal */}
       <Dialog open={openEditUser} onClose={handleCloseUserModal}>
         <DialogTitle>
           Edita tu Perfil
@@ -326,7 +291,6 @@ const User = ({ userId, picturePath }) => {
           </IconButton>
         </DialogTitle>
         <DialogContent>
-          {" "}
           <TextField
             autoFocus
             margin="dense"
@@ -360,7 +324,6 @@ const User = ({ userId, picturePath }) => {
             onChange={handleChange}
           />
         </DialogContent>
-
         <Box sx={{ display: "flex", justifyContent: "flex-end", p: 2 }}>
           <Button onClick={handleCloseUserModal} color="primary">
             Cancelar
@@ -378,7 +341,8 @@ const User = ({ userId, picturePath }) => {
             Guardar
           </Button>
         </Box>
-      </Dialog>{" "}
+      </Dialog>
+
       {/* Edit Image Modal */}
       <Dialog open={openEditImage} onClose={handleCloseImageModal}>
         <DialogTitle>

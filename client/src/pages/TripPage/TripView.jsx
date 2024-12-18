@@ -5,24 +5,30 @@ import { useSelector } from "react-redux";
 import config from "@config/config.js";
 import Footer from "@components/Footer/Footer.jsx";
 import NavBar from "@components/NavBar/NavBar.jsx";
-import DaysList from "./DaysList.jsx";
+import DaysList from "./components/DaysList.jsx";
 import {
   Typography,
   Box,
   Button,
-  ListItem,
-  List,
   CircularProgress,
   Divider,
   useTheme,
+  List,
+  ListItem,
+  Avatar,
 } from "@mui/material";
-
+import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import BreadCrumb from "@components/BreadCrumbBack.jsx";
 const TripView = () => {
+  const loggedInUserId = useSelector((state) => state.user._id);
+
   const { tripId } = useParams();
   const [trip, setTrip] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [days, setDays] = useState([]);
+  const [friends, setFriends] = useState([]); // To hold the list of friends
   const theme = useTheme();
   const token = useSelector((state) => state.token);
   const primaryMain = theme.palette.primary.main;
@@ -47,7 +53,26 @@ const TripView = () => {
       }
     };
 
+    const fetchFriends = async () => {
+      try {
+        const response = await fetch(
+          `${config.API_URL}/users/${loggedInUserId}/friends`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch friends list");
+        }
+        const friendsData = await response.json();
+        setFriends(friendsData);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
     fetchTrip();
+    fetchFriends();
   }, [tripId, token]);
 
   const formatDate = (dateString) => format(new Date(dateString), "dd.MM.yyyy");
@@ -60,13 +85,14 @@ const TripView = () => {
   return (
     <Box id="body">
       <NavBar />
+      <BreadCrumb></BreadCrumb>
       <Box
         mt={2}
         p={2}
         display="flex"
         flexDirection="column"
         alignItems="center"
-        sx={{ maxWidth: "800px", margin: "0 auto" }}
+        sx={{}}
       >
         <Button
           variant="contained"
@@ -92,54 +118,34 @@ const TripView = () => {
           <Typography variant="body1" mt={2} align="center">
             {trip.description}
           </Typography>
+          {trip.isPrivate ? (
+            <Box>
+              <LockOutlinedIcon />
+              <Typography>Privado</Typography>
+            </Box>
+          ) : (
+            <Box>
+              <LanguageOutlinedIcon />
+              <Typography>Público</Typography>
+            </Box>
+          )}
         </Box>
         <Divider sx={{ width: "100%", mt: 2, mb: 2 }} />
-        <Box>
-          <Typography variant="h6" sx={{ textAlign: "center", margin: 1 }}>
-            Categories
-          </Typography>
-          <List
-            sx={{
-              textAlign: "center",
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              margin: 1,
-            }}
-          >
-            {trip.categories.map((category) => (
-              <ListItem
-                key={category._id}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  margin: "0.7rem",
-                  boxShadow: "0px 1px 8px #CDD9E1",
-                  backgroundColor: "#fff",
-                  color: "text.primary",
-                  width: 120,
-                  borderRadius: "8px",
-                  padding: "0.5rem",
-                  textAlign: "center",
-                }}
-              >
-                <Box
-                  component="img"
-                  src={`${config.API_URL}/assets/${category.icon}`}
-                  alt={category.category}
-                  sx={{
-                    width: 50,
-                    height: 50,
-                    padding: "0.4rem",
-                    marginBottom: "0.5rem",
-                  }}
-                />
-                <Typography variant="body2">{category.category}</Typography>
-              </ListItem>
-            ))}
-          </List>
-        </Box>
+
+        <Typography variant="h6" align="center" sx={{ mb: 2 }}>
+          Participantes
+        </Typography>
+        <List sx={{ width: "100%" }}>
+          {friends.map((friend) => (
+            <ListItem key={friend.id}>
+              <Avatar alt={friend.username} src={friend.picturePath} />
+              <Typography sx={{ ml: 2 }}>@{friend.username}</Typography>
+            </ListItem>
+          ))}
+        </List>
+
         <Divider sx={{ width: "100%", mt: 2, mb: 2 }} />
+
         <DaysList days={days} />
       </Box>
       <Footer />

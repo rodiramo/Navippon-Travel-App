@@ -24,6 +24,7 @@ import PrivateRoute from "./components/PrivateRoute.jsx";
 import ExperienceForm from "./pages/AdminPage/content/screens/experiences/Form.jsx";
 import FavoritesPage from "./pages/FavoritesPage/FavoritesPage.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import CreateTripPage from "./pages/TripPage/CreateTripPage.jsx";
 import ResultPage from "./pages/ResultPage/ResultPage.jsx";
 function App() {
   const mode = useSelector((state) => state.mode);
@@ -60,6 +61,7 @@ function App() {
                 path="/experiences/filtered-prefecture/:prefectureId"
                 element={<FilteredPrefecturePage />}
               />
+              <Route path="/trips/create-trip" element={<CreateTripPage />} />
               <Route path="/trips" element={<UserTripsPage />} />
               <Route path="/trips/:tripId" element={<TripView />} />
               <Route path="/experiences/:id" element={<ExperienceDetails />} />

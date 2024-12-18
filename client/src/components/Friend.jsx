@@ -24,8 +24,9 @@ const Friend = ({ friendId, name, userPicturePath }) => {
   const friends = useSelector((state) => state.user.friends);
 
   const { palette } = useTheme();
-  const primaryLight = palette.primary.light;
+  const secondaryMain = palette.primary.main;
   const primaryDark = palette.primary.dark;
+  const primaryLight = palette.primary.light;
   const main = palette.neutral.main;
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -83,16 +84,17 @@ const Friend = ({ friendId, name, userPicturePath }) => {
         >
           <Typography
             color={main}
-            variant="h5"
+            variant="p"
             fontWeight="500"
             sx={{
+              fontSize: "1rem",
               "&:hover": {
-                color: primaryLight,
+                color: secondaryMain,
                 cursor: "pointer",
               },
             }}
           >
-            {name}
+            @{name}
           </Typography>
         </Box>
       </FlexBetween>

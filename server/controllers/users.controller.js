@@ -83,8 +83,9 @@ export const getUserFriends = async (req, res) => {
     const friends = await User.find({ _id: { $in: user.friends } });
 
     const formattedFriends = friends.map(
-      ({ _id, firstName, lastName, picturePath }) => ({
+      ({ _id, username, firstName, lastName, picturePath }) => ({
         _id,
+        username,
         firstName,
         lastName,
         picturePath,

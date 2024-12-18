@@ -13,7 +13,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import TripForm from "./TripForm.jsx";
+import TripForm from "./components/TripForm.jsx";
 import { fetchTrips, deleteTrip } from "@services/services.js";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
@@ -28,14 +28,11 @@ const TripsWidget = () => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [tripToDelete, setTripToDelete] = useState(null);
   const token = useSelector((state) => state.token);
+  const loggedInUserId = useSelector((state) => state.user._id);
   const navigate = useNavigate();
 
   const formatDate = (dateString) => {
     return format(new Date(dateString), "dd.MM.yyyy");
-  };
-
-  const handleToggleForm = () => {
-    setShowForm((prev) => !prev);
   };
 
   const handleTripCreated = () => {
@@ -47,7 +44,9 @@ const TripsWidget = () => {
     setLoading(true);
     try {
       const data = await fetchTrips(token);
-      setTrips(data);
+      // Filter trips that belong to the logged-in user
+      const userTrips = data.filter((trip) => trip.userId === loggedInUserId);
+      setTrips(userTrips);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -59,7 +58,7 @@ const TripsWidget = () => {
     if (token) {
       fetchTripsData();
     }
-  }, [token]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [token, loggedInUserId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleViewDetails = (tripId) => {
     navigate(`/trips/${tripId}`);
@@ -91,22 +90,22 @@ const TripsWidget = () => {
 
   return (
     <Box>
-      <Button variant="contained" onClick={handleToggleForm}>
-        {showForm ? "Cancel" : "Create New Trip"}
+      <Button
+        variant="contained"
+        onClick={() => navigate("/trips/create-trip")}
+      >
+        Create New Trip
       </Button>
-      {showForm && (
-        <Box mt={2}>
-          <TripForm onTripCreated={handleTripCreated} />
-        </Box>
-      )}
+
       {loading && <Typography>Loading...</Typography>}
       {error && <Typography color="error">{error}</Typography>}
       {!loading && !error && (
         <Box mt={2}>
           {trips.length === 0 ? (
             <Typography variant="p" sx={{ marginTop: 2 }}>
-              No se ha agregado ningun viaje, agrega un viaje para poder verlo
-              aquí.
+              {trips.length === 0
+                ? "Los viajes de este usuario son privados."
+                : "No se ha agregado ningun viaje, agrega un viaje para poder verlo aquí."}
             </Typography>
           ) : (
             <List>

@@ -61,7 +61,6 @@ const Review = ({
     return <div>User data not found</div>;
   }
 
-  // Log values for debugging purposes
   console.log("Logged In User ID: ", loggedInUserId);
   console.log("User Data: ", userData);
 

@@ -52,7 +52,7 @@ const FriendListWidget = ({ userId }) => {
         fontWeight="500"
         sx={{ mb: "1.5rem" }}
       >
-        Friend List
+        Lista de Amigos
       </Typography>
       <Box display="flex" flexDirection="column" gap="1.5rem">
         {friends.length > 0 ? (
@@ -60,12 +60,12 @@ const FriendListWidget = ({ userId }) => {
             <Friend
               key={friend._id}
               friendId={friend._id}
-              name={`${friend.firstName} ${friend.lastName}`}
+              name={friend.username}
               userPicturePath={friend.picturePath}
             />
           ))
         ) : (
-          <Typography>No friends found</Typography>
+          <Typography>No se encontraron amigos.</Typography>
         )}
       </Box>
     </WidgetWrapper>

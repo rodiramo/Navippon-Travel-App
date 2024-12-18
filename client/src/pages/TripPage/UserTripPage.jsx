@@ -79,9 +79,9 @@ const UserTripsPage = () => {
   }
 
   return (
-    <Box>
+    <Box id="body">
       <NavBar />
-      <Box sx={{ paddingTop: 15, height: "80vh" }}>
+      <Box sx={{ paddingTop: 15 }}>
         <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
           <Link color="inherit" href="/home">
             Home
@@ -91,6 +91,12 @@ const UserTripsPage = () => {
         <Typography variant="h1" gutterBottom>
           My Trips
         </Typography>
+        <Button
+          variant="contained"
+          onClick={() => navigate("/trips/create-trip")}
+        >
+          Create New Trip
+        </Button>
         {error && <Typography color="error">{error}</Typography>}
         {trips.length ? (
           trips.map((trip) => (

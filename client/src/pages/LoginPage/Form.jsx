@@ -19,7 +19,6 @@ import Dropzone from "react-dropzone";
 import { setLogin } from "@state/state.js";
 import FlexBetween from "@components/FlexBetween.jsx";
 import config from "@config/config.js";
-import DefaultAvatar from "/assets/default-avatar.jpg";
 
 // Validation schemas
 const registerSchema = yup.object().shape({
@@ -32,7 +31,6 @@ const registerSchema = yup.object().shape({
     .string()
     .oneOf([yup.ref("password"), null], "Las contraseñas deben ser identicas")
     .required("required"),
-  picture: yup.string(),
 });
 
 const loginSchema = yup.object().shape({
@@ -48,7 +46,6 @@ const initialValuesRegister = {
   email: "",
   password: "",
   confirmPassword: "",
-  picture: "",
 };
 
 const initialValuesLogin = {
@@ -71,11 +68,6 @@ const Form = () => {
     const formData = new FormData();
     for (let value in values) {
       formData.append(value, values[value]);
-    }
-    if (!values.picture || typeof values.picture === "undefined") {
-      formData.append("picturePath", "default-avatar.jpg");
-    } else {
-      formData.append("picturePath", values.picture.name);
     }
 
     const savedUserResponse = await fetch(`${config.API_URL}/auth/register`, {
@@ -222,52 +214,6 @@ const Form = () => {
                     },
                   }}
                 />
-                <Box
-                  gridColumn="span 4"
-                  borderRadius="10rem"
-                  p="1rem"
-                  sx={{
-                    backgroundColor: theme.palette.background.grey,
-                  }}
-                >
-                  <Dropzone
-                    acceptedFiles=".jpg,.jpeg,.png"
-                    multiple={false}
-                    onDrop={(acceptedFiles) =>
-                      setFieldValue("picture", acceptedFiles[0])
-                    }
-                  >
-                    {({ getRootProps, getInputProps }) => (
-                      <Box
-                        {...getRootProps()}
-                        border={`2px dashed ${theme.palette.primary.main}`}
-                        p="1rem"
-                        sx={{
-                          borderRadius: "10rem",
-                          "&:hover": { cursor: "pointer" },
-                        }}
-                      >
-                        <input {...getInputProps()} />
-                        {!values.picture ? (
-                          <img
-                            src={DefaultAvatar}
-                            alt="Default Avatar"
-                            style={{
-                              width: "100px",
-                              height: "100px",
-                              borderRadius: "50%",
-                              objectFit: "cover",
-                            }}
-                          />
-                        ) : (
-                          <FlexBetween>
-                            <Typography>{values.picture}</Typography>
-                          </FlexBetween>
-                        )}
-                      </Box>
-                    )}
-                  </Dropzone>
-                </Box>
               </>
             )}
             <TextField

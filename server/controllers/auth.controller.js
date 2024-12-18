@@ -25,7 +25,7 @@ export const register = async (req, res) => {
       username,
       email,
       password: passwordHash,
-      picturePath,
+      picturePath: "default-avatar.jpg",
       interests,
       role: "user",
     });
